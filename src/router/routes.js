@@ -1,5 +1,5 @@
+import dashboard from './modules/dashboard';
 import application from './modules/application';
-
 import BasicLayout from '@/layouts/basic-layout';
 
 /**
@@ -74,7 +74,8 @@ const frameIn = [
             name: 'application-index'
         }
     },
-    application
+    application,
+    dashboard
 ];
 
 /**
