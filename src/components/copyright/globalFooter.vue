@@ -44,6 +44,7 @@
   .mq-global-footer-links a {
     font-size: 14px;
     color: #808695;
+    text-decoration: none;
     -webkit-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
   }
