@@ -62,13 +62,6 @@ module.exports = {
             .when(process.env.NODE_ENV !== 'development', config => {
 
         });
-        // 不编译 common
-        config.module
-            .rule('js')
-            .test(/\.jsx?$/)
-            .exclude
-            .add(resolve('src/libs/common'))
-            .end();
         // 使用 Vue Loader
         config.module
             .rule('vue')
