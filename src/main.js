@@ -1,27 +1,15 @@
 // Vue
 import Vue from 'vue'
 import App from './App.vue'
-
-// store
 import store from './store'
-// 配置
 import Setting from './setting';
-
-// 混合
 import mixinApp from '@/mixins/app';
-
-// 插件
 import plugins from '@/plugins';
-
-// elementUI
-import ElementUI from 'element-ui';
-
-// 菜单和路由
+import iView from 'view-design';
 import router from './router';
 import menuHeader from '@/menu/header';
 import menuSider from '@/menu/sider';
 import { frameInRoutes } from '@/router/routes';
-
 import i18n from '@/i18n';
 
 // 方法
@@ -33,7 +21,9 @@ import iLink from '@/components/link';
 if (window) window.$t = (key, value) => i18n.t(key, value);
 
 Vue.use(plugins);
-Vue.use(ElementUI);
+Vue.use(iView, {
+  i18n: (key, value) => i18n.t(key, value)
+});
 Vue.component('i-link', iLink);
 
 Vue.config.productionTip = false

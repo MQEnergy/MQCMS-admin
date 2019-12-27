@@ -5,9 +5,6 @@
 const env = process.env.NODE_ENV;
 
 const Setting = {
-    // 是否使用 Mock 的数据，默认 开发环境为 true，生产环境为 false
-    // isMock: env === 'development',
-    isMock: false,
     // 部署应用包时的基本 URL
     publicPath: env === 'development' ? '/' : '/mqcms',
     // 生产环境构建文件的目录名

@@ -7,29 +7,7 @@
                 </div>
                 <div class="page-account-top-desc">MQCMS管理系统</div>
             </div>
-            <Login ref="form" @on-submit="handleSubmit">
-                <UserName name="account" value="" />
-                <Email name="email" />
-                <Poptip trigger="focus" placement="right" width="240">
-                    <Password name="password" :rules="passwordRule" placeholder="至少6位密码，区分大小写" @on-change="handleChangePassword" />
-                    <div slot="content" class="page-account-register-tip">
-                        <div class="page-account-register-tip-title" :class="passwordTip.class">
-                            强度：{{ passwordTip.strong }}
-                        </div>
-                        <Progress :percent="passwordTip.percent" hide-info :stroke-width="6" :stroke-color="passwordTip.color" />
-                        <div class="page-account-register-tip-desc">
-                            请至少输入 6 个字符。请不要使用容易被猜到的密码。
-                        </div>
-                    </div>
-                </Poptip>
-                <Password name="passwordConfirm" :rules="passwordConfirmRule" placeholder="确认密码" />
-                <Mobile name="phone" />
-                <Captcha name="captcha" :field="['phone']" enter-to-submit @on-get-captcha="handleGetCaptcha" />
-                <Submit>{{ $t('page.register.submit') }}</Submit>
-            </Login>
-            <div class="page-account-to-login">
-                <router-link :to="{ name: 'login' }">{{ $t('page.register.other') }}</router-link>
-            </div>
+           
         </div>
         <i-copyright />
     </div>
