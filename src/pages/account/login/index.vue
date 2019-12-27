@@ -7,18 +7,6 @@
                 </div>
                 <div class="page-account-top-desc">MQCMS管理系统</div>
             </div>
-            <Login @on-submit="handleSubmit">
-                <UserName name="account" value="" />
-                <Password name="password" value="" :rules="passwordRule" enter-to-submit />
-                <div class="page-account-auto-login">
-                    <Checkbox v-model="autoLogin" size="large">{{ $t('page.login.remember') }}</Checkbox>
-                    <a href="">{{ $t('page.login.forgot') }}</a>
-                </div>
-                <Submit>{{ $t('page.login.submit') }}</Submit>
-            </Login>
-            <div class="page-account-other">
-                <router-link class="page-account-register" :to="{ name: 'register' }">{{ $t('page.login.signup') }}</router-link>
-            </div>
         </div>
         <i-copyright />
     </div>

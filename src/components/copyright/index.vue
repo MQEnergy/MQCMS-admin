@@ -1,9 +1,13 @@
 <template>
-    <GlobalFooter class="i-copyright" :links="links" :copyright="copyright" />
+    <global-footer class="i-copyright" :links="links" :copyright="copyright" />
 </template>
 <script>
+    import globalFooter from "@/components/copyright/globalFooter";
     export default {
         name: 'i-copyright',
+        components: {
+            globalFooter
+        },
         data () {
             return {
                 links: [
