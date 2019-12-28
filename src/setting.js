@@ -68,10 +68,6 @@ const Setting = {
         showCollapseMenuTitle: false,
         // 是否显示重载按钮
         showReload: true,
-        // 是否显示搜索
-        showSearch: true,
-        // 是否显示通知
-        showNotice: true,
         // 是否显示全屏
         showFullscreen: true,
         // 在手机访问时，是否在顶部显示小尺寸 logo

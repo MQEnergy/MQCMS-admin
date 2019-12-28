@@ -12,13 +12,10 @@
                     <i-header-reload v-if="!isMobile && showReload" @on-reload="handleReload" />
                     <i-menu-head v-if="headerMenu && !isMobile" ref="menuHead" />
                     <i-header-breadcrumb v-if="showBreadcrumb && !headerMenu && !isMobile" ref="breadcrumb" />
-                    <i-header-search v-if="showSearch && !headerMenu && !isMobile && !showBreadcrumb" />
                     <div class="i-layout-header-right">
-                        <i-header-search v-if="(showSearch && isMobile) || (showSearch && (headerMenu || showBreadcrumb))" />
                         <i-menu-head v-if="headerMenu && isMobile" />
                         <i-header-log v-if="isDesktop && showLog" />
                         <i-header-fullscreen v-if="isDesktop && showFullscreen" />
-                        <i-header-notice v-if="showNotice" />
                         <i-header-user />
                         <i-header-setting v-if="enableSetting && !isMobile" />
                     </div>
@@ -50,10 +47,8 @@
     import iHeaderCollapse from './header-collapse';
     import iHeaderReload from './header-reload';
     import iHeaderBreadcrumb from './header-breadcrumb';
-    import iHeaderSearch from './header-search';
     import iHeaderLog from './header-log';
     import iHeaderFullscreen from './header-fullscreen';
-    import iHeaderNotice from './header-notice';
     import iHeaderUser from './header-user';
     import iHeaderSetting from './header-setting';
     import iTabs from './tabs';
@@ -66,7 +61,20 @@
 
     export default {
         name: 'BasicLayout',
-        components: { iMenuHead, iMenuSide, iCopyright, iHeaderLogo, iHeaderCollapse, iHeaderReload, iHeaderBreadcrumb, iHeaderSearch, iHeaderUser, iHeaderLog, iHeaderFullscreen, iHeaderSetting, iHeaderNotice, iTabs },
+        components: {
+            iMenuHead,
+            iMenuSide,
+            iCopyright,
+            iHeaderLogo,
+            iHeaderCollapse,
+            iHeaderReload,
+            iHeaderBreadcrumb,
+            iHeaderUser,
+            iHeaderLog,
+            iHeaderFullscreen,
+            iHeaderSetting,
+            iTabs
+        },
         data () {
             return {
                 showDrawer: false,
@@ -94,7 +102,6 @@
                 'isDesktop',
                 'menuCollapse',
                 'showMobileLogo',
-                'showSearch',
                 'showNotice',
                 'showFullscreen',
                 'showSiderCollapse',

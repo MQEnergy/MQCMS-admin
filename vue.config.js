@@ -34,7 +34,7 @@ module.exports = {
     css: {
         loaderOptions: {
             less: {
-
+                javascriptEnabled: true
             }
         }
     },
@@ -66,8 +66,8 @@ module.exports = {
         config.module
             .rule('vue')
             .test(/\.vue$/)
-            .use('vue-loader')
-            .loader('vue-loader')
+            .use('iview-loader')
+            .loader('iview-loader')
             .tap(() => {
                 return Setting.VueLoaderOptions
             })

@@ -8,6 +8,8 @@ import pluginError from '@/plugins/error';
 import pluginLog from '@/plugins/log';
 // 鉴权指令
 import directiveAuth from '@/plugins/auth';
+// color指令
+import { colorInserted, resizeInserted, fontInserted } from '@/plugins/directive';
 
 export default {
     async install (Vue, options) {
@@ -17,5 +19,8 @@ export default {
 
         // 指令
         Vue.directive('auth', directiveAuth);
+        Vue.directive('color', colorInserted);
+        Vue.directive('resize', resizeInserted);
+        Vue.directive('font', fontInserted);
     }
 }

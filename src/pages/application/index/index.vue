@@ -1,64 +1,30 @@
 <template>
-    <div v-resize="handleResize">
-        <div class="i-layout-page-header">
-            <PageHeader title="我的应用" content="从应用市场可以安装应用到后台使用功能，不需要可卸载" hidden-breadcrumb />
-        </div>
-        <Row type="flex" justify="center" align="middle" :gutter="24" class="ivu-mt">
-            <Col :xl="8" :lg="8" :md="12" :sm="24" :xs="24" class="ivu-mb">
-                <Button type="dashed" icon="md-add" long v-height="200">新增产品</Button>
-            </Col>
-            <Col :xl="8" :lg="8" :md="12" :sm="24" :xs="24" class="ivu-mb" v-for="item in data" :key="item.project">
-                <a>
-                    <Card shadow :padding="0" v-height="200">
-                        <List item-layout="vertical" class="ivu-pl ivu-pr">
-                            <ListItem>
-                                <ListItemMeta :title="item.project">
-                                    <Avatar :src="item.icon" slot="avatar" size="large" />
-                                    <div slot="description" class="list-card-list-desc">
-                                        <Ellipsis ref="ellipsis" :text="item.desc" :lines="4" />
-                                    </div>
-                                </ListItemMeta>
-                                <template slot="action">
-                                    <Divider class="ivu-mb-8" />
-                                    <li v-width="'50%'">操作一</li>
-                                    <li v-width="'50%'">操作二</li>
-                                </template>
-                            </ListItem>
-                        </List>
-                    </Card>
-                </a>
-            </Col>
-        </Row>
+    <div>
+        <components-template ref="components" @on-tab="setTabActiveKey" v-if="tabActiveKey === 'components'" />
+        <apps-template ref="apps" @on-tab="setTabActiveKey" v-if="tabActiveKey === 'apps'" />
     </div>
 </template>
 <script>
-    import listData from './data';
+    import componentsTemplate from './components/index';
+    import appsTemplate from './apps/index';
+    import mixin from './mixins';
 
     export default {
-        name: 'list-card-list',
+        name: 'application-store-index',
+        mixins: [ mixin ],
+        components: {
+            componentsTemplate,
+            appsTemplate
+        },
         data () {
             return {
-                data: []
+                tabActiveKey: 'components'
             }
         },
         methods: {
-            getData () {
-                this.data = listData;
-            },
-            handleResize () {
-                this.$refs.ellipsis.forEach(item => item.init());
+            setTabActiveKey (val) {
+                this.tabActiveKey = val;
             }
-        },
-        mounted () {
-            this.getData();
         }
     }
 </script>
-<style lang="less">
-    .list-card-list{
-        &-desc{
-            height: 85px;
-            overflow: hidden;
-        }
-    }
-</style>

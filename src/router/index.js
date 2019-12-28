@@ -1,9 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import iView from 'view-design';
+
 import util from '@/libs/util'
+
 import Setting from '@/setting';
+
 import store from '@/store/index';
+
+// 路由数据
 import routes from './routes';
 
 Vue.use(VueRouter);
@@ -18,6 +23,7 @@ const router = new VueRouter({
  * 路由拦截
  * 权限验证
  */
+
 router.beforeEach((to, from, next) => {
     if (Setting.showProgressBar) iView.LoadingBar.start();
     // 判断是否需要登录才可以进入

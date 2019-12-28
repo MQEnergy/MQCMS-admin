@@ -1,6 +1,6 @@
 <template>
     <div style="padding-top: 16px;" v-resize="handleResize">
-    
+        MQCMS Admin Dashboard
     </div>
 </template>
 <script>
@@ -39,14 +39,4 @@
     }
 </script>
 <style lang="less">
-    .dashboard-console-visit{
-        .ivu-radio-group-button .ivu-radio-wrapper{
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 12px;
-        }
-        .ivu-radio-group-button .ivu-radio-wrapper:before, .ivu-radio-group-button .ivu-radio-wrapper:after{
-            display: none;
-        }
-    }
 </style>

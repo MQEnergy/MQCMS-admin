@@ -4,6 +4,7 @@
 import util from '@/libs/util';
 import router from '@/router';
 import { AccountLogin, AccountRegister, AccountLogout } from '@api/account';
+import { Modal } from 'view-design';
 
 export default {
     namespaced: true,
@@ -20,6 +21,7 @@ export default {
             password = ''
         } = {}) {
             return new Promise((resolve, reject) => {
+                console.log('ok')
                 // 开始请求登录接口
                 AccountLogin({
                     account,
@@ -69,10 +71,10 @@ export default {
             }
 
             if (confirm) {
-                this.$confirm({
+                Modal.confirm({
                     title: vm.$t('basicLayout.logout.confirmTitle'),
                     content: vm.$t('basicLayout.logout.confirmContent'),
-                    onOk () {
+                    onOk: () => {
                         logout();
                     }
                 });

@@ -1,5 +1,16 @@
 import dashboard from './modules/dashboard';
+import list from './modules/list';
+import user from './modules/user';
+import tag from './modules/tag';
+import attachment from './modules/attachment';
+import auth from './modules/auth';
+import comment from './modules/comment';
+import post from './modules/post';
+import setting from './modules/setting';
 import application from './modules/application';
+import search from './modules/search';
+import system from './modules/system';
+
 import BasicLayout from '@/layouts/basic-layout';
 
 /**
@@ -56,26 +67,18 @@ const frameIn = [
             }
         ]
     },
-    {
-        path: '/system',
-        redirect: {
-            name: 'auth-index'
-        }
-    },
-    {
-        path: '/wechat',
-        redirect: {
-            name: 'attachment-index'
-        }
-    },
-    {
-        path: '/application',
-        redirect: {
-            name: 'application-index'
-        }
-    },
+    dashboard,
+    list,
+    user,
+    tag,
+    auth,
+    attachment,
+    comment,
+    post,
+    setting,
     application,
-    dashboard
+    search,
+    system
 ];
 
 /**
