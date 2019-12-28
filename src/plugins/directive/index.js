@@ -12,10 +12,16 @@ const resizeInserted = {
 }
 
 const fontInserted = (el, binding) => {
-    el.style.fontSize = binding.value;
+    el.style.fontSize = binding.value + 'px';
 }
+
+const heightInserted = (el, binding) => {
+    el.style.height = binding.value + 'px';
+}
+
 export {
     colorInserted,
     resizeInserted,
-    fontInserted
+    fontInserted,
+    heightInserted
 }

@@ -14,8 +14,8 @@ export default [
         link: 'https://pro.iviewui.com/pro/'
     },
     {
-        title: 'MQCMS Admin',
-        desc: '基于 iView 的企业级中后台系统，内置 iView 及 功能强大，适用于各种中后台系统，高可配',
+        title: 'iView Admin Pro',
+        desc: '基于 iView 的企业级中后台系统，内置 iView 及 iView Pro，功能强大，适用于各种中后台系统，高可配',
         cover: 'https://dev-file.iviewui.com/4Z0QR2L0J1XStxBh99jVJ8qLfsGsOgjU/middle',
         time: new Date('2019-03-01 14:00:00'),
         link: 'https://pro.iviewui.com/admin-pro/'

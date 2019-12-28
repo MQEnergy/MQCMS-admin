@@ -31,9 +31,7 @@ Vue.use(ViewUI, {
 
 Vue.component('i-link', iLink);
 Vue.component('page-header', PageHeader);
-Vue.directive('color', function (el, binding) {
-    el.style.color = binding.value;
-});
+
 Vue.config.productionTip = false;
 
 new Vue({

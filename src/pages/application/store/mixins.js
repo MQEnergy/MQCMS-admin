@@ -14,7 +14,7 @@ export default {
         }
     },
     methods: {
-        handleChangeTab ({ name }) {
+        handleChangeTab (name) {
             this.$emit('on-tab', name);
         }
     }

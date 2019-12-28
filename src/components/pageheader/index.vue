@@ -14,6 +14,11 @@
                 </div>
             </div>
         </div>
+        <div class="ivu-page-header-tabs" v-if="tabList.length > 0">
+            <Tabs @on-click="handleTabChange" :value="tabActiveKey">
+                <TabPane v-for="(item, index) in tabList" :key="index" :name="item.name" :label="item.label"></TabPane>
+            </Tabs>
+        </div>
     </div>
 </template>
 
@@ -66,12 +71,8 @@
             }
         },
         methods: {
-            handleTabChange (t) {
-                var e = this,
-                  n = this.tabList.find(function(n) {
-                      return (0, r.default)(this, e), n.name === t
-                  }.bind(this));
-                this.$emit("on-tab-change", JSON.parse((0, i.default)(n)))
+            handleTabChange (name) {
+                this.$emit("on-tab-change", name);
             },
             handleBack () {
                 this.$emit("on-back")

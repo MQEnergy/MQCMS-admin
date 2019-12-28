@@ -18,9 +18,9 @@ export default [
     user,
     tag,
     post,
+    auth,
     attachment,
     comment,
-    auth,
     log,
     application
 ];
