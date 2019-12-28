@@ -9,8 +9,11 @@
                 <div class="ivu-page-header-row">
                     <div class="ivu-page-header-title">{{ title }}</div>
                 </div>
-                <div v-if="content" class="ivu-page-header-row">
+                <div class="ivu-page-header-row" v-if="content">
                     <div class="ivu-page-header-content">{{ content }}</div>
+                </div>
+                <div class="ivu-page-header-row">
+                    <div class="ivu-page-header-content"><slot name="content"></slot></div>
                 </div>
             </div>
         </div>
