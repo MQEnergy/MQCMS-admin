@@ -30,11 +30,6 @@
                         <span class="i-layout-header-setting-item-radio-span" style="background: #191a23;"></span>
                     </Tooltip>
                 </div>
-                <div class="i-layout-header-setting-item-radio" :class="{ 'on': headerTheme === 'primary' }" @click="handleChangeSetting('headerTheme', 'primary')">
-                    <Tooltip content="主色顶栏" placement="top" transfer>
-                        <span class="i-layout-header-setting-item-radio-span" style="background: #2173dc;"></span>
-                    </Tooltip>
-                </div>
                 <div class="i-layout-header-setting-item-radio" :class="{ 'on': headerTheme === 'blue' }" @click="handleChangeSetting('headerTheme', 'blue')">
                     <Tooltip content="极客蓝顶栏" placement="top" transfer>
                        <span class="i-layout-header-setting-item-radio-span" style="background: #2f54eb;"></span>
@@ -64,7 +59,7 @@
             <div class="i-layout-header-setting-item" :class="{ 'i-layout-header-setting-item-disabled': !headerFix }">
                 <span class="i-layout-header-setting-item-desc">
                     下滑时隐藏顶栏
-                    <Tooltip placement="top" content="需开启固定顶栏" transfer>
+                    <Tooltip placement="top" content="需关闭固定顶栏" transfer>
                         <Icon type="ios-help-circle-outline" />
                     </Tooltip>
                 </span>
@@ -140,13 +135,7 @@
                     <Switch size="small" :value="showReload" @on-change="(val) => handleChangeSetting('showReload', val)" />
                 </span>
             </div>
-            <div class="i-layout-header-setting-item">
-                <span class="i-layout-header-setting-item-desc">显示多语言选择</span>
-                <span class="i-layout-header-setting-item-action">
-                    <Switch size="small" :value="showI18n" @on-change="(val) => handleChangeSetting('showI18n', val)" />
-                </span>
-            </div>
-
+     
             <Divider size="small">其它设置</Divider>
 
             <div class="i-layout-header-setting-item">

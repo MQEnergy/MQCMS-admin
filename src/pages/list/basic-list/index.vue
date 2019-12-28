@@ -43,7 +43,7 @@
                             </div>
                             <div class="list-basic-list-content-item">
                                 <span>开始时间</span>
-                                <p>{{ item.time | date_format('YYYY-MM-DD HH:mm:ss') }}</p>
+                                <p>{{ item.time }}</p>
                             </div>
                             <div class="list-basic-list-content-item" v-width="180">
                                 <Progress :percent="item.progress" :status="item.status" :stroke-width="6" />

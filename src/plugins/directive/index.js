@@ -19,9 +19,18 @@ const heightInserted = (el, binding) => {
     el.style.height = binding.value + 'px';
 }
 
+const widthInserted = (el, binding) => {
+    if (binding.value.toString().lastIndexOf('%') > 0) {
+        el.style.width = binding.value;
+    } else {
+        el.style.width = binding.value + 'px';
+    }
+}
+
 export {
     colorInserted,
     resizeInserted,
     fontInserted,
-    heightInserted
+    heightInserted,
+    widthInserted
 }

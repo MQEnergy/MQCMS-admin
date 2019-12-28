@@ -41,7 +41,7 @@
                 <Badge v-if="row.status === 3" status="error" text="异常" />
             </template>
             <template slot-scope="{ row }" slot="date">
-                {{ row.date | date_format('YYYY-MM-DD HH:mm:ss') }}
+                {{ row.date }}
             </template>
             <template slot-scope="{ row, index }" slot="action">
                 <a @click="handleUpdate(index)">编辑</a>

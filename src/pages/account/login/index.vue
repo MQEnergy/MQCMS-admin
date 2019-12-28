@@ -20,7 +20,7 @@
                         </Input>
                     </FormItem>
                     <FormItem>
-                        <Button class="ivu-btn-long" type="primary" size="large" @click="handleSubmit('formInline')">登录</Button>
+                        <Button :loading="submitLoading" class="ivu-btn-long" type="primary" size="large" @click="handleSubmit('formInline')">登录</Button>
                     </FormItem>
                 </Form>
             </div>
@@ -51,7 +51,8 @@
                         { required: true, message: '请输入密码！', trigger: 'blur' },
                         { type: 'string', min: 6, message: '密码不能少于6位！', trigger: 'blur' }
                     ]
-                }
+                },
+                submitLoading: false
             }
         },
         methods: {
@@ -61,11 +62,13 @@
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
+                        this.submitLoading = true;
                         this.login(this.formInline)
-                          .then(() => {
-                              // 重定向对象不存在则返回顶层路径
-                              this.$router.replace(this.$route.query.redirect || '/');
-                          });
+                            .then(() => {
+                                this.$router.replace(this.$route.query.redirect || '/');
+                            }).finally(() => {
+                                this.submitLoading = false;
+                            });
                     } else {
                         return false;
                     }

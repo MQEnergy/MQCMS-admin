@@ -8,25 +8,35 @@
                 <Button type="dashed" icon="md-add" long v-height="200">新增产品</Button>
             </Col>
             <Col :xl="8" :lg="8" :md="12" :sm="24" :xs="24" class="ivu-mb" v-for="item in data" :key="item.project">
-                <a>
-                    <Card shadow :padding="0" v-height="200">
-                        <List item-layout="vertical" class="ivu-pl ivu-pr">
-                            <ListItem>
-                                <ListItemMeta :title="item.project">
-                                    <Avatar :src="item.icon" slot="avatar" size="large" />
-                                    <div slot="description" class="list-card-list-desc">
-                                        <Ellipsis ref="ellipsis" :text="item.desc" :lines="4" />
-                                    </div>
-                                </ListItemMeta>
-                                <template slot="action">
-                                    <Divider class="ivu-mb-8" />
-                                    <li v-width="'50%'">操作一</li>
-                                    <li v-width="'50%'">操作二</li>
-                                </template>
-                            </ListItem>
-                        </List>
-                    </Card>
-                </a>
+                <Card :shadow="!bordered" :bordered="bordered" :dis-hover="bordered" :padding="0">
+                    <div class="ivu-pt ivu-pl ivu-pr">
+                        <div>
+                            <Avatar :src="item.icon" />
+                            <strong class="ivu-ml">{{ item.title }}</strong>
+                        </div>
+                        <div class="ivu-mt">
+                            <div>负责人：{{ item.owner }}</div>
+                            <div>最后更新时间：<Time :time="item.time" type="date" /></div>
+                        </div>
+                    </div>
+                    <Divider class="ivu-mb-8" />
+                    <Row class="ivu-text-center ivu-pb-8">
+                        <Col span="12" class="ivu-br">
+                            <Tooltip placement="top" content="访问">
+                                <i-link :to="item.link" target="_blank">
+                                    <Button icon="md-open" type="text" size="large" />
+                                </i-link>
+                            </Tooltip>
+                        </Col>
+                        <Col span="12" class="ivu-br">
+                            <Tooltip placement="top" content="安装应用">
+                                <i-link>
+                                    <Button icon="md-download" type="text" size="large" />
+                                </i-link>
+                            </Tooltip>
+                        </Col>
+                    </Row>
+                </Card>
             </Col>
         </Row>
     </div>
@@ -38,7 +48,8 @@
         name: 'list-card-list',
         data () {
             return {
-                data: []
+                data: [],
+                bordered: false
             }
         },
         methods: {

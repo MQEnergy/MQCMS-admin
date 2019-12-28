@@ -53,7 +53,10 @@
                 default: !1
             },
             tabList: {
-                type: Array
+                type: Array,
+                default: () => {
+                    return [];
+                }
             },
             tabActiveKey: {
                 type: String

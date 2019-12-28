@@ -11,7 +11,7 @@
                 {{ item.desc }}
             </div>
             <div class="ivu-mt">
-                <Avatar :src="item.auth.avatar" size="small" /> {{ item.auth.name }} 发表于 {{ new Date(item.time) | date_format('YYYY-MM-DD HH:mm:ss') }}
+                <Avatar :src="item.auth.avatar" size="small" /> {{ item.auth.name }} 发表于 {{ new Date(item.time) }}
             </div>
             <template slot="action">
                 <li>

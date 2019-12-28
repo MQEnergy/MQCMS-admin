@@ -2,24 +2,25 @@
     <div>
         <Form ref="searchForm" :model="searchForm" :label-width="labelWidth" :label-position="labelPosition">
             <Row>
-                <Col :xl="14" :lg="14" :md="12" :sm="24" :xs="24">
+                <Col v-bind="gridLeft">
                     <FormItem :label-width="0">
-                        <Input v-model="searchForm.keyword" placeholder="请输入查询内容" style="float: left; max-width: 500px">
+                        <Input v-model="searchForm.keyword" placeholder="请输入查询内容" style="float: left; max-width: 450px">
                             <Select v-model="searchForm.type" slot="prepend" style="width: 100px">
                                 <Option value="id">标签ID</Option>
                                 <Option value="tag_name">标签名称</Option>
                                 <Option value="tag_title">标签标题(SEO)</Option>
                             </Select>
-                            <Button type="primary" slot="append" @click="handleSubmit" icon="ios-search">查询</Button>
+                            <Button type="primary" slot="append" @click="handleSubmit">查询</Button>
                         </Input>
                         <Button style="float: left" type="text" v-color="'#2d8cf0'" @click="collapse = !collapse">
                             {{ collapse ? '普通搜索' : '高级搜索' }}<Icon :type="collapse ? 'ios-arrow-up' : 'ios-arrow-down'" />
                         </Button>
                     </FormItem>
                 </Col>
-                <Col :xl="10" :lg="10" :md="12" :sm="24" :xs="24" class="ivu-text-right">
+                <Col v-bind="grid" class="ivu-text-right">
                     <FormItem :label-width="0">
                         <Button class="ivu-ml-8" type="primary" icon="md-add" @click="handleOpenCreate">新建</Button>
+                        <Button class="ivu-ml-8" type="primary" icon="md-download" @click="handleExport">导出</Button>
                         <Dropdown class="ivu-ml-8">
                             <Button>
                                 更多操作
@@ -58,22 +59,6 @@
                             </Select>
                         </FormItem>
                     </Col>
-                    <Col v-bind="grid">
-                        <FormItem label="是否热门：" prop="is_hot" label-for="is_hot">
-                            <Select v-model="searchForm.is_hot" placeholder="请选择" element-id="is_hot">
-                                <Option :value="0">正常</Option>
-                                <Option :value="1">热门</Option>
-                            </Select>
-                        </FormItem>
-                    </Col>
-                    <Col v-bind="grid">
-                        <FormItem label="标签类型：" prop="tag_type" label-for="tag_type">
-                            <Select v-model="searchForm.tag_type" placeholder="请选择" element-id="tag_type">
-                                <Option :value="1">系统创建</Option>
-                                <Option :value="2">用户创建</Option>
-                            </Select>
-                        </FormItem>
-                    </Col>
                     <Col v-bind="grid" class="ivu-text-right">
                         <FormItem label="">
                             <Button type="primary" @click="handleSubmit">查询</Button>
@@ -90,6 +75,13 @@
     export default {
         data () {
             return {
+                gridLeft: {
+                    xl: 16,
+                    lg: 16,
+                    md: 12,
+                    sm: 24,
+                    xs: 24
+                },
                 grid: {
                     xl: 8,
                     lg: 8,
@@ -131,7 +123,15 @@
             },
             handleOpenCreate () {
                 this.$emit('on-create-form', true, -1);
+            },
+            handleExport () {
+                this.$emit('on-export');
             }
         }
     }
 </script>
+<style scoped>
+    .ivu-text-right {
+        float: right;
+    }
+</style>

@@ -9,7 +9,7 @@ import pluginLog from '@/plugins/log';
 // 鉴权指令
 import directiveAuth from '@/plugins/auth';
 // color指令
-import { colorInserted, resizeInserted, fontInserted, heightInserted } from '@/plugins/directive';
+import { colorInserted, resizeInserted, fontInserted, heightInserted, widthInserted } from '@/plugins/directive';
 
 export default {
     async install (Vue, options) {
@@ -23,5 +23,6 @@ export default {
         Vue.directive('resize', resizeInserted);
         Vue.directive('font', fontInserted);
         Vue.directive('height', heightInserted);
+        Vue.directive('width', widthInserted);
     }
 }
