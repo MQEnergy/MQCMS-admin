@@ -22,7 +22,7 @@
                                 </i-link>
                             </Tooltip>
                         </Col>
-                        <Col span="12" class="ivu-br">
+                        <Col span="12">
                             <Tooltip placement="top" content="安装组件">
                                 <i-link>
                                     <Button icon="md-download" type="text" size="large" />

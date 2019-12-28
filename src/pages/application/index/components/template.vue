@@ -29,7 +29,7 @@
                                 </i-link>
                             </Tooltip>
                         </Col>
-                        <Col span="8" class="ivu-br">
+                        <Col span="8">
                             <Tooltip placement="top" content="编辑查看">
                                 <i-link>
                                     <Button icon="md-eye" type="text" size="large" />

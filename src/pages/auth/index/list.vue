@@ -1,16 +1,7 @@
 <template>
     <div class="i-table-no-border">
-        <Button type="primary" icon="md-add" @click="handleOpenCreate">新建</Button>
-        <Button icon="md-list" class="ivu-ml-8" v-show="selectedData.length">批量操作</Button>
-        <Dropdown class="ivu-ml-8" v-show="selectedData.length" @on-click="handleClickItem">
-            <Button>
-                更多操作
-                <Icon type="ios-arrow-down" />
-            </Button>
-            <DropdownMenu slot="list">
-                <DropdownItem name="delete">删除</DropdownItem>
-            </DropdownMenu>
-        </Dropdown>
+        <!-- 搜索 -->
+        <search-form ref="searchForm" @on-create-form="handleOpenUpdateCreate" @on-search="searchData" @on-reset="getData" />
         <Alert show-icon class="ivu-mt">
             <div v-font="14">
                 已选择 <strong v-color="'#2d8cf0'">{{ selectedData.length }}</strong> 项
@@ -30,54 +21,34 @@
             @on-select-all="handleSelectAll"
             @on-select-all-cancel="handleSelectAllCancel"
         >
-            <template slot-scope="{ row }" slot="id">
-                <div>{{ row.id }}</div>
-            </template>
-            <template slot-scope="{ row }" slot="user_name">
-                <div>{{ row.user_name }}</div>
-            </template>
-            <template slot-scope="{ row }" slot="real_name">
-                <div>{{ row.real_name }}</div>
-            </template>
             <template slot-scope="{ row }" slot="status">
                 <Badge v-if="row.status === 0" status="default" text="禁用" />
                 <Badge v-if="row.status === 1" status="processing" text="正常" />
             </template>
-            <template slot-scope="{ row }" slot="created_at">
-                {{ row.created_at }}
-            </template>
             <template slot-scope="{ row, index }" slot="action">
                 <a @click="handleShow(index)">查看</a>
                 <Divider type="vertical" />
-                <a @click="handleUpdate(index)">编辑</a>
+                <a @click="handleOpenUpdateCreate(true, row.id)">编辑</a>
+                <Divider type="vertical" />
+                <a @click="handleDelete(index)">删除</a>
             </template>
         </Table>
         <div class="ivu-mt ivu-text-center">
             <Page :total="total" show-total :current.sync="current" @on-change="handleChange"/>
         </div>
-
-        <Modal v-model="showCreate" title="新建用户" :loading="creating" @on-ok="handleCreate" @on-cancel="handleCancel">
-            <Form ref="create" :model="createData" :rules="createRules" label-position="left" :label-width="80">
-                <FormItem label="用户名：" prop="user_name">
-                    <Input v-model="createData.user_name" placeholder="请输入用户名" />
-                </FormItem>
-                <FormItem label="姓名：" prop="real_name">
-                    <Input v-model="createData.real_name" placeholder="请输入真实姓名" />
-                </FormItem>
-                <FormItem label="手机号：" prop="phone">
-                    <Input v-model="createData.phone" placeholder="请输入手机号" />
-                </FormItem>
-                <FormItem label="状态：" prop="status">
-                    <Switch v-model="createData.statusFormat" @on-change="handleSwitchChange" />
-                </FormItem>
-            </Form>
-        </Modal>
+        <!-- 创建编辑 -->
+        <create-form ref="createForm" @on-create-form="handleOpenUpdateCreate" @on-ok="getData" />
+     
     </div>
 </template>
 <script>
-    import { AdminIndex, AdminStore, AdminUpdate } from '@/api/admin';
+    import { AdminIndex, AdminDelete } from '@/api/admin';
+    import searchForm from './search-form';
+    import createForm from './create-form';
     export default {
         components: {
+            searchForm,
+            createForm
         },
         data () {
             return {
@@ -93,7 +64,7 @@
                         minWidth: 80
                     },
                     {
-                        title: '用户名',
+                        title: '用户账户',
                         key: 'account',
                         minWidth: 100
                     },
@@ -147,7 +118,7 @@
                         title: '操作',
                         slot: 'action',
                         align: 'center',
-                        minWidth: 140
+                        minWidth: 200
                     }
                 ],
                 loading: false,
@@ -159,28 +130,7 @@
                 sortType: 'normal', // 当前排序类型，可选值为：normal（默认） || asc（升序）|| desc（降序）,
                 sortColumns: '',
                 filterType: undefined,
-                showCreate: false,
-                createData: {
-                    user_name: '',
-                    real_name: '',
-                    phone: '',
-                    status: 1,
-                    statusFormat: true
-                },
-                currentItem: {},
-                createRules: {
-                    user_name: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
-                    ],
-                    real_name: [
-                        { required: true, message: '请输入真实姓名', trigger: 'blur' }
-                    ],
-                    phone: [
-                        { required: true, message: '请输入手机号', trigger: 'blur' }
-                    ]
-                },
-                creating: true,
-                updateIndex: -1
+                searchForm: {}
             }
         },
         computed: {
@@ -237,6 +187,20 @@
                     this.loading = false;
                 });
             },
+            searchData (searchForm) {
+                this.searchForm = searchForm;
+                this.loading = true;
+                AdminIndex({
+                    page: this.current,
+                    limit: this.size,
+                    search: searchForm
+                }).then(async res => {
+                    this.list = res.data;
+                    this.total = res.total;
+                }).finally(() => {
+                    this.loading = false;
+                });
+            },
             // 点击排序按钮时触发
             handleSortChange ({ key, order }) {
                 // 将排序保存到数据
@@ -282,81 +246,49 @@
             },
             handleClickItem (name) {
                 if (name === 'delete') {
-                    this.selectedData.forEach(item => {
-                        const index = this.list.findIndex(i => i.id === item.id);
-                        if (index >= 0) {
-                            this.list.splice(index, 1);
+                    this.$Modal.confirm({
+                        title: '删除标签',
+                        content: '确定批量删除标签吗？',
+                        onOk: () => {
+                            this.selectedData.forEach(item => {
+                                const index = this.list.findIndex(i => i.id === item.id);
+                                if (index >= 0) {
+                                    this.list.splice(index, 1);
+                                }
+                            });
+                            this.selectedData = [];
                         }
                     });
-                    this.selectedData = [];
                 }
             },
-            handleOpenCreate () {
-                this.updateIndex = -1;
-                this.showCreate = true;
+            // 编辑创建数据
+            handleOpenUpdateCreate (status, updateIndex) {
+                this.$refs.createForm.handleShowUpdateCreate(status, updateIndex);
             },
-            // 新增数据
-            handleCreate () {
-                this.$refs.create.validate((valid) => {
-                    if (valid) {
-                        if (this.updateIndex < 0) {
-                            // 新建
-                            AdminStore(
-                                this.createData
-                            ).then(async res => {
-                                this.getData();
-                                this.$Message.success('创建成功');
-                            });
-                        } else {
-                            // 修改
-                            const info = this.list[this.updateIndex];
-                            this.createData.id = info.id;
-                            AdminUpdate(this.createData).then(res => {
-                                const updateItemIndex = this.list.findIndex(item => item.id === info.id);
-                                this.list[updateItemIndex].user_name = this.createData.user_name;
-                                this.list[updateItemIndex].real_name = this.createData.real_name;
-                                this.list[updateItemIndex].phone = this.createData.phone;
-                                this.list[updateItemIndex].status = this.createData.status;
-                                this.$Message.success('修改成功');
-                            });
-                        }
-                        this.showCreate = false;
-                        this.creating = false;
-                        this.$nextTick(() => {
-                            this.creating = true;
-                        });
-                    } else {
-                        this.creating = false;
-                        this.$nextTick(() => {
-                            this.creating = true;
+            handleDelete (index) {
+                this.updateIndex = index;
+                this.$Modal.confirm({
+                    title: '删除用户',
+                    content: '确定删除吗？',
+                    onOk: () => {
+                        AdminDelete({
+                            id: this.list[index].id
+                        }).then(res => {
+                            this.$Message.success('删除成功');
+                            this.current = 1;
+                            this.getData();
+                        }).finally(() => {
                         });
                     }
                 });
             },
-            // 编辑数据
-            handleUpdate (index) {
-                this.updateIndex = index;
-
-                const item = this.list[index];
-                this.createData = {
-                    user_name: item.user_name,
-                    real_name: item.real_name,
-                    phone: item.phone,
-                    status: item.status,
-                    statusFormat: item.status === 1
-                };
-                this.showCreate = true;
-            },
-            handleCancel () {
-                this.$refs.create.resetFields();
-            },
             handleChange (page) {
                 this.current = page;
-                this.getData();
-            },
-            handleSwitchChange (status) {
-                this.createData.status = status ? 1 : 0;
-                this.createData.statusFormat = status;
+                if (this.searchForm) {
+                    this.searchData(this.searchForm);
+                } else {
+                    this.getData();
+                }
             },
             handleShow (index) {
                 this.currentItem = this.list[index];

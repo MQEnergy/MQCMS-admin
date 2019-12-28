@@ -8,6 +8,14 @@ export function AdminIndex (params) {
     });
 }
 
+export function AdminShow (params) {
+    return request({
+        url: '/admin/show',
+        method: 'get',
+        params
+    });
+}
+
 export function AdminStore (data) {
     return request({
         url: '/admin/store',
