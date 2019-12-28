@@ -28,7 +28,6 @@ function errorLog (err) {
         util.log.error('>>>>>> Error >>>>>>');
         console.log(err);
     }
-    // 显示提示，可配置使用 iView 的 $Message 还是 $Notice 组件来显示
     if (Setting.errorModalType === 'Message') {
         Message.error({
             content: err.message,

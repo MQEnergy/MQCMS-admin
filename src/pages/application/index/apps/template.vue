@@ -1,6 +1,6 @@
 <template>
     <Row :gutter="24" class="ivu-mt">
-        <Col :xl="compact ? 8 : 4" :lg="compact ? 8 : 6" :md="12" :sm="12" :xs="24" v-for="(item, index) in appList" :key="index" class="ivu-mb">
+        <Col :xl="compact ? 12 : 6" :lg="compact ? 12 : 8" :md="12" :sm="12" :xs="24" v-for="(item, index) in appList" :key="index" class="ivu-mb">
             <Card :shadow="!bordered" :bordered="bordered" :dis-hover="bordered" :padding="0">
                 <div class="ivu-pt ivu-pl ivu-pr">
                     <div>
@@ -22,7 +22,7 @@
                         </Tooltip>
                     </Col>
                     <Col span="8" class="ivu-br">
-                        <Tooltip placement="top" content="卸载应用">
+                        <Tooltip placement="top" content="卸载组件">
                             <i-link>
                                 <Button icon="md-trash" type="text" size="large" />
                             </i-link>

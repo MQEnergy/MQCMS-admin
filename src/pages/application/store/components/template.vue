@@ -9,11 +9,11 @@
                             <strong>{{ item.title }}</strong>
                         </div>
                         <div class="search-search-projects-item-desc">{{ item.desc }}</div>
-                        <div class="search-search-projects-item-extra ivu-mt-8 ivu-pb-8">
+                        <div class="search-search-projects-item-extra ivu-mt-8">
                             <Time :time="item.time" type="date" />
                         </div>
                     </div>
-                    <Divider class="ivu-mb-8" />
+                    <Divider class="ivu-mb-8 ivu-mt-8" />
                     <Row class="ivu-text-center ivu-pb-8">
                         <Col span="12" class="ivu-br">
                             <Tooltip placement="top" content="访问官网">

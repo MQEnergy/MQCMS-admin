@@ -16,7 +16,7 @@ export default {
                 });
                 // 只在开发模式下打印 log
                 if (process.env.NODE_ENV === 'development') {
-                    util.log.capsule('iView Admin', 'ErrorHandler', 'error');
+                    util.log.capsule('MQCMS Admin', 'ErrorHandler', 'error');
                     util.log.error('>>>>>> 错误信息 >>>>>>');
                     console.log(info);
                     util.log.error('>>>>>> Vue 实例 >>>>>>');

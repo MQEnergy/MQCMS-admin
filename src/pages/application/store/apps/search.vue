@@ -13,8 +13,8 @@
                 <Divider dashed />
                 <FormItem label="排序：">
                     <RadioGroup v-model="order">
-                        <Radio label="new">最新创建</Radio>
-                        <Radio label="update">最后更新</Radio>
+                        <Radio label="new">最新</Radio>
+                        <Radio label="update">最热</Radio>
                     </RadioGroup>
                 </FormItem>
             </Form>
