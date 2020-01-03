@@ -19,8 +19,8 @@ import { getHeaderName, getMenuSider, getSiderSubmenu } from '@/libs/system';
 import iLink from '@/components/link';
 import PageHeader from '@/components/pageheader/index';
 
-import './styles/index.less';
-import './styles/default/mqcms.css';
+import './assets/styles/index.less';
+import './assets/styles/default/mqcms.css';
 
 if (window) window.$t = (key, value) => i18n.t(key, value);
 

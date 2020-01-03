@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="ivu-pt-16">
         <Row :gutter="24">
             <Col :xl="7" :lg="7" :md="24" :sm="24" :xs="24" class="ivu-mb">
                 <Card :bordered="false" dis-hover>
@@ -28,28 +28,28 @@
                         <Row type="flex" justify="center" align="middle" class="ivu-text-center">
                             <Col span="6">
                                 <Tooltip placement="top" content="微博">
-                                    <a href="https://weibo.com/336999699" target="_blank">
+                                    <a href="" target="_blank">
                                         <Avatar :src="icon.weibo" />
                                     </a>
                                 </Tooltip>
                             </Col>
                             <Col span="6">
                                 <Tooltip placement="top" content="知乎">
-                                    <a href="https://www.zhihu.com/people/aresn" target="_blank">
+                                    <a href="" target="_blank">
                                         <Avatar :src="icon.zhihu" />
                                     </a>
                                 </Tooltip>
                             </Col>
                             <Col span="6">
                                 <Tooltip placement="top" content="Facebok">
-                                    <a href="https://www.facebook.com/icarusion" target="_blank">
+                                    <a href="" target="_blank">
                                         <Avatar :src="icon.facebook" />
                                     </a>
                                 </Tooltip>
                             </Col>
                             <Col span="6">
                                 <Tooltip placement="top" content="Twitter">
-                                    <a href="https://twitter.com/iViewUI" target="_blank">
+                                    <a href="" target="_blank">
                                         <Avatar :src="icon.twitter" />
                                     </a>
                                 </Tooltip>
@@ -97,6 +97,7 @@
     import dataArticle from '../../search/search-article/data';
     import dataProject from '../../search/search-projects/data';
     import dataApp from '../../search/search-apps/data';
+    import avatarLogo from '@/assets/images/logo-small.png';
 
     export default {
         name: 'setting-user',
@@ -104,16 +105,14 @@
         data () {
             return {
                 user: {
-                    name: 'Aresn',
-                    avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
+                    name: 'MQCMS',
+                    avatar: avatarLogo,
                     sign: '满招损，谦受益。',
                     tags: [
                         '大神',
                         '最强王者',
                         '落地成盒',
-                        '很有想法',
-                        '懂点设计',
-                        '菜烧的不错'
+                        '很有想法'
                     ]
                 },
                 icon: {
