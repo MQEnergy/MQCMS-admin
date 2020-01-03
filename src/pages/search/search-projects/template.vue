@@ -12,7 +12,6 @@
                         <div class="search-search-projects-item-extra ivu-mt-8 ivu-pb-8">
                             <Time :time="item.time" type="date" />
                             <span class="ivu-fr">
-                                <AvatarList :list="avatarList" size="small" />
                             </span>
                         </div>
                     </div>

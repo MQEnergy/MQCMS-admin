@@ -8,6 +8,7 @@
                 :before-upload="handleBeforeUpload"
                 :headers="handleHeader"
                 :on-success="handleUploadSuccess"
+                :on-error="handleUploadError"
                 :action="uploadUrl">
                 <div style="padding: 20px 0">
                     <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
@@ -158,13 +159,17 @@
                 new Promise((resolve, reject) => {
                     this.$refs.upload.post(this.fileList[index].fileOrigin);
                     resolve();
-                }).then(() => {
-                    this.$Message.success('Success')
+                }).then(res => {
                     this.fileList[index].loadingStatus = false;
+                    this.fileList.splice(index, 1);
                 });
             },
             handleUploadSuccess (res, file, fileList) {
+                this.$Message.success('上传成功');
                 console.info('file: ', file, 'fileList: ', fileList)
+            },
+            handleUploadError (err, response, file) {
+                this.$Message.error(response.message);
             },
             handleSelectStoreImg (index) {
                 this.currentStoreImg = this.imgList[index].url;

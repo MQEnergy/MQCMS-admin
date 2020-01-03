@@ -33,7 +33,6 @@
                         <Input v-model="data.company" placeholder="请输入公司" />
                     </FormItem>
                     <FormItem label="居住地" prop="city">
-                        <City v-model="data.city" show-suffix />
                     </FormItem>
                     <FormItem>
                         <Button type="primary" @click="handleSubmit">更新基本信息</Button>
@@ -96,7 +95,7 @@
                     }
                 },
                 data: {
-                    avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
+                    avatar: require('@/assets/images/default/1.png'),
                     name: 'MQCMS',
                     mail: '12312321@qq.com',
                     desc: '',

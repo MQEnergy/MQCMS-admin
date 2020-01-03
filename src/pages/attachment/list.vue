@@ -1,181 +1,66 @@
 <template>
     <div class="i-table-no-border">
-        <Button type="primary" icon="md-add" @click="handleOpenCreate">新建</Button>
-        <Button icon="md-list" class="ivu-ml-8" v-show="selectedData.length">批量操作</Button>
-        <Dropdown class="ivu-ml-8" v-show="selectedData.length" @on-click="handleClickItem">
-            <Button>
-                更多操作
-                <Icon type="ios-arrow-down" />
-            </Button>
-            <DropdownMenu slot="list">
-                <DropdownItem name="delete">删除</DropdownItem>
-            </DropdownMenu>
-        </Dropdown>
-        <Alert show-icon class="ivu-mt">
-            <div v-font="14">
-                已选择 <strong v-color="'#2d8cf0'">{{ selectedData.length }}</strong> 项
-                <a class="ivu-ml" @click="handleClearSelect">清空</a>
+        <search-form ref="searchForm" @on-create-form="handleOpenUpdateCreate" @on-search="searchData" @on-reset="getData" />
+        <div class="ivu-mt">
+            <div style="position: relative;height: 100px;" v-if="loading">
+                <Spin fix size="large"></Spin>
             </div>
-        </Alert>
-        <Table
-            ref="table"
-            :columns="columns"
-            :data="limitData"
-            :loading="loading"
-            class="ivu-mt"
-            @on-sort-change="handleSortChange"
-            @on-filter-change="handleFilterChange"
-            @on-select="handleSelect"
-            @on-select-cancel="handleSelectCancel"
-            @on-select-all="handleSelectAll"
-            @on-select-all-cancel="handleSelectAllCancel"
-        >
-            <template slot-scope="{ row }" slot="id">
-                <div>{{ row.id }}</div>
-            </template>
-            <template slot-scope="{ row }" slot="tag_name">
-                <div>{{ row.tag_name }}</div>
-            </template>
-            <template slot-scope="{ row }" slot="is_hot">
-                <Tag v-if="row.is_hot === 0" color="primary">正常</Tag>
-                <Tag v-else color="error">热门</Tag>
-            </template>
-            <template slot-scope="{ row }" slot="tag_type">
-                <Tag v-if="row.tag_type === 1" color="primary">系统创建</Tag>
-                <Tag v-else color="success">用户创建</Tag>
-            </template>
-            <template slot-scope="{ row }" slot="status">
-                <Badge v-if="row.status === 0" status="default" text="禁用" />
-                <Badge v-else status="processing" text="正常" />
-            </template>
-            <template slot-scope="{ row }" slot="created_at">
-                {{ row.created_at }}
-            </template>
-            <template slot-scope="{ row, index }" slot="action">
-                <a @click="handleUpdate(index)">编辑</a>
-                <Divider type="vertical" />
-                <a @click="handleDelete(index)">删除</a>
-            </template>
-        </Table>
-        <div class="ivu-mt ivu-text-center">
-            <Page :total="total" show-total :current.sync="current" @on-change="handleChange"/>
+            <Row :gutter="24" class="ivu-mt">
+                <Col :xl="compact ? 8 : 4" :lg="compact ? 8 : 6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
+                    <i-link :to="item.attach_url" target="_blank">
+                        <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
+                            <img :src="'http://localhost/MQCMS/' + item.attach_url" class="search-search-projects-item-cover">
+                            <div class="ivu-p-8">
+                                <div>
+                                    <strong>{{ item.attach_name }}</strong>
+                                </div>
+                                <div class="search-search-projects-item-desc">{{ item.attach_origin_name }}</div>
+                                <div class="search-search-projects-item-extra">
+                                    <Time :time="item.created_at" type="datetime" />
+                                </div>
+                            </div>
+                            <Divider class="ivu-mb-8 ivu-mt-8" />
+                            <Row class="ivu-text-center ivu-pb-8">
+                                <Col span="12" class="ivu-br">
+                                    <Tooltip placement="top" content="删除图片">
+                                        <i-link>
+                                            <Button icon="md-trash" type="text" size="large" />
+                                        </i-link>
+                                    </Tooltip>
+                                </Col>
+                                <Col span="12">
+                                    <Tooltip placement="top" content="查看">
+                                        <i-link>
+                                            <Button icon="md-eye" type="text" size="large" />
+                                        </i-link>
+                                    </Tooltip>
+                                </Col>
+                            </Row>
+                        </Card>
+                    </i-link>
+                </Col>
+            </Row>
+            <div class="ivu-mt ivu-text-center" slot="footer">
+                <Page :total="total" show-total :current.sync="current" @on-change="handleChange"/>
+            </div>
         </div>
-
-        <Modal v-model="showCreate" title="新建标签" :loading="creating" @on-ok="handleCreate" @on-cancel="handleCancel">
-            <Form ref="create" :model="createData" :rules="createRules" label-position="left" :label-width="80">
-                <FormItem label="名称：" prop="tag_name">
-                    <Input v-model="createData.tag_name" placeholder="请输入名称" />
-                </FormItem>
-                <FormItem label="热门：" prop="is_hot">
-                    <Switch v-model="createData.hotFormat" @on-change="handleHotSwitchChange" />
-                </FormItem>
-                <FormItem label="状态：" prop="status">
-                    <Switch v-model="createData.statusFormat" @on-change="handleStatusSwitchChange" />
-                </FormItem>
-            </Form>
-        </Modal>
+        <!-- 创建编辑 -->
+        <create-form ref="createForm" @on-create-form="handleOpenUpdateCreate" @on-ok="getData" />
     </div>
 </template>
 <script>
-    import { AttachmentIndex, AttachmentStore, AttachmentUpdate, AttachmentDelete } from '@/api/attachment';
-
+    import { AttachmentIndex, AttachmentSearch, AttachmentUpdate } from '@/api/attachment';
+    import searchForm from './search-form';
+    import createForm from './create-form';
     export default {
+        components: {
+            searchForm,
+            createForm
+        },
         data () {
             return {
-                columns: [
-                    {
-                        type: 'selection',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
-                        title: 'ID',
-                        key: 'id',
-                        minWidth: 80
-                    },
-                    {
-                        title: '标签名称',
-                        key: 'tag_name',
-                        minWidth: 100
-                    },
-                    {
-                        title: '使用次数',
-                        key: 'used_count',
-                        minWidth: 100
-                    },
-                    {
-                        title: '是否热门',
-                        slot: 'is_hot',
-                        minWidth: 100,
-                        filters: [
-                            {
-                                label: '正常',
-                                value: 0
-                            },
-                            {
-                                label: '热门',
-                                value: 1
-                            }
-                        ],
-                        filterMultiple: true,
-                        filterRemote (value) {
-                            // 切换过滤条件时，将条件保存到本地
-                            this.filterHotType = value;
-                        }
-                    },
-                    {
-                        title: '标签类型',
-                        slot: 'tag_type',
-                        minWidth: 100,
-                        filters: [
-                            {
-                                label: '系统创建',
-                                value: 1
-                            },
-                            {
-                                label: '用户创建',
-                                value: 2
-                            }
-                        ],
-                        filterMultiple: true,
-                        filterRemote (value) {
-                            // 切换过滤条件时，将条件保存到本地
-                            this.filterAttachmentType = value;
-                        }
-                    },
-                    {
-                        title: '状态',
-                        slot: 'status',
-                        minWidth: 100,
-                        filters: [
-                            {
-                                label: '禁用',
-                                value: 0
-                            },
-                            {
-                                label: '正常',
-                                value: 1
-                            }
-                        ],
-                        filterMultiple: true,
-                        filterRemote (value) {
-                            // 切换过滤条件时，将条件保存到本地
-                            this.filterStatusType = value;
-                        }
-                    },
-                    {
-                        title: '添加时间',
-                        key: 'created_at',
-                        minWidth: 140,
-                        sortable: 'custom'
-                    },
-                    {
-                        title: '操作',
-                        slot: 'action',
-                        align: 'center',
-                        minWidth: 140
-                    }
-                ],
+                bordered: true,
+                compact: true,
                 loading: false,
                 list: [],
                 selectedData: [],
@@ -184,24 +69,8 @@
                 size: 10,
                 sortType: 'normal', // 当前排序类型，可选值为：normal（默认） || asc（升序）|| desc（降序）,
                 sortColumns: '',
-                filterStatusType: undefined,
-                filterHotType: undefined,
-                filterAttachmentType: undefined,
-                showCreate: false,
-                createData: {
-                    tag_name: '',
-                    is_hot: 1,
-                    hotFormat: true,
-                    status: 1,
-                    statusFormat: true
-                },
-                createRules: {
-                    tag_name: [
-                        { required: true, message: '请输入标签名称', trigger: 'blur' }
-                    ]
-                },
-                creating: true,
-                updateIndex: -1
+                filterType: undefined,
+                searchForm: {}
             }
         },
         computed: {
@@ -220,31 +89,21 @@
                         return a[sortColumns] < b[sortColumns] ? 1 : -1;
                     });
                 }
-                // 状态动态计算过滤类型
-                if (this.filterStatusType && this.filterStatusType.length) {
+
+                // 动态计算过滤类型
+                if (this.filterType && this.filterType.length) {
                     data = data.filter(item => {
-                        return this.filterStatusType.indexOf(item.status) >= 0;
+                        return this.filterType.indexOf(item.status) >= 0;
                     });
                 }
 
-                // 是否热门动态计算过滤类型
-                if (this.filterHotType && this.filterHotType.length) {
-                    data = data.filter(item => {
-                        return this.filterHotType.indexOf(item.is_hot) >= 0;
-                    });
-                }
-                // 标签类型动态计算过滤类型
-                if (this.filterAttachmentType && this.filterAttachmentType.length) {
-                    data = data.filter(item => {
-                        return this.filterAttachmentType.indexOf(item.tag_type) >= 0;
-                    });
-                }
                 // 判断是否有选中的数据
-                const selectedNames = this.selectedData.map(item => item.tag_name);
+                const selectedNames = this.selectedData.map(item => item.id);
                 data.map(item => {
-                    item._checked = selectedNames.indexOf(item.tag_name) >= 0;
+                    item._checked = selectedNames.indexOf(item.id) >= 0;
                     return item;
                 });
+
                 return data;
             },
             // 因为要动态计算总页数，所以还需要一个计算属性来返回最终给 Table 的 data
@@ -261,6 +120,21 @@
                 AttachmentIndex({
                     page: this.current,
                     limit: this.size
+                }).then(async res => {
+                    this.list = res.data;
+                    this.total = res.total;
+                }).finally(() => {
+                    this.loading = false;
+                });
+            },
+            searchData (searchForm) {
+                this.list = [];
+                this.searchForm = searchForm;
+                this.loading = true;
+                AttachmentSearch({
+                    page: this.current,
+                    limit: this.size,
+                    search: searchForm
                 }).then(async res => {
                     this.list = res.data;
                     this.total = res.total;
@@ -328,60 +202,9 @@
                     });
                 }
             },
-            handleOpenCreate () {
-                this.updateIndex = -1;
-                this.showCreate = true;
-            },
-            // 新增数据
-            handleCreate () {
-                this.$refs.create.validate((valid) => {
-                    if (valid) {
-                        if (this.updateIndex < 0) {
-                            // 新建
-                            AttachmentStore(
-                                this.createData
-                            ).then(async res => {
-                                this.getData();
-                                this.$Message.success('创建成功');
-                            });
-                        } else {
-                            // 修改
-                            const info = this.list[this.updateIndex];
-                            this.createData.id = info.id;
-                            AttachmentUpdate(this.createData).then(res => {
-                                const updateItemIndex = this.list.findIndex(item => item.id === info.id);
-                                this.list[updateItemIndex].tag_name = this.createData.tag_name;
-                                this.list[updateItemIndex].status = this.createData.status;
-                                this.list[updateItemIndex].is_hot = this.createData.is_hot;
-                                this.$Message.success('修改成功');
-                            });
-                        }
-                        this.showCreate = false;
-                        this.creating = false;
-                        this.$nextTick(() => {
-                            this.creating = true;
-                        });
-                    } else {
-                        this.creating = false;
-                        this.$nextTick(() => {
-                            this.creating = true;
-                        });
-                    }
-                });
-            },
-            // 编辑数据
-            handleUpdate (index) {
-                this.updateIndex = index;
-
-                const item = this.list[index];
-                this.createData = {
-                    tag_name: item.tag_name,
-                    is_hot: item.is_hot,
-                    status: item.status,
-                    statusFormat: item.status === 1,
-                    hotFormat: item.is_hot === 1
-                };
-                this.showCreate = true;
+            // 编辑创建数据
+            handleOpenUpdateCreate (status, updateIndex) {
+                this.$refs.createForm.handleShowUpdateCreate(status, updateIndex);
             },
             handleDelete (index) {
                 this.updateIndex = index;
@@ -389,7 +212,7 @@
                     title: '删除标签',
                     content: '确定删除该标签吗？',
                     onOk: () => {
-                        AttachmentDelete({
+                        AttachmentUpdate({
                             id: this.list[index].id
                         }).then(res => {
                             this.$Message.success('删除成功');
@@ -400,21 +223,40 @@
                     }
                 });
             },
-            handleCancel () {
-                this.$refs.create.resetFields();
-            },
             handleChange (page) {
                 this.current = page;
-                this.getData();
-            },
-            handleHotSwitchChange (isHot) {
-                this.createData.is_hot = isHot ? 1 : 0;
-                this.createData.hotFormat = isHot;
-            },
-            handleStatusSwitchChange (status) {
-                this.createData.status = status ? 1 : 0;
-                this.createData.statusFormat = status;
+                if (this.searchForm) {
+                    this.searchData(this.searchForm);
+                } else {
+                    this.getData();
+                }
             }
         }
     }
 </script>
+<style lang="less" scoped>
+    .search-search-projects{
+        &-item{
+            &-cover{
+                width: 100%;
+                height: 200px;
+                border-radius: 4px 4px 0 0;
+            }
+            &-desc{
+                display: -webkit-box;
+                height: 40px;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            &-extra{
+                span{
+                    display: inline-block;
+                    color: #808695;
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+</style>
+

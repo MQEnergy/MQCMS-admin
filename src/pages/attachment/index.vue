@@ -4,18 +4,18 @@
             <page-header title="附件列表" content="" hidden-breadcrumb />
         </div>
         <Card :bordered="false" dis-hover class="ivu-mt">
-            <search-form @on-submit="getData" @on-reset="getData" />
             <list ref="list" />
         </Card>
     </div>
 </template>
 <script>
-    import searchForm from './search-form';
     import list from './list';
 
     export default {
         name: 'attachment-index',
-        components: { searchForm, list },
+        components: {
+            list
+        },
         data () {
             return {
 

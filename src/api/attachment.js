@@ -8,6 +8,14 @@ export function AttachmentIndex (params) {
     });
 }
 
+export function AttachmentSearch (data) {
+    return request({
+        url: '/attachment/index',
+        method: 'post',
+        data
+    });
+}
+
 export function AttachmentStore (data) {
     return request({
         url: '/attachment/store',

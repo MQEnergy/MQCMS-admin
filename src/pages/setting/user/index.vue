@@ -10,20 +10,12 @@
                         </p>
                         <p>{{ user.sign }}</p>
                     </div>
-                    <DescriptionList :col="1" class="ivu-mt">
-                        <Description>
-                            <Icon type="ios-briefcase-outline" slot="term" class="ivu-mr-8" />
-                            <span>前端工程师</span>
-                        </Description>
-                        <Description>
-                            <Icon type="ios-git-network" slot="term" class="ivu-mr-8" />
-                            <span>中台-数据平台团队-前端创新团队-前端架构和平台工具团队</span>
-                        </Description>
-                        <Description>
-                            <Icon type="ios-pin-outline" slot="term" class="ivu-mr-8" />
-                            <span>北京市</span>
-                        </Description>
-                    </DescriptionList>
+                    <Icon type="ios-briefcase-outline" slot="term" class="ivu-mr-8" />
+                    <span>前端工程师</span><br>
+                    <Icon type="ios-git-network" slot="term" class="ivu-mr-8" />
+                    <span>中台-数据平台团队-前端创新团队-前端架构和平台工具团队</span>
+                    <Icon type="ios-pin-outline" slot="term" class="ivu-mr-8" />
+                    <span>北京市</span>
                     <div>
                         <Row type="flex" justify="center" align="middle" class="ivu-text-center">
                             <Col span="6">
@@ -57,7 +49,6 @@
                         </Row>
                     </div>
                     <Divider dashed />
-                    <DescriptionList title="标签" />
                     <div>
                         <Tag v-for="item in user.tags" :key="item">{{ item }}</Tag>
                         <Input v-model="newIcon" ref="tag" size="small" autofocus v-if="addIcon" v-width="100" @on-enter="handleAddNewTag" @on-blur="addIcon = false" />

@@ -1,70 +1,80 @@
 <template>
-    <Form ref="form" :model="data" :rules="rules" :label-width="labelWidth" :label-position="labelPosition">
-        <Row :gutter="24" type="flex" justify="end">
-            <Col v-bind="grid">
-                <FormItem label="规则名称：" prop="name" label-for="name">
-                    <Input v-model="data.name" placeholder="请输入" element-id="name" />
-                </FormItem>
-            </Col>
-            <Col v-bind="grid">
-                <FormItem label="使用状态：" prop="status1" label-for="status1">
-                    <Select v-model="data.status1" placeholder="请选择" element-id="status1">
-                        <Option :value="0">关闭</Option>
-                        <Option :value="1">运行中</Option>
-                    </Select>
-                </FormItem>
-            </Col>
-            <template v-if="collapse">
-                <Col v-bind="grid">
-                    <FormItem label="调用次数：" prop="count" label-for="count">
-                        <InputNumber v-width="'100%'" v-model="data.count" placeholder="请输入" element-id="count" />
+    <div>
+        <Form ref="searchForm" :model="searchForm" :label-width="labelWidth" :label-position="labelPosition">
+            <Row>
+                <Col v-bind="gridLeft">
+                    <FormItem :label-width="0">
+                        <Input v-model="searchForm.keyword" placeholder="请输入查询内容" style="float: left; max-width: 500px">
+                            <Select v-model="searchForm.type" slot="prepend" style="width: 100px">
+                                <Option value="id">ID</Option>
+                                <Option value="attach_name">附件名称</Option>
+                                <Option value="attach_origin_name">附件原名</Option>
+                            </Select>
+                            <Button type="primary" slot="append" @click="handleSubmit" icon="ios-search">查询</Button>
+                        </Input>
+                        <Button style="float: left" type="text" v-color="'#2d8cf0'" @click="collapse = !collapse">
+                            {{ collapse ? '普通搜索' : '高级搜索' }}<Icon :type="collapse ? 'ios-arrow-up' : 'ios-arrow-down'" />
+                        </Button>
                     </FormItem>
                 </Col>
-                <Col v-bind="grid">
-                    <FormItem label="更新日期：" prop="date" label-for="date">
-                        <DatePicker v-width="'100%'" v-model="data.date" placeholder="请选择" element-id="date" />
+                <Col v-bind="grid" class="ivu-text-right">
+                    <FormItem :label-width="0">
+                        <Button class="ivu-ml-8" type="primary" icon="md-add" @click="handleOpenCreate">新建</Button>
+                        <Button class="ivu-ml-8" type="primary" icon="md-download" @click="handleExport">导出</Button>
+                        <Dropdown class="ivu-ml-8">
+                            <Button>
+                                更多操作
+                                <Icon type="ios-arrow-down" />
+                            </Button>
+                            <DropdownMenu slot="list">
+                                <DropdownItem name="delete">批量删除</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
                     </FormItem>
                 </Col>
-                <Col v-bind="grid">
-                    <FormItem label="使用状态：" prop="status2" label-for="status2">
-                        <Select v-model="data.status2" placeholder="请选择" element-id="status2">
-                            <Option :value="0">关闭</Option>
-                            <Option :value="1">运行中</Option>
-                        </Select>
-                    </FormItem>
-                </Col>
-                <Col v-bind="grid">
-                    <FormItem label="使用状态：" prop="status3" label-for="status3">
-                        <Select v-model="data.status3" placeholder="请选择" element-id="status3">
-                            <Option :value="0">关闭</Option>
-                            <Option :value="1">运行中</Option>
-                        </Select>
-                    </FormItem>
-                </Col>
-            </template>
-            <Col v-bind="grid" class="ivu-text-right">
-                <FormItem>
-                    <Button type="primary" @click="handleSubmit">查询</Button>
-                    <Button class="ivu-ml-8" @click="handleReset">重置</Button>
-                    <a v-font="14" class="ivu-ml-8" @click="collapse = !collapse">
-                        <template v-if="!collapse">
-                            展开 <Icon type="ios-arrow-down" />
-                        </template>
-                        <template v-else>
-                            收起 <Icon type="ios-arrow-up" />
-                        </template>
-                    </a>
-                </FormItem>
-            </Col>
-        </Row>
-    </Form>
+            </Row>
+            <Row style="margin-top: 10px">
+                <template v-if="collapse">
+                    <Col v-bind="grid">
+                        <FormItem label="附件类型：" prop="attach_type" label-for="attach_type">
+                            <Select v-model="searchForm.attach_type" placeholder="请选择" element-id="attach_type">
+                                <Option :value="1">图片</Option>
+                                <Option :value="2">视频</Option>
+                                <Option :value="3">文件</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col v-bind="grid">
+                        <FormItem label="状态：" prop="status" label-for="status">
+                            <Select v-model="searchForm.status" placeholder="请选择" element-id="status">
+                                <Option :value="1">正常</Option>
+                                <Option :value="0">删除</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col v-bind="grid" class="ivu-text-right">
+                        <FormItem label="">
+                            <Button type="primary" @click="handleSubmit">查询</Button>
+                            <Button class="ivu-ml-8" @click="handleReset">重置</Button>
+                        </FormItem>
+                    </Col>
+                </template>
+            </Row>
+        </Form>
+    </div>
 </template>
 <script>
     import { mapState } from 'vuex';
-
     export default {
         data () {
             return {
+                gridLeft: {
+                    xl: 16,
+                    lg: 16,
+                    md: 12,
+                    sm: 24,
+                    xs: 24
+                },
                 grid: {
                     xl: 8,
                     lg: 8,
@@ -73,16 +83,11 @@
                     xs: 24
                 },
                 collapse: false,
-                data: {
-                    name: '',
-                    status1: '',
-                    count: null,
-                    date: '',
-                    status2: '',
-                    status3: ''
-                },
-                rules: {
-
+                searchForm: {
+                    type: 'id',
+                    keyword: '',
+                    status: '',
+                    attach_type: ''
                 }
             }
         },
@@ -99,12 +104,24 @@
         },
         methods: {
             handleSubmit () {
-                this.$emit('on-submit', this.data);
+                this.$emit('on-search', this.searchForm);
             },
             handleReset () {
-                this.$refs.form.resetFields();
+                this.$refs.searchForm.resetFields();
                 this.$emit('on-reset');
+            },
+            handleOpenCreate () {
+                this.$emit('on-create-form', true, -1);
+            },
+            handleExport () {
+                this.$emit('on-export');
             }
         }
     }
 </script>
+<style scoped>
+    .ivu-text-right {
+        float: right;
+    }
+</style>
+
