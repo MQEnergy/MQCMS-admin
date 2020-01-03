@@ -97,10 +97,10 @@
                 },
                 data: {
                     avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                    name: 'Aresn',
-                    mail: 'aresn@iview.design',
+                    name: 'MQCMS',
+                    mail: '12312321@qq.com',
                     desc: '',
-                    company: 'TalkingData',
+                    company: 'MQCMS',
                     city: '110000'
                 },
                 rules: {

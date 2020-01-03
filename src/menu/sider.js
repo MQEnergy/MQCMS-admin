@@ -8,6 +8,7 @@ import attachment from './modules/attachment';
 import comment from './modules/comment';
 import auth from './modules/auth';
 import application from './modules/application';
+import setting from './modules/setting';
 
 // 系统
 import log from './modules/log';
@@ -20,6 +21,7 @@ export default [
     post,
     auth,
     attachment,
+    setting,
     comment,
     log,
     application

@@ -3,7 +3,7 @@
         <div class="i-layout-page-header">
             <page-header title="用户信息" content="" hidden-breadcrumb />
         </div>
-        <Row :gutter="24">
+        <Row class="ivu-pt-16" :gutter="24">
             <Col :xl="6" :lg="6" :md="0" :sm="0" :xs="0">
                 <Card shadow title="个人设置" icon="md-options" :padding="0">
                     <CellGroup @on-click="handleChangeCell" class="ivu-pt-8 ivu-pb-8">

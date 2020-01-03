@@ -9,7 +9,7 @@ export default {
             },
             user: {
                 center: '个人中心',
-                setting: '设置',
+                setting: '个人设置',
                 logOut: '退出登录'
             },
             logout: {

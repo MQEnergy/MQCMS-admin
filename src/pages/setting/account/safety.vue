@@ -35,7 +35,7 @@
             <Row type="flex" justify="center" align="middle">
                 <Col span="22">
                     <h4>个性域名</h4>
-                    <p>已绑定域名：iview.design</p>
+                    <p>已绑定域名：MQCMS.net</p>
                 </Col>
                 <Col span="2" class="ivu-text-right">
                     <i-link link-color>修改</i-link>
