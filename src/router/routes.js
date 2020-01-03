@@ -16,7 +16,6 @@ import BasicLayout from '@/layouts/basic-layout';
 /**
  * 在主框架内显示
  */
-
 const frameIn = [
     {
         path: '/',
@@ -41,7 +40,6 @@ const frameIn = [
                 },
                 component: () => import('@/pages/system/log')
             },
-            // 刷新页面 必须保留
             {
                 path: 'refresh',
                 name: 'refresh',
@@ -53,7 +51,6 @@ const frameIn = [
                     render: h => h()
                 }
             },
-            // 页面重定向 必须保留
             {
                 path: 'redirect/:route*',
                 name: 'redirect',
@@ -84,9 +81,7 @@ const frameIn = [
 /**
  * 在主框架之外显示
  */
-
 const frameOut = [
-    // 登录
     {
         path: '/login',
         name: 'login',
@@ -95,7 +90,6 @@ const frameOut = [
         },
         component: () => import('@/pages/account/login')
     },
-    // 注册
     {
         path: '/register',
         name: 'register',
@@ -104,7 +98,6 @@ const frameOut = [
         },
         component: () => import('@/pages/account/register')
     },
-    // 注册结果
     {
         path: '/register/result',
         name: 'register-result',
@@ -119,7 +112,6 @@ const frameOut = [
 /**
  * 错误页面
  */
-
 const errorPage = [
     {
         path: '/403',
@@ -146,11 +138,7 @@ const errorPage = [
         component: () => import('@/pages/system/error/404')
     }
 ];
-
-// 导出需要显示菜单的
 export const frameInRoutes = frameIn;
-
-// 重新组织后导出
 export default [
     ...frameIn,
     ...frameOut,
