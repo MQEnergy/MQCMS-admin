@@ -1,6 +1,6 @@
 <template>
     <Row :gutter="24" class="ivu-mt">
-        <Col :xl="compact ? 8 : 4" :lg="compact ? 8 : 6" :md="12" :sm="12" :xs="24" v-for="(item, index) in projectList" :key="index" class="ivu-mb">
+        <Col :xxl="4" :xl="6" :lg="6" :md="12" :sm="12" :xs="24" v-for="(item, index) in projectList" :key="index" class="ivu-mb">
             <i-link :to="item.link" target="_blank">
                 <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
                     <img :src="item.cover" class="search-search-projects-item-cover">

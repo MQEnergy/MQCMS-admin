@@ -6,7 +6,7 @@
                 <Spin fix size="large"></Spin>
             </div>
             <Row :gutter="24" class="ivu-mt">
-                <Col :xl="compact ? 8 : 4" :lg="compact ? 8 : 6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
+                <Col :xxl="4" :xl="6" :lg="6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
                     <i-link :to="item.attach_url" target="_blank">
                         <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
                             <img :src="'http://localhost/MQCMS/' + item.attach_url" class="search-search-projects-item-cover">
@@ -60,13 +60,12 @@
         data () {
             return {
                 bordered: true,
-                compact: true,
                 loading: false,
                 list: [],
                 selectedData: [],
                 current: 1,
                 total: 0,
-                size: 10,
+                size: 12,
                 sortType: 'normal', // 当前排序类型，可选值为：normal（默认） || asc（升序）|| desc（降序）,
                 sortColumns: '',
                 filterType: undefined,
