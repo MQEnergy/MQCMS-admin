@@ -52,16 +52,13 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
     config => {
-        // 在请求发送之前做一些处理
         const token = util.cookies.get('token');
-        // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
         if (token) {
             config.headers['Authorization'] = 'Bearer ' + token;
         }
         return config;
     },
     error => {
-        // 发送失败
         console.log(error);
         Promise.reject(error);
     }
@@ -70,26 +67,18 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
     response => {
-        // dataAxios 是 axios 返回数据中的 data
         const dataAxios = response.data;
-        // 这个状态码是和后端约定的
         const { code } = dataAxios;
-        // 根据 code 进行判断
         if (code === undefined) {
-            // 如果没有 code 代表这不是项目后端开发的接口
             return dataAxios;
         } else {
-            // 有 code 代表这是一个后端接口 可以进行进一步的判断
             switch (code) {
             case 0:
-                // [ 示例 ] code === 0 代表没有错误
                 return dataAxios.data;
             case 'xxx':
-                // [ 示例 ] 其它和后台约定的 code
                 errorCreate(`[ code: xxx ] ${dataAxios.msg}: ${response.config.url}`);
                 break;
             default:
-                // 不是正确的 code
                 errorCreate(`${dataAxios.msg}: ${response.config.url}`);
                 break;
             }
@@ -117,14 +106,9 @@ service.interceptors.response.use(
                 title: '提示',
                 content: '登录状态已失效或您已在其他设备登录，请重新登录',
                 onOk: () => {
-                    // 删除cookie
                     util.cookies.remove('token');
                     util.cookies.remove('uuid');
-
-                    // 清空 vuex 用户信息
                     store.dispatch('admin/user/set', {}, { root: true });
-
-                    // 跳转路由
                     router.push({
                         name: 'login'
                     });
@@ -136,5 +120,4 @@ service.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
 export default service;

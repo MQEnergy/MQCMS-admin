@@ -1,8 +1,6 @@
 /**
  * @description 鉴权指令
- * 当传入的权限当前用户没有时，会移除该组件
- * 用例：<Tag v-auth="['admin']">text</Tag>
- * */
+ */
 import store from '@/store';
 import { includeArray } from '@/libs/system';
 
