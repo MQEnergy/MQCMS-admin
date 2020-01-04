@@ -7,37 +7,31 @@
             </div>
             <Row :gutter="24" class="ivu-mt">
                 <Col :xxl="4" :xl="6" :lg="6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
-                    <i-link :to="item.attach_url" target="_blank">
-                        <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
-                            <img :src="'http://localhost/MQCMS/' + item.attach_url" class="search-search-projects-item-cover">
-                            <div class="ivu-p-8">
-                                <div>
-                                    <strong>{{ item.attach_name }}</strong>
-                                </div>
-                                <div class="search-search-projects-item-desc">{{ item.attach_origin_name }}</div>
-                                <div class="search-search-projects-item-extra">
-                                    <Time :time="item.created_at" type="datetime" />
-                                </div>
+                    <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
+                        <img :src="item.attach_url" class="search-search-projects-item-cover">
+                        <div class="ivu-p-8">
+                            <div>
+                                <strong>{{ item.attach_name }}</strong>
                             </div>
-                            <Divider class="ivu-mb-8 ivu-mt-8" />
-                            <Row class="ivu-text-center ivu-pb-8">
-                                <Col span="12" class="ivu-br">
-                                    <Tooltip placement="top" content="删除图片">
-                                        <i-link>
-                                            <Button icon="md-trash" type="text" size="large" />
-                                        </i-link>
-                                    </Tooltip>
-                                </Col>
-                                <Col span="12">
-                                    <Tooltip placement="top" content="查看">
-                                        <i-link>
-                                            <Button icon="md-eye" type="text" size="large" />
-                                        </i-link>
-                                    </Tooltip>
-                                </Col>
-                            </Row>
-                        </Card>
-                    </i-link>
+                            <div class="search-search-projects-item-desc">{{ item.attach_origin_name }}</div>
+                            <div class="search-search-projects-item-extra">
+                                <Time :time="item.created_at" type="datetime" />
+                            </div>
+                        </div>
+                        <Divider class="ivu-mb-8 ivu-mt-8" />
+                        <Row class="ivu-text-center ivu-pb-8">
+                            <Col span="12" class="ivu-br">
+                                <Tooltip placement="top" content="删除图片">
+                                    <Button @click="handleRemove(index)" icon="md-trash" type="text" size="large" />
+                                </Tooltip>
+                            </Col>
+                            <Col span="12">
+                                <Tooltip placement="top" content="查看">
+                                    <Button icon="md-eye" type="text" size="large" />
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </Card>
                 </Col>
             </Row>
             <div class="ivu-mt ivu-text-center" slot="footer">
@@ -49,7 +43,7 @@
     </div>
 </template>
 <script>
-    import { AttachmentIndex, AttachmentSearch, AttachmentUpdate } from '@/api/attachment';
+    import { AttachmentIndex, AttachmentSearch, AttachmentDelete } from '@/api/attachment';
     import searchForm from './search-form';
     import createForm from './create-form';
     export default {
@@ -205,13 +199,13 @@
             handleOpenUpdateCreate (status, updateIndex) {
                 this.$refs.createForm.handleShowUpdateCreate(status, updateIndex);
             },
-            handleDelete (index) {
+            handleRemove (index) {
                 this.updateIndex = index;
                 this.$Modal.confirm({
-                    title: '删除标签',
-                    content: '确定删除该标签吗？',
+                    title: '删除提示',
+                    content: '确定删除该记录吗？',
                     onOk: () => {
-                        AttachmentUpdate({
+                        AttachmentDelete({
                             id: this.list[index].id
                         }).then(res => {
                             this.$Message.success('删除成功');
