@@ -1,7 +1,15 @@
 <template>
     <div class="i-table-no-border">
         <!-- 搜索 -->
-        <search-form ref="searchForm" @on-create-form="handleOpenUpdateCreate" @on-search="searchData" @on-reset="getData" />
+        <search-form
+            ref="searchForm"
+            :show-multi-del="true"
+            :base-search-form="baseSeachForm"
+            :advanced-search-form="advancedSearchForm"
+            @on-create-form="handleOpenUpdateCreate"
+            @on-search="searchData"
+            @on-reset="getData"
+        />
         <!-- 列表 -->
         <Alert show-icon>
             <div v-font="14">
@@ -62,8 +70,9 @@
 </template>
 <script>
     import { TagSearch, TagIndex, TagDelete } from '@/api/tag';
-    import searchForm from './search-form';
     import createForm from './create-form';
+    import searchForm from '@/components/search-form/index';
+    
     export default {
         components: {
             searchForm,
@@ -177,7 +186,103 @@
                 filterStatusType: undefined,
                 filterHotType: undefined,
                 filterTagType: undefined,
-                searchForm: {}
+                searchForm: {},
+                baseSeachForm: {
+                    type: 'id',
+                    keyword: '',
+                    options: [
+                        {
+                            name: '标签ID',
+                            value: 'id'
+                        },
+                        {
+                            name: '标签名称',
+                            value: 'tag_name'
+                        },
+                        {
+                            name: '标签标题(SEO)',
+                            value: 'tag_title'
+                        }
+                    ]
+                },
+                advancedSearchForm: [
+                    {
+                        label_name: '标签状态：',
+                        label_prop: 'status',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '0',
+                                name: '禁用'
+                            },
+                            {
+                                value: '1',
+                                name: '正常'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '是否热门：',
+                        label_prop: 'is_hot',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '0',
+                                name: '正常'
+                            },
+                            {
+                                value: '1',
+                                name: '热门'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '标签类型：',
+                        label_prop: 'tag_type',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '1',
+                                name: '系统创建'
+                            },
+                            {
+                                value: '2',
+                                name: '用户创建'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '标签名称：',
+                        label_prop: 'tag_name',
+                        ele_value: '',
+                        ele_type: 'input',
+                        options: []
+                    },
+                    {
+                        label_name: '创建日期：',
+                        label_prop: 'created_at',
+                        ele_value: '',
+                        ele_type: 'date',
+                        options: {}
+                    },
+                    {
+                        label_name: '创建日期：',
+                        label_prop: 'created_at',
+                        ele_value: '',
+                        ele_type: 'datetime',
+                        options: {}
+                    },
+                    {
+                        label_name: '日期范围：',
+                        label_prop: 'created_at',
+                        ele_value: '',
+                        ele_type: 'daterange',
+                        options: {}
+                    },
+                ]
             }
         },
         computed: {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Form ref="searchForm" :model="searchForm" :label-width="labelWidth" :label-position="labelPosition">
+        <Form ref="searchForm" :label-width="labelWidth" :label-position="labelPosition">
             <Row>
                 <Col v-bind="gridLeft">
                     <FormItem :label-width="0">
@@ -44,13 +44,13 @@
                                 <Input v-model="item.ele_value" placeholder="请输入关键词搜索" :element-id="item.label_prop"/>
                             </template>
                             <template v-else-if="item.ele_type === 'date'">
-                                <DatePicker :value="item.ele_value" type="date" format="yyyy-MM-dd HH:mm:ss" :options="item.options" placeholder="请选择日期"></DatePicker>
+                                <DatePicker style="width: 100%" :value="item.ele_value" type="date" :format="item.format ? item.format : 'yyyy-MM-dd'" :options="item.options" placeholder="请选择日期"></DatePicker>
                             </template>
                             <template v-else-if="item.ele_type === 'datetime'">
-                                <DatePicker :value="item.ele_value" type="datetime" format="yyyy-MM-dd HH:mm:ss" :options="item.options" placeholder="请选择日期"></DatePicker>
+                                <DatePicker style="width: 100%" :value="item.ele_value" type="datetime" :format="item.format ? item.format : 'yyyy-MM-dd HH:mm'" :options="item.options" placeholder="请选择日期"></DatePicker>
                             </template>
                             <template v-else-if="item.ele_type === 'daterange'">
-                                <DatePicker :value="item.ele_value" type="daterange" format="yyyy-MM-dd HH:mm:ss" :options="item.options" placeholder="请选择日期范围"></DatePicker>
+                                <DatePicker style="width: 100%" :value="item.ele_value" type="daterange" :format="item.format ? item.format : 'yyyy-MM-dd HH:mm'" :options="item.options" placeholder="请选择日期范围"></DatePicker>
                             </template>
                         </FormItem>
                     </Col>
@@ -67,8 +67,8 @@
 </template>
 <script>
     // baseSearchForm: {
-    //      keyword: '',
     //      type: '',
+    //      keyword: '',
     //      options: [
     //          {
     //              value: '',
@@ -87,7 +87,7 @@
     //                  value: '',
     //                  name: ''
     //              }
-    //          }
+    //          ]
     //      },
     // }
     import { mapState } from 'vuex';
@@ -110,9 +110,9 @@
                 default: false
             },
             baseSearchForm: {
-                type: Array,
+                type: Object,
                 default: () => {
-                    return []
+                    return {}
                 }
             },
             advancedSearchForm: {
@@ -155,10 +155,24 @@
         },
         methods: {
             handleSubmit () {
+                this.searchForm = {
+                    type: this.baseSearchForm.type,
+                    keyword: this.baseSearchForm.keyword,
+                };
+                if (this.advancedSearchForm.length > 0) {
+                    this.advancedSearchForm.forEach((item, value) => {
+                        this.searchForm[item.label_prop] = item.ele_value;
+                    })
+                }
                 this.$emit('on-search', this.searchForm);
             },
             handleReset () {
-                this.$refs.searchForm.resetFields();
+                this.baseSearchForm.keyword = '';
+                if (this.advancedSearchForm.length > 0) {
+                    this.advancedSearchForm.forEach((item, value) => {
+                        item.ele_value = '';
+                    })
+                }
                 this.$emit('on-reset');
             },
             handleOpenCreate () {
