@@ -71,7 +71,7 @@
 <script>
     import { TagSearch, TagIndex, TagDelete } from '@/api/tag';
     import createForm from './create-form';
-    import searchForm from '@/components/search-form/index';
+    import searchForm from '@/components/searchform/index';
     
     export default {
         components: {
@@ -207,22 +207,6 @@
                 },
                 advancedSearchForm: [
                     {
-                        label_name: '标签状态：',
-                        label_prop: 'status',
-                        ele_value: '',
-                        ele_type: 'select',
-                        options: [
-                            {
-                                value: '0',
-                                name: '禁用'
-                            },
-                            {
-                                value: '1',
-                                name: '正常'
-                            }
-                        ],
-                    },
-                    {
                         label_name: '是否热门：',
                         label_prop: 'is_hot',
                         ele_value: '',
@@ -262,25 +246,30 @@
                         options: []
                     },
                     {
-                        label_name: '创建日期：',
-                        label_prop: 'created_at',
-                        ele_value: '',
-                        ele_type: 'date',
-                        options: {}
-                    },
-                    {
-                        label_name: '创建日期：',
-                        label_prop: 'created_at',
-                        ele_value: '',
-                        ele_type: 'datetime',
-                        options: {}
-                    },
-                    {
-                        label_name: '日期范围：',
+                        label_name: '创建时间：',
                         label_prop: 'created_at',
                         ele_value: '',
                         ele_type: 'daterange',
                         options: {}
+                    },
+                    {
+                        label_name: '更新时间：',
+                        label_prop: 'updated_at',
+                        ele_value: '',
+                        ele_type: 'datetimerange',
+                        options: {}
+                    },
+                    {
+                        label_name: '标签状态：',
+                        label_prop: 'status',
+                        ele_value: '1',
+                        ele_type: 'switch',
+                        options: {
+                            open: '开',
+                            true_value: '1',
+                            close: '关',
+                            false_value: '0'
+                        }
                     },
                 ]
             }
