@@ -238,6 +238,9 @@
                         }
                     })
                 }
+                this.searchForm = {
+                    time: {}
+                };
                 this.$emit('on-reset');
             },
             handleRefresh() {

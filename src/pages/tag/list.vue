@@ -3,13 +3,14 @@
         <!-- 搜索 -->
         <search-form
             ref="searchForm"
-            :show-multi-del="true"
+            :show-multi-del="false"
             :base-search-form="baseSeachForm"
             :advanced-search-form="advancedSearchForm"
             @on-create-form="handleOpenUpdateCreate"
             @on-search="searchData"
             @on-reset="getData"
             @on-multi-del="handleMultiDel"
+            @on-export="handleExport"
         />
         <!-- 列表 -->
         <Alert show-icon>
@@ -438,6 +439,9 @@
                 } else {
                     this.getData();
                 }
+            },
+            handleExport () {
+                this.$Message.success('导出成功');
             }
         }
     }
