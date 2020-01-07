@@ -31,7 +31,7 @@
                         <Button v-if="showExport" class="ivu-ml-8" type="primary" icon="md-download"
                                 @click="handleExport">导出
                         </Button>
-                        <Dropdown v-if="showMultiDel" class="ivu-ml-8">
+                        <Dropdown v-if="showMultiDel" class="ivu-ml-8" @on-click="handleMultiClick">
                             <Button>
                                 更多操作
                                 <Icon type="ios-arrow-down" />
@@ -187,7 +187,8 @@
                 searchForm: {
                     time: {}
                 },
-                timeArr: []
+                timeArr: [],
+                selectedKeys: []
             }
         },
         computed: {
@@ -247,6 +248,11 @@
             },
             handleExport() {
                 this.$emit('on-export');
+            },
+            handleMultiClick (value) {
+                if (value === 'delete') {
+                    this.$emit('on-multi-del');
+                }
             },
             handleSwitchChange(value) {
             },

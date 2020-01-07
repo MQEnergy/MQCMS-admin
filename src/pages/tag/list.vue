@@ -9,6 +9,7 @@
             @on-create-form="handleOpenUpdateCreate"
             @on-search="searchData"
             @on-reset="getData"
+            @on-multi-del="handleMultiDel"
         />
         <!-- 列表 -->
         <Alert show-icon>
@@ -394,23 +395,6 @@
             handleClearSelect () {
                 this.selectedData = [];
             },
-            handleClickItem (name) {
-                if (name === 'delete') {
-                    this.$Modal.confirm({
-                        title: '删除标签',
-                        content: '确定批量删除标签吗？',
-                        onOk: () => {
-                            this.selectedData.forEach(item => {
-                                const index = this.list.findIndex(i => i.id === item.id);
-                                if (index >= 0) {
-                                    this.list.splice(index, 1);
-                                }
-                            });
-                            this.selectedData = [];
-                        }
-                    });
-                }
-            },
             // 编辑创建数据
             handleOpenUpdateCreate (status, updateIndex) {
                 this.$refs.createForm.handleShowUpdateCreate(status, updateIndex);
@@ -429,6 +413,21 @@
                             this.getData();
                         }).finally(() => {
                         });
+                    }
+                });
+            },
+            handleMultiDel () {
+                console.log(this.selectedData)
+                if (this.selectedData.length === 0) {
+                    this.$Message.error('请选择至少一个元素');
+                    return false;
+                }
+                const ids = this.selectedData.map(item => item.id);
+                this.$Modal.confirm({
+                    title: '删除提示',
+                    content: '确定要批量删除吗？',
+                    onOk: () => {
+                        this.$Message.success('删除成功: ' + ids);
                     }
                 });
             },
