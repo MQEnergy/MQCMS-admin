@@ -124,7 +124,7 @@
     import mixin from './mixins';
     
     export default {
-        name: '',
+        name: 'search-form',
         mixins: [ mixin ],
         props: {
             showRefresh: {
