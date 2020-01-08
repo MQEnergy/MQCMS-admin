@@ -33,9 +33,9 @@
             @on-select-all-cancel="handleSelectAllCancel"
         >
             <template slot-scope="{ row }" slot="label_type">
-                <Tag v-if="row.label_type == 1" color="default">单图</Tag>
-                <Tag v-else-if="row.label_type == 2" color="default">视频</Tag>
-                <Tag v-else-if="row.label_type == 3" color="default">多类别</Tag>
+                <Tag v-if="row.label_type == 1" color="success">单图</Tag>
+                <Tag v-else-if="row.label_type == 2" color="primary">视频</Tag>
+                <Tag v-else-if="row.label_type == 3" color="error">其他</Tag>
             </template>
             <template slot-scope="{ row }" slot="is_good">
                 <Tag v-if="row.is_good == 1" color="success">商品</Tag>
@@ -170,58 +170,87 @@
                     keyword: '',
                     options: [
                         {
-                            name: '标签ID',
+                            name: 'ID',
                             value: 'id'
                         },
                         {
-                            name: '标签名称',
-                            value: 'tag_name'
+                            name: '发布者',
+                            value: 'user_name'
                         },
                         {
-                            name: '标签标题(SEO)',
-                            value: 'tag_title'
+                            name: 'uuid',
+                            value: 'uuid'
                         }
                     ]
                 },
                 advancedSearchForm: [
                     {
-                        label_name: '是否热门：',
-                        label_prop: 'is_hot',
-                        ele_value: '',
-                        ele_type: 'select',
-                        options: [
-                            {
-                                value: '0',
-                                name: '正常'
-                            },
-                            {
-                                value: '1',
-                                name: '热门'
-                            }
-                        ],
-                    },
-                    {
-                        label_name: '标签类型：',
-                        label_prop: 'tag_type',
+                        label_name: '资源类型：',
+                        label_prop: 'label_type',
                         ele_value: '',
                         ele_type: 'select',
                         options: [
                             {
                                 value: '1',
-                                name: '系统创建'
+                                name: '单图'
                             },
                             {
                                 value: '2',
-                                name: '用户创建'
+                                name: '视频'
+                            },
+                            {
+                                value: '3',
+                                name: '其他'
                             }
                         ],
                     },
                     {
-                        label_name: '标签名称：',
-                        label_prop: 'tag_name',
+                        label_name: '是否商品：',
+                        label_prop: 'is_good',
                         ele_value: '',
-                        ele_type: 'input',
-                        options: []
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '1',
+                                name: '是'
+                            },
+                            {
+                                value: '0',
+                                name: '否'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '是否发布：',
+                        label_prop: 'is_publish',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '1',
+                                name: '是'
+                            },
+                            {
+                                value: '0',
+                                name: '否'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '是否推荐：',
+                        label_prop: 'is_recommend',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '1',
+                                name: '是'
+                            },
+                            {
+                                value: '0',
+                                name: '否'
+                            }
+                        ],
                     },
                     {
                         label_name: '创建时间：',
@@ -234,21 +263,9 @@
                         label_name: '更新时间：',
                         label_prop: 'updated_at',
                         ele_value: '',
-                        ele_type: 'datetimerange',
+                        ele_type: 'daterange',
                         options: {}
-                    },
-                    {
-                        label_name: '标签状态：',
-                        label_prop: 'status',
-                        ele_value: '1',
-                        ele_type: 'switch',
-                        options: {
-                            open: '开',
-                            true_value: '1',
-                            close: '关',
-                            false_value: '0'
-                        }
-                    },
+                    }
                 ]
             }
         },
