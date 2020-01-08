@@ -341,6 +341,13 @@
                 const index = this.selectedData.findIndex(item => item.id === row.id);
                 this.selectedData.splice(index, 1);
             },
+            handleSelectAll (selection) {
+                selection.forEach(item => {
+                    if (this.selectedData.findIndex(i => i.id === item.id) < 0) {
+                        this.selectedData.push(item);
+                    }
+                });
+            },
             // 取消当前页全选时，将当前页的数据（即 dataWithPage）从已选项中删除
             handleSelectAllCancel () {
                 const selection = this.dataWithPage;
