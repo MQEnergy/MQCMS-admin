@@ -60,7 +60,7 @@
             <template slot-scope="{ row, index }" slot="action">
                 <a @click="handleOpenUpdateCreate(true, row.id)">编辑</a>
                 <Divider type="vertical" />
-                <a @click="handleDelete(index)">删除</a>
+                <a v-color="'#ed4014'" @click="handleDelete(index)">删除</a>
             </template>
         </Table>
         <div class="ivu-mt ivu-text-center">
@@ -72,13 +72,13 @@
 </template>
 <script>
     import { TagSearch, TagIndex, TagDelete } from '@/api/tag';
-    import createForm from './create-form';
-    import searchForm from '@/components/searchform/index';
+    import CreateForm from './create-form';
+    import SearchForm from '@/components/searchform/index';
     
     export default {
         components: {
-            searchForm,
-            createForm
+            SearchForm,
+            CreateForm
         },
         data () {
             return {
@@ -403,8 +403,8 @@
             handleDelete (index) {
                 this.updateIndex = index;
                 this.$Modal.confirm({
-                    title: '删除标签',
-                    content: '确定删除该标签吗？',
+                    title: '删除提示',
+                    content: '确定删除该条记录吗？',
                     onOk: () => {
                         TagDelete({
                             id: this.list[index].id

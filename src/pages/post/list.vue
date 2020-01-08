@@ -1,17 +1,19 @@
 <template>
     <div class="i-table-no-border">
-        <Button type="primary" icon="md-add" @click="handleOpenCreate">新建</Button>
-        <Button icon="md-list" class="ivu-ml-8" v-show="selectedData.length">批量操作</Button>
-        <Dropdown class="ivu-ml-8" v-show="selectedData.length" @on-click="handleClickItem">
-            <Button>
-                更多操作
-                <Icon type="ios-arrow-down" />
-            </Button>
-            <DropdownMenu slot="list">
-                <DropdownItem name="delete">删除</DropdownItem>
-            </DropdownMenu>
-        </Dropdown>
-        <Alert show-icon class="ivu-mt">
+        <!-- 搜索 -->
+        <search-form
+            ref="searchForm"
+            :show-multi-del="false"
+            :base-search-form="baseSeachForm"
+            :advanced-search-form="advancedSearchForm"
+            @on-create-form="handleOpenUpdateCreate"
+            @on-search="searchData"
+            @on-reset="getData"
+            @on-multi-del="handleMultiDel"
+            @on-export="handleExport"
+        />
+        <!-- 列表 -->
+        <Alert show-icon>
             <div v-font="14">
                 已选择 <strong v-color="'#2d8cf0'">{{ selectedData.length }}</strong> 项
                 <a class="ivu-ml" @click="handleClearSelect">清空</a>
@@ -31,54 +33,51 @@
             @on-select-all-cancel="handleSelectAllCancel"
         >
             <template slot-scope="{ row }" slot="label_type">
-                <Tag v-if="row.label_type === '1'" color="default">单图</Tag>
-                <Tag v-else-if="row.label_type === '2'" color="default">视频</Tag>
-                <Tag v-else-if="row.label_type === '3'" color="default">多类别</Tag>
+                <Tag v-if="row.label_type == 1" color="default">单图</Tag>
+                <Tag v-else-if="row.label_type == 2" color="default">视频</Tag>
+                <Tag v-else-if="row.label_type == 3" color="default">多类别</Tag>
             </template>
             <template slot-scope="{ row }" slot="is_good">
-                <Tag v-if="row.is_good === '1'" color="success">商品</Tag>
-                <Tag v-else-if="row.is_good === '0'" color="default">正常</Tag>
+                <Tag v-if="row.is_good == 1" color="success">商品</Tag>
+                <Tag v-else-if="row.is_good == 0" color="default">正常</Tag>
             </template>
             <template slot-scope="{ row }" slot="is_publish">
-                <Tag v-if="row.is_publish === '1'" color="success">已发布</Tag>
-                <Tag v-else-if="row.is_publish === '0'" color="default">草稿</Tag>
+                <Tag v-if="row.is_publish == 1" color="success">已发布</Tag>
+                <Tag v-else-if="row.is_publish == 0" color="default">草稿</Tag>
             </template>
             <template slot-scope="{ row }" slot="is_recommend">
-                <Tag v-if="row.is_recommend === '1'" color="error">推荐</Tag>
-                <Tag v-else-if="row.is_recommend === '0'" color="default">正常</Tag>
+                <Tag v-if="row.is_recommend == 1" color="error">推荐</Tag>
+                <Tag v-else-if="row.is_recommend == 0" color="default">正常</Tag>
             </template>
             <template slot-scope="{ row }" slot="status">
-                <Badge v-if="row.status === '0'" status="default" text="禁用" />
-                <Badge v-if="row.status === '1'" status="processing" text="正常" />
+                <Badge v-if="row.status == 0" status="default" text="禁用" />
+                <Badge v-if="row.status == 1" status="processing" text="正常" />
             </template>
             <template slot-scope="{ row }" slot="created_at">
                 {{ row.created_at }}
             </template>
             <template slot-scope="{ row, index }" slot="action">
-                <a @click="handleUpdate(index)">编辑</a>
+                <a @click="handleOpenUpdateCreate(true, row.id)">编辑</a>
+                <Divider type="vertical" />
+                <a v-color="'#ed4014'" @click="handleDelete(index)">删除</a>
             </template>
         </Table>
         <div class="ivu-mt ivu-text-center">
             <Page :total="total" show-total :current.sync="current" @on-change="handleChange"/>
         </div>
         <!-- 详情 编辑 新增 -->
-        <Drawer
-            title="发布编辑帖子"
-            v-model="createSeen"
-            width="720"
-            :mask-closable="false"
-            :styles="styles">
-            <detail :info="currentItem" @on-cancel="handleDetailSeen" @on-ok="getData" />
-        </Drawer>
+        <create-form ref="createForm" @on-create-form="handleOpenUpdateCreate" @on-ok="getData" />
     </div>
 </template>
 <script>
-    import { PostIndex } from '@/api/post';
-    import Detail from './detail';
-
+    import { PostSearch, PostIndex, PostDelete } from '@/api/post';
+    import CreateForm from './create-form';
+    import SearchForm from '@/components/searchform/index';
+    
     export default {
         components: {
-            Detail
+            CreateForm,
+            SearchForm
         },
         data () {
             return {
@@ -165,13 +164,92 @@
                 sortType: 'normal', // 当前排序类型，可选值为：normal（默认） || asc（升序）|| desc（降序）,
                 sortColumns: '',
                 filterType: undefined,
-                createSeen: false,
-                styles: {
-                    height: 'calc(100% - 55px)',
-                    overflow: 'auto',
-                    paddingBottom: '53px',
-                    position: 'static'
-                }
+                searchForm: {},
+                baseSeachForm: {
+                    type: 'id',
+                    keyword: '',
+                    options: [
+                        {
+                            name: '标签ID',
+                            value: 'id'
+                        },
+                        {
+                            name: '标签名称',
+                            value: 'tag_name'
+                        },
+                        {
+                            name: '标签标题(SEO)',
+                            value: 'tag_title'
+                        }
+                    ]
+                },
+                advancedSearchForm: [
+                    {
+                        label_name: '是否热门：',
+                        label_prop: 'is_hot',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '0',
+                                name: '正常'
+                            },
+                            {
+                                value: '1',
+                                name: '热门'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '标签类型：',
+                        label_prop: 'tag_type',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '1',
+                                name: '系统创建'
+                            },
+                            {
+                                value: '2',
+                                name: '用户创建'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '标签名称：',
+                        label_prop: 'tag_name',
+                        ele_value: '',
+                        ele_type: 'input',
+                        options: []
+                    },
+                    {
+                        label_name: '创建时间：',
+                        label_prop: 'created_at',
+                        ele_value: '',
+                        ele_type: 'daterange',
+                        options: {}
+                    },
+                    {
+                        label_name: '更新时间：',
+                        label_prop: 'updated_at',
+                        ele_value: '',
+                        ele_type: 'datetimerange',
+                        options: {}
+                    },
+                    {
+                        label_name: '标签状态：',
+                        label_prop: 'status',
+                        ele_value: '1',
+                        ele_type: 'switch',
+                        options: {
+                            open: '开',
+                            true_value: '1',
+                            close: '关',
+                            false_value: '0'
+                        }
+                    },
+                ]
             }
         },
         computed: {
@@ -199,9 +277,9 @@
                 }
 
                 // 判断是否有选中的数据
-                const selectedNames = this.selectedData.map(item => item.user_name);
+                const selectedNames = this.selectedData.map(item => item.id);
                 data.map(item => {
-                    item._checked = selectedNames.indexOf(item.user_name) >= 0;
+                    item._checked = selectedNames.indexOf(item.id) >= 0;
                     return item;
                 });
 
@@ -217,20 +295,26 @@
         },
         methods: {
             getData () {
-                this.handleDetailSeen();
                 this.loading = true;
                 PostIndex({
                     page: this.current,
                     limit: this.size
                 }).then(async res => {
                     this.list = res.data;
-                    this.list.forEach((val, key) => {
-                       val.label_type  = val.label_type ? val.label_type.toString() : '1';
-                       val.is_good  = val.is_good ? val.is_good.toString() : '0';
-                       val.is_publish  = val.is_publish ? val.is_publish.toString() : '0';
-                       val.is_recommend  = val.is_recommend ? val.is_recommend.toString() : '0';
-                       val.status  = val.status ? val.status.toString() : '1';
-                    });
+                    this.total = res.total;
+                }).finally(() => {
+                    this.loading = false;
+                });
+            },
+            searchData (searchForm) {
+                this.searchForm = searchForm;
+                this.loading = true;
+                PostSearch({
+                    page: this.current,
+                    limit: this.size,
+                    search: searchForm
+                }).then(async res => {
+                    this.list = res.data;
                     this.total = res.total;
                 }).finally(() => {
                     this.loading = false;
@@ -257,14 +341,6 @@
                 const index = this.selectedData.findIndex(item => item.id === row.id);
                 this.selectedData.splice(index, 1);
             },
-            // 当前页全选时，判断已选数据是否存在，不存在则添加
-            handleSelectAll (selection) {
-                selection.forEach(item => {
-                    if (this.selectedData.findIndex(i => i.id === item.id) < 0) {
-                        this.selectedData.push(item);
-                    }
-                });
-            },
             // 取消当前页全选时，将当前页的数据（即 dataWithPage）从已选项中删除
             handleSelectAllCancel () {
                 const selection = this.dataWithPage;
@@ -279,35 +355,52 @@
             handleClearSelect () {
                 this.selectedData = [];
             },
-            handleClickItem (name) {
-                if (name === 'delete') {
-                    this.selectedData.forEach(item => {
-                        const index = this.list.findIndex(i => i.id === item.id);
-                        if (index >= 0) {
-                            this.list.splice(index, 1);
-                        }
-                    });
-                    this.selectedData = [];
+            // 编辑创建数据
+            handleOpenUpdateCreate (status, updateIndex) {
+                this.$refs.createForm.handleShowUpdateCreate(status, updateIndex);
+            },
+            handleDelete (index) {
+                this.updateIndex = index;
+                this.$Modal.confirm({
+                    title: '删除提示',
+                    content: '确定删除该条记录吗？',
+                    onOk: () => {
+                        PostDelete({
+                            id: this.list[index].id
+                        }).then(res => {
+                            this.$Message.success('删除成功');
+                            this.current = 1;
+                            this.getData();
+                        }).finally(() => {
+                        });
+                    }
+                });
+            },
+            handleMultiDel () {
+                console.log(this.selectedData)
+                if (this.selectedData.length === 0) {
+                    this.$Message.error('请选择至少一个元素');
+                    return false;
                 }
-            },
-            handleOpenCreate () {
-                this.currentItem = {};
-                this.createSeen = true;
-            },
-            handleUpdate (index) {
-                this.currentItem  = this.list[index];
-                this.createSeen = true;
+                const ids = this.selectedData.map(item => item.id);
+                this.$Modal.confirm({
+                    title: '删除提示',
+                    content: '确定要批量删除吗？',
+                    onOk: () => {
+                        this.$Message.success('删除成功: ' + ids);
+                    }
+                });
             },
             handleChange (page) {
                 this.current = page;
-                this.getData();
+                if (this.searchForm) {
+                    this.searchData(this.searchForm);
+                } else {
+                    this.getData();
+                }
             },
-            handleSwitchChange (status) {
-                this.createData.status = status ? 1 : 0;
-                this.createData.statusFormat = status;
-            },
-            handleDetailSeen () {
-                this.createSeen = false;
+            handleExport () {
+                this.$Message.success('导出成功');
             }
         }
     }

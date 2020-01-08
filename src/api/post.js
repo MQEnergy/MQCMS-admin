@@ -8,6 +8,14 @@ export function PostIndex (params) {
     });
 }
 
+export function PostSearch (data) {
+    return request({
+        url: '/post/index',
+        method: 'post',
+        data
+    });
+}
+
 export function PostStore (data) {
     return request({
         url: '/post/store',
@@ -16,11 +24,11 @@ export function PostStore (data) {
     });
 }
 
-export function PostShow (data) {
+export function PostShow (params) {
     return request({
         url: '/post/show',
         method: 'get',
-        data
+        params
     });
 }
 
