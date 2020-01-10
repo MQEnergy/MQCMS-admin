@@ -1,6 +1,16 @@
 <template>
     <div class="i-table-no-border">
-        <search-form ref="searchForm" @on-create-form="handleOpenUpdateCreate" @on-search="searchData" @on-reset="getData" />
+        <!-- 搜索 -->
+        <search-form
+            ref="searchForm"
+            :show-multi-del="false"
+            :show-export="false"
+            :base-search-form="baseSeachForm"
+            :advanced-search-form="advancedSearchForm"
+            @on-create-form="handleOpenUpdateCreate"
+            @on-search="searchData"
+            @on-reset="getData"
+        />
         <Table
             ref="table"
             :columns="columns"
@@ -31,7 +41,7 @@
 </template>
 <script>
     import { UserIndex, UserSearch, UserUpdate } from '@/api/user';
-    import searchForm from './search-form';
+    import searchForm from '@/components/searchform';
     import createForm from './create-form';
     export default {
         components: {
@@ -108,7 +118,54 @@
                 sortType: 'normal', // 当前排序类型，可选值为：normal（默认） || asc（升序）|| desc（降序）,
                 sortColumns: '',
                 filterType: undefined,
-                searchForm: {}
+                searchForm: {},
+                baseSeachForm: {
+                    type: 'id',
+                    keyword: '',
+                    options: [
+                        {
+                            name: 'ID',
+                            value: 'id'
+                        },
+                        {
+                            name: '用户名',
+                            value: 'user_name'
+                        },
+                        {
+                            name: '姓名',
+                            value: 'real_name'
+                        },
+                        {
+                            name: '手机号',
+                            value: 'phone'
+                        }
+                    ]
+                },
+                advancedSearchForm: [
+                    {
+                        label_name: '用户状态：',
+                        label_prop: 'status',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '0',
+                                name: '禁用'
+                            },
+                            {
+                                value: '1',
+                                name: '正常'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '创建时间：',
+                        label_prop: 'created_at',
+                        ele_value: '',
+                        ele_type: 'daterange',
+                        options: [],
+                    }
+                ]
             }
         },
         computed: {

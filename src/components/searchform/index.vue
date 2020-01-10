@@ -4,14 +4,16 @@
             <Row class="search-form-base-row">
                 <Col v-bind="gridLeft">
                     <FormItem :label-width="0">
-                        <Input v-model="baseSearchForm.keyword" clearable placeholder="请输入查询内容"
+                        <Input v-model="baseSearchForm.keyword" @on-search="handleSubmit(1)" clearable search enter-button="搜索" placeholder="请输入查询内容"
                                style="float: left; max-width: 450px">
                             <Select v-model="baseSearchForm.type" slot="prepend" style="width: 100px">
-                                <Option v-for="(item, index) in baseSearchForm.options" :key="index"
-                                        :value="item.value">{{ item.name }}
+                                <Option
+                                    v-for="(item, index) in baseSearchForm.options"
+                                    :key="index"
+                                    :value="item.value">
+                                    {{ item.name }}
                                 </Option>
                             </Select>
-                            <Button type="primary" slot="append" @click="handleSubmit" icon="ios-search">查询</Button>
                         </Input>
                         <Button v-if="showAdvanced" style="float: left" type="text" v-color="'#2d8cf0'"
                                 @click="collapse = !collapse">
@@ -86,7 +88,7 @@
                     </Col>
                     <Col v-bind="grid" class="ivu-text-right">
                         <FormItem label="">
-                            <Button type="primary" @click="handleSubmit">查询</Button>
+                            <Button type="primary" @click="handleSubmit(2)">高级搜索</Button>
                             <Button class="ivu-ml-8" @click="handleReset">重置</Button>
                         </FormItem>
                     </Col>
@@ -96,30 +98,6 @@
     </div>
 </template>
 <script>
-    // baseSearchForm: {
-    //      type: '',
-    //      keyword: '',
-    //      options: [
-    //          {
-    //              value: '',
-    //              name: ''
-    //          }
-    //      ]
-    // }
-    // advancedSearchForm: [
-    //      {
-    //          label_name: '状态：',
-    //          label_prop: 'label_name',
-    //          ele_value: '',
-    //          ele_type: 'select',
-    //          options: [
-    //              {
-    //                  value: '',
-    //                  name: ''
-    //              }
-    //          ]
-    //      },
-    // }
     import {mapState} from 'vuex';
     import mixin from './mixins';
     
@@ -203,7 +181,10 @@
             }
         },
         methods: {
-            handleSubmit() {
+            handleSubmit(type) {
+                if (type === 1 && this.baseSearchForm.keyword === '') {
+                    return false;
+                }
                 this.searchForm = {
                     type: this.baseSearchForm.type,
                     keyword: this.baseSearchForm.keyword
@@ -226,7 +207,6 @@
                         }
                     })
                 }
-                console.log(this.searchForm)
                 this.$emit('on-search', this.searchForm);
             },
             handleReset() {
@@ -244,6 +224,28 @@
                 this.$emit('on-reset');
             },
             handleRefresh() {
+                this.searchForm = {
+                    type: this.baseSearchForm.type,
+                    keyword: this.baseSearchForm.keyword
+                };
+                if (this.advancedSearchForm.length > 0) {
+                    const timeArr = {};
+                    this.advancedSearchForm.forEach((item, index) => {
+                        switch (item.ele_type) {
+                            case 'date':
+                            case 'datetime':
+                            case 'daterange':
+                            case 'datetimerange':
+                                timeArr[item.label_prop] = item.ele_value;
+                                this.searchForm.time = timeArr;
+                                break;
+                            default:
+                                this.searchForm[item.label_prop] = item.ele_value;
+                                break;
+                
+                        }
+                    })
+                }
                 this.$emit('on-search', this.searchForm);
             },
             handleOpenCreate() {
@@ -275,7 +277,7 @@
     .search-form {
         &-base-row {
             .ivu-input-icon {
-                right: 85px !important;
+                right: 65px !important;
             }
         }
     }
