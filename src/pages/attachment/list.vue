@@ -1,41 +1,54 @@
 <template>
     <div class="i-table-no-border">
-        <search-form ref="searchForm" @on-create-form="handleOpenUpdateCreate" @on-search="searchData" @on-reset="getData" />
+        <!-- 搜索 -->
+        <search-form
+            ref="searchForm"
+            :show-multi-del="false"
+            :show-export="false"
+            :base-search-form="baseSeachForm"
+            :advanced-search-form="advancedSearchForm"
+            @on-create-form="handleOpenUpdateCreate"
+            @on-search="searchData"
+            @on-reset="getData"
+        />
         <div class="ivu-mt">
             <div style="position: relative;height: 100px;" v-if="loading">
                 <Spin fix size="large"></Spin>
             </div>
-            <Row :gutter="24" class="ivu-mt">
-                <Col :xxl="4" :xl="6" :lg="6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
-                    <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
-                        <img :src="item.attach_url" class="search-search-projects-item-cover">
-                        <div class="ivu-p-8">
-                            <div>
-                                <strong>{{ item.attach_name }}</strong>
+            <empty v-else-if="limitData.length === 0" />
+            <div v-else>
+                <Row :gutter="24" class="ivu-mt">
+                    <Col :xxl="4" :xl="6" :lg="6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
+                        <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
+                            <img :src="item.attach_url" class="search-search-projects-item-cover">
+                            <div class="ivu-p-8">
+                                <div>
+                                    <strong>{{ item.attach_name }}</strong>
+                                </div>
+                                <div class="search-search-projects-item-desc">{{ item.attach_origin_name }}</div>
+                                <div class="search-search-projects-item-extra">
+                                    <Time :time="item.created_at" type="datetime" />
+                                </div>
                             </div>
-                            <div class="search-search-projects-item-desc">{{ item.attach_origin_name }}</div>
-                            <div class="search-search-projects-item-extra">
-                                <Time :time="item.created_at" type="datetime" />
-                            </div>
-                        </div>
-                        <Divider class="ivu-mb-8 ivu-mt-8" />
-                        <Row class="ivu-text-center ivu-pb-8">
-                            <Col span="12" class="ivu-br">
-                                <Tooltip placement="top" content="删除图片">
-                                    <Button @click="handleRemove(index)" icon="md-trash" type="text" size="large" />
-                                </Tooltip>
-                            </Col>
-                            <Col span="12">
-                                <Tooltip placement="top" content="查看">
-                                    <Button icon="md-eye" type="text" size="large" />
-                                </Tooltip>
-                            </Col>
-                        </Row>
-                    </Card>
-                </Col>
-            </Row>
-            <div class="ivu-mt ivu-text-center" slot="footer">
-                <Page :total="total" show-total :current.sync="current" @on-change="handleChange"/>
+                            <Divider class="ivu-mb-8 ivu-mt-8" />
+                            <Row class="ivu-text-center ivu-pb-8">
+                                <Col span="12" class="ivu-br">
+                                    <Tooltip placement="top" content="删除图片">
+                                        <Button @click="handleRemove(index)" icon="md-trash" type="text" size="large" />
+                                    </Tooltip>
+                                </Col>
+                                <Col span="12">
+                                    <Tooltip placement="top" content="查看">
+                                        <Button icon="md-eye" type="text" size="large" />
+                                    </Tooltip>
+                                </Col>
+                            </Row>
+                        </Card>
+                    </Col>
+                </Row>
+                <div class="ivu-mt ivu-text-center" slot="footer">
+                    <Page :total="total" show-total :current.sync="current" @on-change="handleChange"/>
+                </div>
             </div>
         </div>
         <!-- 创建编辑 -->
@@ -44,12 +57,15 @@
 </template>
 <script>
     import { AttachmentIndex, AttachmentSearch, AttachmentDelete } from '@/api/attachment';
-    import searchForm from './search-form';
-    import createForm from './create-form';
+    import SearchForm from '@/components/searchform';
+    import CreateForm from './create-form';
+    import Empty from '@/components/common/empty';
+    
     export default {
         components: {
-            searchForm,
-            createForm
+            SearchForm,
+            CreateForm,
+            Empty
         },
         data () {
             return {
@@ -63,7 +79,54 @@
                 sortType: 'normal', // 当前排序类型，可选值为：normal（默认） || asc（升序）|| desc（降序）,
                 sortColumns: '',
                 filterType: undefined,
-                searchForm: {}
+                searchForm: {},
+                baseSeachForm: {
+                    type: 'id',
+                    keyword: '',
+                    options: [
+                        {
+                            name: 'ID',
+                            value: 'id'
+                        },
+                        {
+                            name: '附件名称',
+                            value: 'attach_name'
+                        },
+                        {
+                            name: '附件原名称',
+                            value: 'attach_origin_name'
+                        }
+                    ]
+                },
+                advancedSearchForm: [
+                    {
+                        label_name: '附件类型：',
+                        label_prop: 'attach_type',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '1',
+                                name: '单图'
+                            },
+                            {
+                                value: '2',
+                                name: '视频'
+                            },
+                            {
+                                value: '3',
+                                name: '其他'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '创建时间：',
+                        label_prop: 'created_at',
+                        ele_value: '',
+                        ele_type: 'daterange',
+                        options: [],
+                    }
+                ]
             }
         },
         computed: {
