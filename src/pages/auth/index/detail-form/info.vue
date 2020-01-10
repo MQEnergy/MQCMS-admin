@@ -43,10 +43,10 @@
     </div>
 </template>
 <script>
-    import uploadForm from '@/components/uploadform/index';
+    import UploadForm from '@/components/uploadform';
     export default {
         components: {
-            uploadForm
+            UploadForm
         },
         data () {
             return {
