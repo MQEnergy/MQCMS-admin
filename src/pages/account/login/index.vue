@@ -11,12 +11,12 @@
                 <Form ref="formInline" :model="formInline" :rules="ruleInline">
                     <FormItem prop="account">
                         <Input type="text" size="large" v-model="formInline.account" placeholder="请输入账号">
-                            <Icon type="ios-person-outline" slot="prepend"></Icon>
+                            <Icon type="md-person" slot="prepend" />
                         </Input>
                     </FormItem>
                     <FormItem prop="password">
                         <Input type="password" size="large" v-model="formInline.password" placeholder="请输入密码">
-                            <Icon type="ios-lock-outline" slot="prepend"></Icon>
+                            <Icon type="md-lock" slot="prepend"></Icon>
                         </Input>
                     </FormItem>
                     <FormItem>
