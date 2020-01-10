@@ -27,18 +27,21 @@
                 <Col span="16">
                     <div style="position: relative; margin-bottom: 20px;">
                         <div @click="handleSelectStoreImg(index)" v-for="(item, index) in imageList" :key="index" style="position: relative; margin: 6px; width: 80px; height: 80px; display: inline-block; ">
-                            <img :src="item.url" style="width: 80px; height: 80px; cursor: pointer" :alt="item.alt" srcset="">
+                            <img :src="item.attach_url" style="width: 80px; height: 80px; cursor: pointer">
                             <div v-if="item.isChoose" style="position: absolute; height: 82px; width: 82px; top: -1px; left: -1px; border: 2px solid #409EFF;">
                             </div>
                         </div>
                     </div>
-                    <Page :total="100" show-total />
+                    <div style="margin: 0px auto; text-align: center">
+                        <Page :total="imgTotal" show-total />
+                    </div>
                 </Col>
                 <Col span="8">
                     <p style="font-weight: bold; border-bottom: 1px solid #ebeef5; padding-bottom: 10px; margin-bottom: 10px;">附件详情</p>
-                    <img :src="currentStoreImg" style="height: 80px;" alt="">
+                    <img :src="currentItem.attach_url" style="height: 80px;" alt="">
                     <div style="line-height: 25px;">
-                        <p>名称：1.png</p>
+                        <p>原名称：{{ currentItem.attach_origin_name }}
+                        <p>新名称：{{ currentItem.attach_name }}.{{ currentItem.attach_extension }}</p>
                         <p>时间：2018年2月12日</p>
                         <p>大小：758KB</p>
                         <p>尺寸：1024 * 768 px</p>
@@ -80,7 +83,7 @@
             },
             imageListUrl: {
                 type: String,
-                default: '/admin/attachment/delete'
+                default: '/attachment/index'
             },
             isLocal: {
                 type: Boolean,
@@ -103,26 +106,23 @@
                 imgList: [
                     {
                         url: require('@/assets/images/default/1.png'),
-                        alt: '',
                         isChoose: false
                     },
                     {
                         url: require('@/assets/images/default/2.png'),
-                        alt: '',
                         isChoose: false
                     },
                     {
                         url: require('@/assets/images/default/3.png'),
-                        alt: '',
                         isChoose: false
                     },
                     {
                         url: require('@/assets/images/default/4.png'),
-                        alt: '',
                         isChoose: false
                     }
                 ],
                 currentStoreImg: '',
+                currentItem: {},
                 netPicUrl: '',
                 imgTotal: 0
             }
@@ -185,7 +185,7 @@
                 this.$Message.error(response.message);
             },
             handleSelectStoreImg (index) {
-                this.currentStoreImg = this.imgList[index].url;
+                this.currentItem = this.imgList[index];
                 this.imgList[index].isChoose = true;
                 this.imgList.forEach((val, key) => {
                     if (key !== index) {
