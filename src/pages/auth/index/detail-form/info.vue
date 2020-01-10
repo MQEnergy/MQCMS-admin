@@ -43,7 +43,7 @@
     </div>
 </template>
 <script>
-    import uploadForm from '../../../common/upload-form';
+    import uploadForm from '@/components/uploadform/index';
     export default {
         components: {
             uploadForm
