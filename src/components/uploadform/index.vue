@@ -36,7 +36,11 @@
                         <div v-else>
                             <div style="position: relative; margin-bottom: 20px;">
                                 <div v-for="(item, index) in imageList" :key="index" @click="handleSelectStoreImg(index)" style="position: relative; margin: 6px; width: 80px; height: 80px; display: inline-block; ">
-                                    <img :src="item.attach_url" style="width: 80px; height: 80px; cursor: pointer">
+                                    <img v-if="item.attach_type === 1" :src="item.attach_url" style="width: 80px; height: 80px; cursor: pointer">
+                                    <video v-if="item.attach_type === 2" width="80" height="80" autoplay>
+                                        <source :src="item.attach_url" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
                                     <div v-if="item.isChoose" style="position: absolute; height: 82px; width: 82px; top: -1px; left: -1px; border: 2px solid #409EFF;">
                                     </div>
                                 </div>
@@ -49,7 +53,11 @@
                     <Col v-if="currentItem" span="8">
                         <div class="upload-form-right-container">
                             <p class="upload-form-right-container-title" style="">附件详情</p>
-                            <img class="upload-form-" :src="currentItem.attach_url" style="height: 80px; width: 80px;">
+                            <img v-if="currentItem.attach_type === 1" class="upload-form-right-container-img" :src="currentItem.attach_url" style="height: 80px; width: 80px;">
+                            <video v-if="currentItem.attach_type === 2" width="80" height="80" autoplay>
+                                <source :src="currentItem.attach_url" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
                             <div style="line-height: 25px; word-wrap:break-word; word-break:break-all; ">
                                 <p>原名称：{{ currentItem.attach_origin_name }}
                                 <p>新名称：{{ currentItem.attach_name }}.{{ currentItem.attach_extension }}</p>
@@ -180,6 +188,9 @@
                         limit: this.imgSize
                     }
                 }).then(res => {
+                    res.data.forEach((item, index) => {
+                        item.attach_url = process.env.VUE_APP_UPLOAD_HOST_URL + item.attach_url;
+                    });
                     this.imgList = res.data;
                     this.imgTotal = res.total;
                 }).finally(() => {
