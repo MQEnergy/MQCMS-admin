@@ -1,6 +1,6 @@
 <template>
-    <Tabs :animated="false" type="card">
-        <TabPane v-if="isLocal" label="本地图片">
+    <Tabs :animated="false" type="card" @on-click="handleTabClick">
+        <TabPane name="local" v-if="isLocal" label="本地图片">
             <Upload
                 type="drag"
                 ref="upload"
@@ -22,7 +22,7 @@
                 </Button>
             </div>
         </TabPane>
-        <TabPane v-if="isStock" label="图库图片">
+        <TabPane name="stock" v-if="isStock" label="图库图片">
             <Row>
                 <Col span="16">
                     <div style="position: relative; margin-bottom: 20px;">
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div style="margin: 0px auto; text-align: center">
-                        <Page :total="imgTotal" show-total />
+                        <Page :total="imgTotal" show-total :current.sync="currentPage" :page-size="imgSize" @on-change="handleChange"/>
                     </div>
                 </Col>
                 <Col span="8">
@@ -42,8 +42,9 @@
                     <div style="line-height: 25px;">
                         <p>原名称：{{ currentItem.attach_origin_name }}
                         <p>新名称：{{ currentItem.attach_name }}.{{ currentItem.attach_extension }}</p>
-                        <p>时间：2018年2月12日</p>
-                        <p>大小：758KB</p>
+                        <p>格式：{{ currentItem.attach_minetype }}</p>
+                        <p>时间：{{ currentItem.created_at }}</p>
+                        <p>大小：{{ currentItem.attach_size / 1000 }}KB</p>
                         <p>尺寸：1024 * 768 px</p>
                         <p>
                             <Poptip
@@ -58,7 +59,7 @@
                 </Col>
             </Row>
         </TabPane>
-        <TabPane v-if="isNet" label="网络图片">
+        <TabPane name="net" v-if="isNet" label="网络图片">
             <Input v-model="netPicUrl" placeholder="请输入网络图片地址">
                 <span slot="prepend">网络图片</span>
             </Input>
@@ -124,7 +125,9 @@
                 currentStoreImg: '',
                 currentItem: {},
                 netPicUrl: '',
-                imgTotal: 0
+                currentPage: 1,
+                imgTotal: 0,
+                imgSize: 20
             }
         },
         computed: {
@@ -152,8 +155,11 @@
             handleImageList () {
                 return request({
                     url: this.imageListUrl,
-                    method: 'post',
-                    data: {}
+                    method: 'get',
+                    params: {
+                        page: this.currentPage,
+                        limit: this.imgSize
+                    }
                 }).then(res => {
                     this.imgList = res.data;
                     this.imgTotal = res.total;
@@ -198,6 +204,15 @@
             },
             handleCancel () {
                 console.log('cancel')
+            },
+            handleChange (page) {
+                this.currentPage = page;
+                this.handleImageList();
+            },
+            handleTabClick (name) {
+                if (name === 'stock') {
+                    this.handleImageList();
+                }
             }
         }
     }
