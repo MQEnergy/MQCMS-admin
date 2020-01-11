@@ -37,7 +37,7 @@
                             <div style="position: relative; margin-bottom: 20px;">
                                 <div v-for="(item, index) in imageList" :key="index" @click="handleSelectStoreImg(index)" style="position: relative; margin: 6px; width: 80px; height: 80px; display: inline-block; ">
                                     <img v-if="item.attach_type === 1" :src="item.attach_url" style="width: 80px; height: 80px; cursor: pointer">
-                                    <video v-if="item.attach_type === 2" width="80" height="80" autoplay>
+                                    <video v-if="item.attach_type === 2" width="80" height="80">
                                         <source :src="item.attach_url" type="video/mp4">
                                         Your browser does not support the video tag.
                                     </video>
@@ -53,17 +53,17 @@
                     <Col v-if="currentItem" span="8">
                         <div class="upload-form-right-container">
                             <p class="upload-form-right-container-title" style="">附件详情</p>
-                            <img v-if="currentItem.attach_type === 1" class="upload-form-right-container-img" :src="currentItem.attach_url" style="height: 80px; width: 80px;">
-                            <video v-if="currentItem.attach_type === 2" width="80" height="80" autoplay>
+                            <img @click="handlePreviewRightImage" v-if="currentItem.attach_type === 1" class="upload-form-right-container-resource" :src="currentItem.attach_url" >
+                            <video @click="handlePreviewRightImage" v-if="currentItem.attach_type === 2" class="upload-form-right-container-resource" muted autoplay>
                                 <source :src="currentItem.attach_url" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                             <div style="line-height: 25px; word-wrap:break-word; word-break:break-all; ">
-                                <p>原名称：{{ currentItem.attach_origin_name }}
-                                <p>新名称：{{ currentItem.attach_name }}.{{ currentItem.attach_extension }}</p>
-                                <p>格式：{{ currentItem.attach_minetype }}</p>
-                                <p>时间：{{ currentItem.created_at }}</p>
-                                <p>大小：{{ currentItem.attach_size / 1000 }}KB</p>
+                                <p><span style="color: #999;">原名称：</span>{{ currentItem.attach_origin_name }}
+                                <p><span style="color: #999;">新名称：</span>{{ currentItem.attach_name }}.{{ currentItem.attach_extension }}</p>
+                                <p><span style="color: #999;">格式：</span>{{ currentItem.attach_minetype }}</p>
+                                <p><span style="color: #999;">时间：</span>{{ currentItem.created_at }}</p>
+                                <p><span style="color: #999;">大小：</span>{{ currentItem.attach_size / 1000 }}KB</p>
                                 <!--                            <p>尺寸：1024 * 768 px</p>-->
                                 <p style="margin-top: 10px;">
                                     <Poptip
@@ -89,8 +89,14 @@
                 <p style="margin: 10px 0px">图片地址必须以http开头,以jpg,png,bmp,gif结束</p>
             </TabPane>
         </Tabs>
-        <Modal title="预览图片" v-model="imgVisible">
-            <img :src="currentVisibleImg" style="max-width: 800px; max-height: 800px;">
+        <Modal title="预览图片" v-model="imgVisible" width="830">
+            <div v-if="currentItem" style="text-align: center">
+                <img v-if="currentItem.attach_type === 1" :src="currentItem.attach_url" style="max-width: 800px; max-height: 800px;" >
+                <video v-if="currentItem.attach_type === 2" muted autoplay>
+                    <source :src="currentItem.attach_url" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
             <div slot="footer">
                 <Button type="error" @click="handleCloseModal">关闭</Button>
             </div>
@@ -223,6 +229,7 @@
                 this.$Message.error(response.message);
             },
             handleSelectStoreImg (index) {
+                this.currentItem = undefined;
                 this.currentItem = this.imgList[index];
                 this.imgList[index].isChoose = true;
                 this.imgList.forEach((val, key) => {
@@ -258,8 +265,12 @@
                 }
             },
             handlePreviewImage (file) {
-                this.currentVisibleImg = file.response ? file.response.fullpath : '';
                 this.imgVisible = true;
+                this.currentVisibleImg = file.response ? process.env.VUE_APP_UPLOAD_HOST_URL + file.response.fullpath : '';
+            },
+            handlePreviewRightImage () {
+                this.imgVisible = true;
+                this.currentVisibleImg = this.currentItem.attach_url;
             },
             handleCloseModal () {
                 this.imgVisible = false;
@@ -270,11 +281,16 @@
 <style lang="less" scoped>
     .upload-form {
         &-right-container {
-            &-p {
+            &-title {
                 font-weight: bold;
                 border-bottom: 1px solid #ebeef5;
                 padding-bottom: 10px;
                 margin-bottom: 10px;
+            }
+            &-resource {
+                cursor: pointer;
+                height: 80px;
+                width: 80px;
             }
         }
     }
