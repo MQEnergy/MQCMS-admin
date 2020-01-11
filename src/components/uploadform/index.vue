@@ -1,78 +1,104 @@
 <template>
-    <Tabs :animated="false" type="card" @on-click="handleTabClick">
-        <TabPane name="local" v-if="isLocal" label="本地图片">
-            <Upload
-                type="drag"
-                ref="upload"
-                :multiple="multiple"
-                :before-upload="handleBeforeUpload"
-                :headers="setHeader"
-                :on-success="handleUploadSuccess"
-                :on-error="handleUploadError"
-                :action="uploadUrl">
-                <div style="padding: 20px 0">
-                    <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                    <p>点击或拖拽文件上传</p>
+    <div>
+        <Tabs :animated="false" type="card" @on-click="handleTabClick">
+            <TabPane name="local" v-if="isLocal" label="本地图片">
+                <Upload
+                        type="drag"
+                        ref="upload"
+                        :multiple="multiple"
+                        :show-upload-list="true"
+                        :before-upload="handleBeforeUpload"
+                        :headers="setHeader"
+                        :on-success="handleUploadSuccess"
+                        :on-error="handleUploadError"
+                        :on-preview="handlePreviewImage"
+                        :action="uploadUrl">
+                    <div style="padding: 20px 0">
+                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                        <p>点击或拖拽文件上传</p>
+                    </div>
+                </Upload>
+                <div v-for="(item, index) in uploadedFileList" :key="index" style="clear: both">
+                    上传的图片: {{ item.fileName }}
+                    <Button style="float: right; color: #1e93ff" type="text" @click="handleUpload(index)" :loading="item.loadingStatus">
+                        {{ item.loadingStatus ? '上传中' : '点击上传' }}
+                    </Button>
                 </div>
-            </Upload>
-            <div v-for="(item, index) in uploadedFileList" :key="index" style="clear: both">
-                上传的图片: {{ item.fileName }}
-                <Button style="float: right; color: #1e93ff" type="text" @click="handleUpload(index)" :loading="item.loadingStatus">
-                    {{ item.loadingStatus ? '上传中' : '点击上传' }}
-                </Button>
-            </div>
-        </TabPane>
-        <TabPane name="stock" v-if="isStock" label="图库图片">
-            <Row>
-                <Col span="16">
-                    <div style="position: relative; margin-bottom: 20px;">
-                        <div @click="handleSelectStoreImg(index)" v-for="(item, index) in imageList" :key="index" style="position: relative; margin: 6px; width: 80px; height: 80px; display: inline-block; ">
-                            <img :src="item.attach_url" style="width: 80px; height: 80px; cursor: pointer">
-                            <div v-if="item.isChoose" style="position: absolute; height: 82px; width: 82px; top: -1px; left: -1px; border: 2px solid #409EFF;">
+
+            </TabPane>
+            <TabPane name="stock" v-if="isStock" label="图库图片">
+                <Row :loading="loading">
+                    <Col span="16">
+                        <div style="position: relative;height: 100px;" v-if="loading">
+                            <Spin fix size="large"></Spin>
+                        </div>
+                        <empty v-else-if="imageList.length === 0" />
+                        <div v-else>
+                            <div style="position: relative; margin-bottom: 20px;">
+                                <div v-for="(item, index) in imageList" :key="index" @click="handleSelectStoreImg(index)" style="position: relative; margin: 6px; width: 80px; height: 80px; display: inline-block; ">
+                                    <img :src="item.attach_url" style="width: 80px; height: 80px; cursor: pointer">
+                                    <div v-if="item.isChoose" style="position: absolute; height: 82px; width: 82px; top: -1px; left: -1px; border: 2px solid #409EFF;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin: 0px auto; text-align: center">
+                                <Page :total="imgTotal" show-total :current.sync="currentPage" :page-size="imgSize" @on-change="handleChange"/>
                             </div>
                         </div>
-                    </div>
-                    <div style="margin: 0px auto; text-align: center">
-                        <Page :total="imgTotal" show-total :current.sync="currentPage" :page-size="imgSize" @on-change="handleChange"/>
-                    </div>
-                </Col>
-                <Col span="8">
-                    <p style="font-weight: bold; border-bottom: 1px solid #ebeef5; padding-bottom: 10px; margin-bottom: 10px;">附件详情</p>
-                    <img :src="currentItem.attach_url" style="height: 80px;" alt="">
-                    <div style="line-height: 25px;">
-                        <p>原名称：{{ currentItem.attach_origin_name }}
-                        <p>新名称：{{ currentItem.attach_name }}.{{ currentItem.attach_extension }}</p>
-                        <p>格式：{{ currentItem.attach_minetype }}</p>
-                        <p>时间：{{ currentItem.created_at }}</p>
-                        <p>大小：{{ currentItem.attach_size / 1000 }}KB</p>
-                        <p>尺寸：1024 * 768 px</p>
-                        <p>
-                            <Poptip
-                                confirm
-                                title="您确认删除这张图片吗？"
-                                @on-ok="handleOk"
-                                @on-cancel="handleCancel">
-                                <Button type="error" ghost size="small">永久删除</Button>
-                            </Poptip>
-                        </p>
-                    </div>
-                </Col>
-            </Row>
-        </TabPane>
-        <TabPane name="net" v-if="isNet" label="网络图片">
-            <Input v-model="netPicUrl" placeholder="请输入网络图片地址">
-                <span slot="prepend">网络图片</span>
-            </Input>
-            <p style="margin: 10px 0px">图片地址必须以http开头,以jpg,png,bmp,gif结束</p>
-        </TabPane>
-    </Tabs>
+                    </Col>
+                    <Col v-if="currentItem" span="8">
+                        <div class="upload-form-right-container">
+                            <p class="upload-form-right-container-title" style="">附件详情</p>
+                            <img class="upload-form-" :src="currentItem.attach_url" style="height: 80px; width: 80px;">
+                            <div style="line-height: 25px; word-wrap:break-word; word-break:break-all; ">
+                                <p>原名称：{{ currentItem.attach_origin_name }}
+                                <p>新名称：{{ currentItem.attach_name }}.{{ currentItem.attach_extension }}</p>
+                                <p>格式：{{ currentItem.attach_minetype }}</p>
+                                <p>时间：{{ currentItem.created_at }}</p>
+                                <p>大小：{{ currentItem.attach_size / 1000 }}KB</p>
+                                <!--                            <p>尺寸：1024 * 768 px</p>-->
+                                <p style="margin-top: 10px;">
+                                    <Poptip
+                                            confirm
+                                            title="您确认删除这张图片吗？"
+                                            @on-ok="handleDelSubmit"
+                                            @on-cancel="handleDelCancel">
+                                        <Button type="error" ghost size="small">永久删除</Button>
+                                    </Poptip>
+                                </p>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col v-else span="8">
+                        <empty :is-back="false" empty-text="请选择左边的图片展示图片信息"/>
+                    </Col>
+                </Row>
+            </TabPane>
+            <TabPane name="net" v-if="isNet" label="网络图片">
+                <Input v-model="netPicUrl" placeholder="请输入网络图片地址">
+                    <span slot="prepend">网络图片</span>
+                </Input>
+                <p style="margin: 10px 0px">图片地址必须以http开头,以jpg,png,bmp,gif结束</p>
+            </TabPane>
+        </Tabs>
+        <Modal title="预览图片" v-model="imgVisible">
+            <img :src="currentVisibleImg" style="max-width: 800px; max-height: 800px;">
+            <div slot="footer">
+                <Button type="error" @click="handleCloseModal">关闭</Button>
+            </div>
+        </Modal>
+    </div>
 </template>
 
 <script>
     import request from '@/plugins/request';
     import util from '@/libs/util';
+    import Empty from '@/components/common/empty';
     export default {
         name: 'upload-form',
+        components: {
+            Empty
+        },
         props: {
             multiple: {
                 type: Boolean,
@@ -86,6 +112,10 @@
                 type: String,
                 default: '/attachment/index'
             },
+            delImageUrl: {
+                type: String,
+                default: '/attachment/delete'
+            },
             isLocal: {
                 type: Boolean,
                 default: true
@@ -97,37 +127,25 @@
             isNet: {
                 type: Boolean,
                 default: true
+            },
+            isDel: {
+                type: Boolean,
+                default: true
             }
-            
         },
         data () {
             return {
                 file: null,
                 uploadedFileList: [],
-                imgList: [
-                    {
-                        url: require('@/assets/images/default/1.png'),
-                        isChoose: false
-                    },
-                    {
-                        url: require('@/assets/images/default/2.png'),
-                        isChoose: false
-                    },
-                    {
-                        url: require('@/assets/images/default/3.png'),
-                        isChoose: false
-                    },
-                    {
-                        url: require('@/assets/images/default/4.png'),
-                        isChoose: false
-                    }
-                ],
-                currentStoreImg: '',
-                currentItem: {},
+                imgList: [],
+                currentItem: undefined,
                 netPicUrl: '',
                 currentPage: 1,
                 imgTotal: 0,
-                imgSize: 20
+                imgSize: 20,
+                imgVisible: false,
+                currentVisibleImg: '',
+                loading: true
             }
         },
         computed: {
@@ -153,6 +171,7 @@
         },
         methods: {
             handleImageList () {
+                this.loading = true;
                 return request({
                     url: this.imageListUrl,
                     method: 'get',
@@ -163,6 +182,8 @@
                 }).then(res => {
                     this.imgList = res.data;
                     this.imgTotal = res.total;
+                }).finally(() => {
+                    this.loading = false;
                 });
             },
             handleBeforeUpload (file) {
@@ -199,11 +220,21 @@
                     }
                 })
             },
-            handleOk () {
-                console.log('OK')
+            handleDelSubmit () {
+                return request({
+                    url: this.delImageUrl,
+                    method: 'post',
+                    data: {
+                        id: this.currentItem.id
+                    }
+                }).then(res => {
+                    this.$Message.success('删除成功');
+                    this.currentPage = 1;
+                    this.currentItem = undefined;
+                    this.handleImageList();
+                });
             },
-            handleCancel () {
-                console.log('cancel')
+            handleDelCancel () {
             },
             handleChange (page) {
                 this.currentPage = page;
@@ -211,11 +242,29 @@
             },
             handleTabClick (name) {
                 if (name === 'stock') {
+                    this.currentPage = 1;
                     this.handleImageList();
                 }
+            },
+            handlePreviewImage (file) {
+                this.currentVisibleImg = file.response ? file.response.fullpath : '';
+                this.imgVisible = true;
+            },
+            handleCloseModal () {
+                this.imgVisible = false;
             }
         }
     }
 </script>
-<style scoped>
+<style lang="less" scoped>
+    .upload-form {
+        &-right-container {
+            &-p {
+                font-weight: bold;
+                border-bottom: 1px solid #ebeef5;
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+            }
+        }
+    }
 </style>
