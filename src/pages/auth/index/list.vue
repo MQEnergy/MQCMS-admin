@@ -3,7 +3,7 @@
         <!-- 搜索 -->
         <search-form
           ref="searchForm"
-          :show-multi-del="false"
+          :show-multi-action="false"
           :show-export="false"
           :base-search-form="baseSeachForm"
           :advanced-search-form="advancedSearchForm"
@@ -42,7 +42,7 @@
                 <a @click="handleDelete(index)">删除</a>
             </template>
         </Table>
-        <div class="ivu-mt ivu-text-center">
+        <div class="ivu-mt ivu-text-right">
             <Page :total="total" show-total :current.sync="current" @on-change="handleChange"/>
         </div>
         <!-- 创建编辑 -->

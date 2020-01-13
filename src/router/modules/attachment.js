@@ -20,7 +20,7 @@ export default {
             name: `${pre}index`,
             meta: {
                 ...meta,
-                title: '用户列表'
+                title: '附件列表'
             },
             component: () => import('@/pages/attachment/index')
         }

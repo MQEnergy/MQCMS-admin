@@ -30,16 +30,19 @@
                         <Button v-if="showCreate" class="ivu-ml-8" type="primary" icon="md-add"
                                 @click="handleOpenCreate">新建
                         </Button>
-                        <Button v-if="showExport" class="ivu-ml-8" type="primary" icon="md-download"
+                        <Button v-if="showExport" class="ivu-ml-8" type="primary" icon="md-arrow-down"
                                 @click="handleExport">导出
                         </Button>
-                        <Dropdown v-if="showMultiDel" class="ivu-ml-8" @on-click="handleMultiClick">
+                        <Button v-if="showImport" class="ivu-ml-8" type="primary" icon="md-arrow-up"
+                                @click="handleImport">导入
+                        </Button>
+                        <Dropdown v-if="showMultiAction" class="ivu-ml-8" @on-click="handleMultiClick">
                             <Button>
                                 更多操作
                                 <Icon type="ios-arrow-down" />
                             </Button>
                             <DropdownMenu slot="list">
-                                <DropdownItem name="delete">批量删除</DropdownItem>
+                                <DropdownItem v-for="(item, index) in multiActions" :key="index" :name="item.value" >{{ item.name }}</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </FormItem>
@@ -111,7 +114,11 @@
             },
             showExport: {
                 type: Boolean,
-                default: true
+                default: false
+            },
+            showImport: {
+                type: Boolean,
+                default: false
             },
             showCreate: {
                 type: Boolean,
@@ -121,9 +128,15 @@
                 type: Boolean,
                 default: true
             },
-            showMultiDel: {
+            showMultiAction: {
                 type: Boolean,
                 default: false
+            },
+            multiActions: {
+                type: Array,
+                default: () => {
+                    return []
+                }
             },
             baseSearchForm: {
                 type: Object,
@@ -254,10 +267,11 @@
             handleExport() {
                 this.$emit('on-export');
             },
+            handleImport () {
+                this.$emit('on-import');
+            },
             handleMultiClick (value) {
-                if (value === 'delete') {
-                    this.$emit('on-multi-del');
-                }
+                this.$emit(value);
             },
             handleSwitchChange(value) {
             },

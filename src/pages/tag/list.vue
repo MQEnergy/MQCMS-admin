@@ -3,7 +3,7 @@
         <!-- 搜索 -->
         <search-form
             ref="searchForm"
-            :show-multi-del="false"
+            :show-multi-action="false"
             :base-search-form="baseSeachForm"
             :advanced-search-form="advancedSearchForm"
             @on-create-form="handleOpenUpdateCreate"

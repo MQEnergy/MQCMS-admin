@@ -2,73 +2,187 @@
     <div class="i-table-no-border">
         <!-- 搜索 -->
         <search-form
+            style="border-bottom: 1px solid #eee"
             ref="searchForm"
-            :show-multi-del="false"
-            :show-export="false"
+            :show-multi-action="true"
+            :multi-actions="multiActions"
+            :show-export="true"
+            :show-import="true"
             :base-search-form="baseSeachForm"
             :advanced-search-form="advancedSearchForm"
+            @on-import="handleShowImport"
             @on-create-form="handleOpenUpdateCreate"
             @on-search="searchData"
             @on-reset="getData"
+            @on-show-recyle="handleShowRecyle"
+            @on-multi-del="handleMultiDel"
         />
         <div class="ivu-mt">
+            <RadioGroup v-model="modeType" type="button" @on-change="handleChangeMode">
+                <Radio label="list"><Icon type="md-menu" /></Radio>
+                <Radio label="thumb"><Icon type="md-apps" /></Radio>
+            </RadioGroup>
             <div style="position: relative;height: 100px;" v-if="loading">
                 <Spin fix size="large"></Spin>
             </div>
             <empty v-else-if="limitData.length === 0" />
             <div v-else>
-                <Row :gutter="24" class="ivu-mt">
-                    <Col :xxl="4" :xl="6" :lg="6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
-                        <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
-                            <img :src="item.attach_url" class="search-search-projects-item-cover">
-                            <div class="ivu-p-8">
-                                <div>
-                                    <strong>{{ item.attach_name }}</strong>
+                <div v-if="modeType === 'list'">
+                    <Table
+                        ref="table"
+                        :columns="columns"
+                        :data="limitData"
+                        :loading="loading"
+                        class="ivu-mt"
+                        @on-sort-change="handleSortChange"
+                        @on-filter-change="handleFilterChange"
+                        @on-select="handleSelect"
+                        @on-select-cancel="handleSelectCancel"
+                        @on-select-all="handleSelectAll"
+                        @on-select-all-cancel="handleSelectAllCancel"
+                    >
+                        <template slot-scope="{ row }" slot="attach_name">
+                            <List>
+                                <ListItem>
+                                    <ListItemMeta
+                                        :avatar="row.attach_url"
+                                        :title="row.attach_name" :description="row.attach_origin_name" />
+                                </ListItem>
+                            </List>
+                        </template>
+                        <template slot-scope="{ row }" slot="attach_size">
+                            大小：{{ parseFloat(row.attach_size / 1000).toFixed(2) > 1024 ? parseFloat(row.attach_size / 1000 / 1000).toFixed(2) + 'MB' : parseFloat(row.attach_size / 1000).toFixed(2) + 'KB' }}<br>
+                            类型：{{ row.attach_minetype }}
+                        </template>
+                        <template slot-scope="{ row }" slot="attach_type">
+                            <Tag v-if="row.attach_type === 1" color="primary">图片</Tag>
+                            <Tag v-if="row.attach_type === 2" color="success">视频</Tag>
+                            <Tag v-if="row.attach_type === 3" color="error">其他</Tag>
+                        </template>
+                        <template slot-scope="{ row }" slot="status">
+                            <Badge v-if="row.status === 0" status="default" text="禁用" />
+                            <Badge v-if="row.status === 1" status="processing" text="正常" />
+                        </template>
+                        <template slot-scope="{ row, index }" slot="action">
+                            <a @click="handleShow(index)">查看</a>
+                            <Divider type="vertical" />
+                            <a @click="handleOpenUpdateCreate(true, row.id)">编辑</a>
+                            <Divider type="vertical" />
+                            <a @click="handleRemove(index)">删除</a>
+                        </template>
+                    </Table>
+                </div>
+                <div v-else>
+                    <Row :gutter="24" class="ivu-mt">
+                        <Col :xxl="4" :xl="6" :lg="6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
+                            <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
+                                <img :src="item.attach_url" class="search-search-projects-item-cover">
+                                <div class="ivu-p-8">
+                                    <div>
+                                        <strong>{{ item.attach_name }}</strong>
+                                    </div>
+                                    <div class="search-search-projects-item-desc">{{ item.attach_origin_name }}</div>
+                                    <div class="search-search-projects-item-extra">
+                                        <Time :time="item.created_at" type="datetime" />
+                                    </div>
                                 </div>
-                                <div class="search-search-projects-item-desc">{{ item.attach_origin_name }}</div>
-                                <div class="search-search-projects-item-extra">
-                                    <Time :time="item.created_at" type="datetime" />
-                                </div>
-                            </div>
-                            <Divider class="ivu-mb-8 ivu-mt-8" />
-                            <Row class="ivu-text-center ivu-pb-8">
-                                <Col span="12" class="ivu-br">
-                                    <Tooltip placement="top" content="删除图片">
-                                        <Button @click="handleRemove(index)" icon="md-trash" type="text" size="large" />
-                                    </Tooltip>
-                                </Col>
-                                <Col span="12">
-                                    <Tooltip placement="top" content="查看">
-                                        <Button icon="md-eye" type="text" size="large" />
-                                    </Tooltip>
-                                </Col>
-                            </Row>
-                        </Card>
-                    </Col>
-                </Row>
-                <div class="ivu-mt ivu-text-center" slot="footer">
-                    <Page :total="total" show-total :current.sync="current" @on-change="handleChange"/>
+                                <Divider class="ivu-mb-8 ivu-mt-8" />
+                                <Row class="ivu-text-center ivu-pb-8">
+                                    <Col span="12" class="ivu-br">
+                                        <Tooltip placement="top" content="删除图片">
+                                            <Button @click="handleRemove(index)" icon="md-trash" type="text" size="large" />
+                                        </Tooltip>
+                                    </Col>
+                                    <Col span="12">
+                                        <Tooltip placement="top" content="查看">
+                                            <Button icon="md-eye" type="text" size="large" />
+                                        </Tooltip>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                    </Row>
+                </div>
+                <div class="ivu-mt ivu-text-right" slot="footer">
+                    <Page :total="total" show-total :current.sync="current" show-elevator show-sizer :page-size="size"
+                          @on-change="handleChange"
+                          @on-page-size-change="handlePageSizeChange"/>
                 </div>
             </div>
         </div>
         <!-- 创建编辑 -->
         <create-form ref="createForm" @on-create-form="handleOpenUpdateCreate" @on-ok="getData" />
+        <!-- 上传图片 -->
+        <Modal
+            v-model="uploadFormSeen"
+            title="选择图片"
+            width="800"
+            :mask-closable="false"
+            @on-ok="handleOk"
+            @on-cancel="handleCancel">
+            <upload-form ref="uploadForm" @on-success="handleSuccess" @on-show-image="handleShowImage" :multiple="false" />
+        </Modal>
     </div>
 </template>
 <script>
     import { AttachmentIndex, AttachmentSearch, AttachmentDelete } from '@/api/attachment';
     import SearchForm from '@/components/searchform';
+    import UploadForm from '@/components/uploadform';
     import CreateForm from './create-form';
     import Empty from '@/components/common/empty';
-    
+  
     export default {
         components: {
             SearchForm,
             CreateForm,
-            Empty
+            Empty,
+            UploadForm
         },
         data () {
             return {
+                modeType: 'list',
+                columns: [
+                    {
+                        type: 'selection',
+                        width: 80,
+                        align: 'left'
+                    },
+                    {
+                        title: 'ID',
+                        width: 80,
+                        key: 'id',
+                    },
+                    {
+                        title: '附件信息',
+                        key: 'attach_name',
+                        minWidth: 300,
+                        slot: 'attach_name',
+                    },
+                    {
+                        title: '附件参数',
+                        key: 'attach_size',
+                        width: 200,
+                        slot: 'attach_size',
+                    },
+                    {
+                        title: '类型',
+                        key: 'attach_type',
+                        minWidth: 80,
+                        slot: 'attach_type',
+                    },
+                    {
+                        title: '添加时间',
+                        key: 'created_at',
+                        width: 180,
+                        sortable: 'custom'
+                    },
+                    {
+                        title: '操作',
+                        slot: 'action',
+                        align: 'center',
+                        width: 200
+                    }
+                ],
                 bordered: true,
                 loading: false,
                 list: [],
@@ -124,9 +238,20 @@
                         label_prop: 'created_at',
                         ele_value: '',
                         ele_type: 'daterange',
-                        options: [],
+                        options: {},
                     }
-                ]
+                ],
+                multiActions: [
+                    {
+                        name: '查看回收站',
+                        value: 'on-show-recyle'
+                    },
+                    {
+                        name: '批量删除',
+                        value: 'on-multi-del'
+                    }
+                ],
+                uploadFormSeen: false
             }
         },
         computed: {
@@ -286,6 +411,59 @@
                 } else {
                     this.getData();
                 }
+            },
+            handlePageSizeChange (size) {
+                this.current = 1;
+                this.size = size;
+                if (this.searchForm) {
+                    this.searchData(this.searchForm);
+                } else {
+                    this.getData();
+                }
+            },
+            handleShowImport () {
+                this.uploadFormSeen = true;
+            },
+            handleOk () {
+                console.log('OK')
+            },
+            handleCancel () {
+                this.uploadFormSeen = false;
+            },
+            handleSuccess () {
+                console.log('OK')
+            },
+            handleShowImage () {
+                console.log('OK')
+            },
+            handleShowRecyle () {
+                console.log('recyle')
+            },
+            handleChangeMode (value) {
+                console.log(value)
+            },
+            handleMultiDel () {
+                if (this.selectedData.length === 0) {
+                    this.$Message.error('请选择列表');
+                    return false;
+                }
+                this.$Modal.confirm({
+                    title: '删除提示',
+                    content: '确定删除该记录吗？',
+                    onOk: () => {
+                        AttachmentDelete({
+                            id: this.list[index].id
+                        }).then(res => {
+                            this.$Message.success('删除成功');
+                            this.current = 1;
+                            this.getData();
+                        }).finally(() => {
+                        });
+                    }
+                });
+            },
+            handleShow () {
+                console.log('show')
             }
         }
     }

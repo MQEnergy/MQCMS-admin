@@ -2,29 +2,33 @@
     <div>
         <Tabs :animated="false" type="card" @on-click="handleTabClick">
             <TabPane name="local" v-if="isLocal" label="本地图片">
-                <Upload
-                        type="drag"
-                        ref="upload"
-                        :multiple="multiple"
-                        :show-upload-list="true"
-                        :before-upload="handleBeforeUpload"
-                        :headers="setHeader"
-                        :on-success="handleUploadSuccess"
-                        :on-error="handleUploadError"
-                        :on-preview="handlePreviewImage"
-                        :action="uploadUrl">
-                    <div style="padding: 20px 0">
-                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                        <p>点击或拖拽文件上传</p>
+                <div v-if="showBaseUpload">
+                    <Upload
+                            type="drag"
+                            ref="upload"
+                            :multiple="multiple"
+                            :show-upload-list="true"
+                            :before-upload="handleBeforeUpload"
+                            :headers="setHeader"
+                            :on-success="handleUploadSuccess"
+                            :on-error="handleUploadError"
+                            :on-preview="handlePreviewImage"
+                            :action="uploadUrl">
+                        <div style="padding: 20px 0">
+                            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                            <p>点击或拖拽文件上传</p>
+                        </div>
+                    </Upload>
+                    <div v-for="(item, index) in uploadedFileList" :key="index" style="clear: both">
+                        上传的图片: {{ item.fileName }}
+                        <Button style="float: right; color: #1e93ff" type="text" @click="handleUpload(index)" :loading="item.loadingStatus">
+                            {{ item.loadingStatus ? '上传中' : '点击上传' }}
+                        </Button>
                     </div>
-                </Upload>
-                <div v-for="(item, index) in uploadedFileList" :key="index" style="clear: both">
-                    上传的图片: {{ item.fileName }}
-                    <Button style="float: right; color: #1e93ff" type="text" @click="handleUpload(index)" :loading="item.loadingStatus">
-                        {{ item.loadingStatus ? '上传中' : '点击上传' }}
-                    </Button>
                 </div>
-
+                <div v-else>
+                    <slot name="upload"></slot>
+                </div>
             </TabPane>
             <TabPane name="stock" v-if="isStock" label="图库图片">
                 <Row :loading="loading">
@@ -143,6 +147,10 @@
                 default: true
             },
             isDel: {
+                type: Boolean,
+                default: true
+            },
+            showBaseUpload: {
                 type: Boolean,
                 default: true
             }
