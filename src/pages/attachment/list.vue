@@ -189,7 +189,7 @@
                 selectedData: [],
                 current: 1,
                 total: 0,
-                size: 12,
+                size: 10,
                 sortType: 'normal', // 当前排序类型，可选值为：normal（默认） || asc（升序）|| desc（降序）,
                 sortColumns: '',
                 filterType: undefined,

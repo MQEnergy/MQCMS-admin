@@ -22,8 +22,8 @@
                         </Button>
                     </FormItem>
                 </Col>
-                <Col v-bind="gridRight" class="ivu-text-right">
-                    <FormItem :label-width="0">
+                <Col v-bind="gridRight">
+                    <FormItem :label-width="0" style="float: right;">
                         <Button v-if="showRefresh" class="ivu-ml-8" type="success" icon="md-refresh"
                                 @click="handleRefresh">刷新
                         </Button>
@@ -283,9 +283,6 @@
     }
 </script>
 <style scoped>
-    .ivu-text-right {
-        float: right;
-    }
 </style>
 <style lang="less">
     .search-form {
