@@ -8,7 +8,7 @@
             :multi-actions="multiActions"
             :show-export="true"
             :show-import="true"
-            :base-search-form="baseSeachForm"
+            :base-search-form="baseSearchForm"
             :advanced-search-form="advancedSearchForm"
             @on-import="handleShowImport"
             @on-create-form="handleOpenUpdateCreate"
@@ -45,7 +45,7 @@
                             <List>
                                 <ListItem>
                                     <ListItemMeta
-                                        :avatar="row.attach_url"
+                                        :avatar="row.attach_full_url"
                                         :title="row.attach_name" :description="row.attach_origin_name" />
                                 </ListItem>
                             </List>
@@ -74,17 +74,15 @@
                 </div>
                 <div v-else>
                     <Row :gutter="24" class="ivu-mt">
-                        <Col :xxl="4" :xl="6" :lg="6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
+                        <Col :xxl="3" :xl="6" :lg="6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
                             <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
-                                <img :src="item.attach_url" class="search-search-projects-item-cover">
-                                <div class="ivu-p-8">
-                                    <div>
-                                        <strong>{{ item.attach_name }}</strong>
-                                    </div>
-                                    <div class="search-search-projects-item-desc">{{ item.attach_origin_name }}</div>
-                                    <div class="search-search-projects-item-extra">
-                                        <Time :time="item.created_at" type="datetime" />
-                                    </div>
+                                <img class="search-search-projects-item-cover" v-if="item.attach_type === 1" :src="item.attach_full_url" >
+                                <video class="search-search-projects-item-cover" v-if="item.attach_type === 2" muted autoplay>
+                                    <source :src="item.attach_full_url" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <div class="search-search-projects-item-extra">
+                                    <Time :time="item.created_at" type="datetime" />
                                 </div>
                                 <Divider class="ivu-mb-8 ivu-mt-8" />
                                 <Row class="ivu-text-center ivu-pb-8">
@@ -194,7 +192,7 @@
                 sortColumns: '',
                 filterType: undefined,
                 searchForm: {},
-                baseSeachForm: {
+                baseSearchForm: {
                     type: 'id',
                     keyword: '',
                     options: [
@@ -302,9 +300,6 @@
                     page: this.current,
                     limit: this.size
                 }).then(async res => {
-                    res.data.forEach((item, index) => {
-                        item.attach_url = process.env.VUE_APP_UPLOAD_HOST_URL + item.attach_url;
-                    });
                     this.list = res.data;
                     this.total = res.total;
                 }).finally(() => {
@@ -317,12 +312,9 @@
                 this.loading = true;
                 AttachmentSearch({
                     page: this.current,
-                    limit: this.size,
-                    search: searchForm
+                    search: searchForm,
+                    limit: this.size
                 }).then(async res => {
-                    res.data.forEach((item, index) => {
-                        item.attach_url = process.env.VUE_APP_UPLOAD_HOST_URL + item.attach_url;
-                    });
                     this.list = res.data;
                     this.total = res.total;
                 }).finally(() => {
@@ -446,6 +438,12 @@
                 console.log('recyle')
             },
             handleChangeMode (value) {
+                if (value === 'thumb') {
+                    this.size = 24;
+                } else {
+                    this.size = 10;
+                }
+                this.getData();
                 console.log(value)
             },
             handleMultiDel () {
@@ -479,7 +477,7 @@
         &-item{
             &-cover{
                 width: 100%;
-                height: 200px;
+                height: 150px;
                 border-radius: 4px 4px 0 0;
             }
             &-desc{

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="upload-form">
         <Tabs :animated="false" type="card" @on-click="handleTabClick">
             <TabPane name="local" v-if="isLocal" label="本地图片">
                 <div v-if="showBaseUpload">
@@ -32,44 +32,64 @@
             </TabPane>
             <TabPane name="stock" v-if="isStock" label="图库图片">
                 <Row :loading="loading">
-                    <Col span="16">
-                        <div style="position: relative;height: 100px;" v-if="loading">
-                            <Spin fix size="large"></Spin>
-                        </div>
-                        <empty v-else-if="imageList.length === 0" />
-                        <div v-else>
-                            <div style="position: relative; margin-bottom: 20px;">
-                                <div v-for="(item, index) in imageList" :key="index" @click="handleSelectStoreImg(index)" style="position: relative; margin: 6px; width: 80px; height: 80px; display: inline-block; ">
-                                    <img v-if="item.attach_type === 1" :src="item.attach_url" style="width: 80px; height: 80px; cursor: pointer">
-                                    <video v-if="item.attach_type === 2" width="80" height="80">
-                                        <source :src="item.attach_url" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    <div v-if="item.isChoose" style="position: absolute; height: 82px; width: 82px; top: -1px; left: -1px; border: 2px solid #409EFF;">
+                    <Col span="15">
+                        <div class="upload-form-left-container">
+                            <!-- 搜索 -->
+                            <search-form
+                                    class="upload-form-left-container-container-search-form"
+                                    :show-refresh="false"
+                                    :show-create="false"
+                                    :show-advanced="false"
+                                    ref="searchForm"
+                                    :base-search-form="baseSearchForm"
+                                    @on-search="handleSearchImageList"
+                                    @on-reset="handleImageList"
+                            />
+                            <div class="upload-form-left-container-spin" v-if="loading">
+                                <Spin fix size="large"></Spin>
+                            </div>
+                            <empty :is-back="false" v-else-if="imageList.length === 0" />
+                            <div class="upload-form-left-container-container" v-else>
+                                <div class="upload-form-left-container-container-img-list">
+                                    <div class="upload-form-left-container-container-img-item" v-for="(item, index) in imageList" :key="index" @click="handleSelectStoreImg(index)">
+                                        <img v-if="item.attach_type === 1" :src="item.attach_full_url" >
+                                        <video v-if="item.attach_type === 2">
+                                            <source :src="item.attach_full_url" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <div class="upload-form-left-container-container-border" v-if="item.isChoose">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div style="margin: 0px auto; text-align: center">
-                                <Page :total="imgTotal" show-total :current.sync="currentPage" :page-size="imgSize" @on-change="handleChange"/>
+                                <div class="upload-form-left-container-container-pagination">
+                                    <Page :total="imgTotal" show-total :current.sync="currentPage" :page-size="imgSize" @on-change="handleChange"/>
+                                </div>
                             </div>
                         </div>
                     </Col>
-                    <Col v-if="currentItem" span="8">
+                    <Col v-if="currentItem" span="9">
                         <div class="upload-form-right-container">
-                            <p class="upload-form-right-container-title" style="">附件详情</p>
-                            <img @click="handlePreviewRightImage" v-if="currentItem.attach_type === 1" class="upload-form-right-container-resource" :src="currentItem.attach_url" >
-                            <video @click="handlePreviewRightImage" v-if="currentItem.attach_type === 2" class="upload-form-right-container-resource" muted autoplay>
-                                <source :src="currentItem.attach_url" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <div style="line-height: 25px; word-wrap:break-word; word-break:break-all; ">
-                                <p><span style="color: #999;">原名称：</span>{{ currentItem.attach_origin_name }}
-                                <p><span style="color: #999;">新名称：</span>{{ currentItem.attach_name }}.{{ currentItem.attach_extension }}</p>
-                                <p><span style="color: #999;">格式：</span>{{ currentItem.attach_minetype }}</p>
-                                <p><span style="color: #999;">时间：</span>{{ currentItem.created_at }}</p>
-                                <p><span style="color: #999;">大小：</span>{{ currentItem.attach_size / 1000 }}KB</p>
-                                <!--                            <p>尺寸：1024 * 768 px</p>-->
-                                <p style="margin-top: 10px;">
+                            <p class="upload-form-right-container-title">附件详情</p>
+                            <div class="upload-form-right-container-resource">
+                                <img @click="handlePreviewRightImage" v-if="currentItem.attach_type === 1" :src="currentItem.attach_full_url" >
+                                <video @click="handlePreviewRightImage" v-if="currentItem.attach_type === 2" muted autoplay>
+                                    <source :src="currentItem.attach_full_url" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            <div class="upload-form-right-container-resource-info">
+                                <Form :model="currentItem" :label-width="58" label-position="left">
+                                    <FormItem label="原名称:">{{ currentItem.attach_origin_name }}</FormItem>
+                                    <FormItem label="新名称:">{{ currentItem.attach_name }}.{{ currentItem.attach_extension }}</FormItem>
+                                    <FormItem label="格式:">{{ currentItem.attach_minetype }}</FormItem>
+                                    <FormItem label="大小:">
+                                        {{ parseFloat(currentItem.attach_size / 1000).toFixed(2) > 1024
+                                        ? parseFloat(currentItem.attach_size / 1000 / 1000).toFixed(2) + 'MB' :
+                                        parseFloat(currentItem.attach_size / 1000).toFixed(2) + 'KB' }}
+                                    </FormItem>
+                                    <FormItem label="时间:">{{ currentItem.created_at }}</FormItem>
+                                </Form>
+                                <p class="upload-form-right-container-resource-del-button">
                                     <Poptip
                                             confirm
                                             title="您确认删除这张图片吗？"
@@ -95,9 +115,9 @@
         </Tabs>
         <Modal title="预览图片" v-model="imgVisible" width="830">
             <div v-if="currentItem" style="text-align: center">
-                <img v-if="currentItem.attach_type === 1" :src="currentItem.attach_url" style="max-width: 800px; max-height: 800px;" >
+                <img v-if="currentItem.attach_type === 1" :src="currentItem.attach_full_url" style="max-width: 800px; max-height: 800px;" >
                 <video v-if="currentItem.attach_type === 2" muted autoplay>
-                    <source :src="currentItem.attach_url" type="video/mp4">
+                    <source :src="currentItem.attach_full_url" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
@@ -109,13 +129,17 @@
 </template>
 
 <script>
+    import SearchForm from '@/components/searchform';
     import request from '@/plugins/request';
     import util from '@/libs/util';
     import Empty from '@/components/common/empty';
+    import mixinApp from "@/mixins/app";
     export default {
+        mixins: [ mixinApp ],
         name: 'upload-form',
         components: {
-            Empty
+            Empty,
+            SearchForm
         },
         props: {
             multiple: {
@@ -167,7 +191,26 @@
                 imgSize: 20,
                 imgVisible: false,
                 currentVisibleImg: '',
-                loading: true
+                loading: true,
+                searchForm: {},
+                baseSearchForm: {
+                    type: 'id',
+                    keyword: '',
+                    options: [
+                        {
+                            name: 'ID',
+                            value: 'id'
+                        },
+                        {
+                            name: '附件名称',
+                            value: 'attach_name'
+                        },
+                        {
+                            name: '附件原名称',
+                            value: 'attach_origin_name'
+                        }
+                    ]
+                },
             }
         },
         computed: {
@@ -201,10 +244,29 @@
                         page: this.currentPage,
                         limit: this.imgSize
                     }
-                }).then(res => {
-                    res.data.forEach((item, index) => {
-                        item.attach_url = process.env.VUE_APP_UPLOAD_HOST_URL + item.attach_url;
-                    });
+                }).then(async res => {
+                    this.imgList = res.data;
+                    this.imgTotal = res.total;
+                }).finally(() => {
+                    this.loading = false;
+                });
+            },
+            handleSearchImageList (searchForm) {
+                if (searchForm._is_search) {
+                    this.currentPage = 1;
+                }
+                this.list = [];
+                this.searchForm = searchForm;
+                this.loading = true;
+                return request({
+                    url: this.imageListUrl,
+                    method: 'post',
+                    data: {
+                        page: this.currentPage,
+                        limit: this.imgSize,
+                        search: searchForm
+                    }
+                }).then(async res => {
                     this.imgList = res.data;
                     this.imgTotal = res.total;
                 }).finally(() => {
@@ -264,7 +326,11 @@
             },
             handleChange (page) {
                 this.currentPage = page;
-                this.handleImageList();
+                if (this.searchForm) {
+                    this.handleSearchImageList(this.searchForm);
+                } else {
+                    this.handleImageList();
+                }
             },
             handleTabClick (name) {
                 if (name === 'stock') {
@@ -274,11 +340,11 @@
             },
             handlePreviewImage (file) {
                 this.imgVisible = true;
-                this.currentVisibleImg = file.response ? process.env.VUE_APP_UPLOAD_HOST_URL + file.response.fullpath : '';
+                this.currentItem = file.response;
             },
             handlePreviewRightImage () {
                 this.imgVisible = true;
-                this.currentVisibleImg = this.currentItem.attach_url;
+                this.currentVisibleImg = this.currentItem.attach_full_url;
             },
             handleCloseModal () {
                 this.imgVisible = false;
@@ -286,20 +352,83 @@
         }
     }
 </script>
+<style lang="less">
+    .upload-form .search-form-base-row-input {
+        max-width: none !important;
+    }
+</style>
 <style lang="less" scoped>
     .upload-form {
+        .ivu-form-item {
+            margin-bottom: 0px;
+        }
+        &-left-container {
+            border-right: 1px solid #eee;
+            &-spin {
+                position: relative;
+                height: 200px;
+            }
+            &-container {
+                &-search-form {
+                    border-bottom: 1px solid #eee;
+                    margin-bottom: 20px;
+                    margin-right: 25px;
+                }
+                &-img-list {
+                    position: relative;
+                    margin-bottom: 20px;
+                }
+                &-img-item {
+                    position: relative;
+                    margin: 6px;
+                    width: 80px;
+                    height: 80px;
+                    display: inline-block;
+                    img, video {
+                        width: 80px;
+                        height: 80px;
+                        cursor: pointer
+                    }
+                }
+                &-border {
+                    position: absolute;
+                    height: 82px;
+                    width: 82px;
+                    top: -1px;
+                    left: -1px;
+                    border: 2px solid #409EFF;
+                }
+                &-pagination {
+                    margin: 0px auto;
+                    text-align: center
+                }
+            }
+        }
         &-right-container {
+            padding-left: 15px;
             &-title {
                 font-weight: bold;
                 border-bottom: 1px solid #ebeef5;
                 padding-bottom: 10px;
-                margin-bottom: 10px;
+                margin-bottom: 15px;
             }
             &-resource {
-                cursor: pointer;
-                height: 80px;
-                width: 80px;
+                text-align: center;
+                img, video {
+                    cursor: pointer;
+                    height: 120px;
+                    width: 120px;
+                }
+                &-info {
+                    line-height: 25px;
+                    word-wrap:break-word;
+                    word-break:break-all;
+                }
+                &-del-button {
+                    margin-top: 10px;
+                }
             }
         }
     }
+
 </style>

@@ -3,7 +3,7 @@
         <p v-if="isIcon"><Icon class="empty-container-icon" :class="styleClass" :type="icon" /></p>
         <p v-else><img class="empty-container-img" :class="styleClass" :src="icon" /></p>
         <p class="empty-container-text"><span>{{ emptyText }}</span></p>
-        <p class="empty-container-btn"><Button v-if="isBack" @click="handleBack" shape="circle" type="dashed">返回</Button></p>
+        <p v-if="isBack" class="empty-container-btn"><Button @click="handleBack" shape="circle" type="dashed">返回</Button></p>
     </div>
 </template>
 
@@ -47,7 +47,6 @@
 
 <style lang="less" scoped>
     .empty-container {
-        height: 200px;
         padding-top: 20px;
         text-align: center;
         line-height: 35px;
