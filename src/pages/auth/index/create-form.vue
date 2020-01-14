@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="create-form">
         <Modal width="600" :mask-closable="false" v-model="showCreate" title="新建用户" :loading="creating" @on-ok="handleCreate" @on-cancel="handleCancel">
             <Form ref="create" :model="createData" :rules="createRules" label-position="left" :label-width="80">
                 <FormItem label="账户：" prop="account">
@@ -11,6 +11,11 @@
                 <FormItem label="手机号：" prop="phone">
                     <Input v-model="createData.phone" placeholder="请输入手机号" />
                 </FormItem>
+                <FormItem label="密码：" prop="password">
+                    <Input v-model="createData.password" enter-button="初始密码" placeholder="点击生成初始密码" clearable>
+                        <Button type="primary" slot="append" @click="handleInitPassword">初始密码</Button>
+                    </Input>
+                </FormItem>
                 <FormItem label="状态：" prop="status">
                     <Switch v-model="createData.statusFormat" @on-change="handleStatusSwitchChange" />
                 </FormItem>
@@ -21,6 +26,8 @@
 
 <script>
     import { AdminShow, AdminStore, AdminUpdate } from '@/api/admin';
+    import random_str from '@/libs/random_str';
+
     export default {
         name: 'create-form',
         data () {
@@ -33,6 +40,7 @@
                     account: '',
                     real_name: '',
                     phone: '',
+                    password: '',
                     status: 1,
                     statusFormat: true
                 },
@@ -45,6 +53,9 @@
                     ],
                     phone: [
                         { required: true, message: '请输入手机号', trigger: 'blur' }
+                    ],
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur' }
                     ]
                 },
                 info: {}
@@ -67,6 +78,7 @@
                     id: this.updateIndex
                 }).then(res => {
                     this.createData = Object.assign(this.createData, res);
+                    this.createData.statusFormat = this.createData.status === 1 ? true : false;
                 }).finally(() => {
                     this.creating = false;
                 })
@@ -106,9 +118,15 @@
             handleCancel () {
                 this.$refs.create.resetFields();
                 this.$emit('on-create-form', false, -1);
+            },
+            handleInitPassword () {
+                this.createData.password = random_str(6);
             }
         }
     }
 </script>
-<style scoped>
+<style lang="less">
+    .ivu-input-icon {
+        right: 90px !important;
+    }
 </style>
