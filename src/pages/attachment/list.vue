@@ -302,6 +302,9 @@
                     page: this.current,
                     limit: this.size
                 }).then(async res => {
+                    res.data.forEach((item, index) => {
+                        item.attach_url = process.env.VUE_APP_UPLOAD_HOST_URL + item.attach_url;
+                    });
                     this.list = res.data;
                     this.total = res.total;
                 }).finally(() => {
@@ -317,6 +320,9 @@
                     limit: this.size,
                     search: searchForm
                 }).then(async res => {
+                    res.data.forEach((item, index) => {
+                        item.attach_url = process.env.VUE_APP_UPLOAD_HOST_URL + item.attach_url;
+                    });
                     this.list = res.data;
                     this.total = res.total;
                 }).finally(() => {
@@ -491,6 +497,9 @@
                 }
             }
         }
+    }
+    .ivu-avatar-image {
+        border-radius: 4px !important;
     }
 </style>
 
