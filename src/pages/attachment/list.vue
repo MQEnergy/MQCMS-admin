@@ -74,7 +74,7 @@
                     </Table>
                 </div>
                 <div v-else>
-                    <Row :gutter="24" class="ivu-mt">
+                    <Row :gutter="24" class="ivu-mt search-search-projects">
                         <Col :xxl="3" :xl="6" :lg="6" :md="12" :sm="12" :xs="24" v-for="(item, index) in limitData" :key="index" class="ivu-mb">
                             <Card :bordered="bordered" :padding="0" class="search-search-projects-item">
                                 <img class="search-search-projects-item-cover" v-if="item.attach_type === 1" :src="item.attach_full_url" >
@@ -474,22 +474,25 @@
     }
 </script>
 <style lang="less" scoped>
-    .search-search-projects{
-        &-item{
-            &-cover{
+    .search-search-projects {
+        .ivu-mb {
+            height: 250px;
+        }
+        &-item {
+            &-cover {
                 width: 100%;
                 height: 150px;
                 border-radius: 4px 4px 0 0;
             }
-            &-desc{
+            &-desc {
                 display: -webkit-box;
                 height: 40px;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
                 overflow: hidden;
             }
-            &-extra{
-                span{
+            &-extra {
+                span {
                     display: inline-block;
                     color: #808695;
                     vertical-align: middle;
@@ -501,4 +504,3 @@
         border-radius: 4px !important;
     }
 </style>
-
