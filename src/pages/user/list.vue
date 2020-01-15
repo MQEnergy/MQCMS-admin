@@ -29,6 +29,8 @@
                 <Badge v-if="row.status === 1" status="processing" text="正常" />
             </template>
             <template slot-scope="{ row, index }" slot="action">
+                <a @click="handleShow(row, index)">查看</a>
+                <Divider type="vertical" />
                 <a @click="handleOpenUpdateCreate(true, row.id)">编辑</a>
             </template>
         </Table>
@@ -299,6 +301,9 @@
             // 编辑创建数据
             handleOpenUpdateCreate (status, updateIndex) {
                 this.$refs.createForm.handleShowUpdateCreate(status, updateIndex);
+            },
+            handleShow (row, index) {
+                console.log(row, index);
             },
             handleDelete (index) {
                 this.updateIndex = index;

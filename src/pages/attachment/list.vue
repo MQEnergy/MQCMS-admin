@@ -492,6 +492,7 @@
                 overflow: hidden;
             }
             &-extra {
+                text-align: center;
                 span {
                     display: inline-block;
                     color: #808695;
