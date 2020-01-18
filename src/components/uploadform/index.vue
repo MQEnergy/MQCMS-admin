@@ -89,7 +89,7 @@
                                     </FormItem>
                                     <FormItem label="时间:">{{ currentItem.created_at }}</FormItem>
                                 </Form>
-                                <p class="upload-form-right-container-resource-del-button">
+                                <p class="upload-form-right-container-resource-del-button" v-if="isDel">
                                     <Poptip
                                             confirm
                                             title="您确认删除这张图片吗？"
