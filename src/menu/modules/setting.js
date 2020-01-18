@@ -13,6 +13,14 @@ export default {
         {
             path: `${pre}account`,
             title: '个人设置'
+        },
+        {
+            path: `${pre}form`,
+            title: '表单构建'
+        },
+        {
+            path: `${pre}table`,
+            title: '表格构建'
         }
     ]
 }

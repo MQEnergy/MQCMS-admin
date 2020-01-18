@@ -184,7 +184,7 @@
                         label_prop: 'created_at',
                         ele_value: '',
                         ele_type: 'daterange',
-                        options: [],
+                        options: {},
                     }
                 ]
             }

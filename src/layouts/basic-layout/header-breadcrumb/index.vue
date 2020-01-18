@@ -28,7 +28,7 @@
                 'showBreadcrumbIcon',
                 'menuCollapse'
             ]),
-            ...mapState('admin/menu', [
+            ...mapState('admin/table', [
                 'openNames',
                 'activePath',
                 'header',
@@ -51,7 +51,7 @@
                 });
                 return newItems;
             },
-            // 第一级，默认是 menu/header.js 中的第一项
+            // 第一级，默认是 table/header.js 中的第一项
             topItem () {
                 return this.header.find(item => item.name === this.headerName);
             }

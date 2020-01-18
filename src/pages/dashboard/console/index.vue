@@ -14,13 +14,13 @@
         </p>
         <p style="width: 450px; margin: 0 auto; margin-top: 30px; text-align: left">
             后端项目仓库：
-            <i-link link-color="true" target="_blank" href="https://github.com/MQEnergy/MQCMS">https://github.com/MQEnergy/MQCMS</i-link>
+            <i-link :link-color="true" target="_blank" href="https://github.com/MQEnergy/MQCMS">https://github.com/MQEnergy/MQCMS</i-link>
             <br>
             前端项目仓库：
-            <i-link link-color="true" target="_blank" href="https://github.com/MQEnergy/MQCMS-admin">https://github.com/MQEnergy/MQCMS-admin</i-link>
+            <i-link :link-color="true" target="_blank" href="https://github.com/MQEnergy/MQCMS-admin">https://github.com/MQEnergy/MQCMS-admin</i-link>
             <br>
             小程序项目仓库：
-            <i-link link-color="true" target="_blank" href="https://github.com/MQEnergy/MQCMS-miniprogram">https://github.com/MQEnergy/MQCMS-miniprogram</i-link>
+            <i-link :link-color="true" target="_blank" href="https://github.com/MQEnergy/MQCMS-miniprogram">https://github.com/MQEnergy/MQCMS-miniprogram</i-link>
         </p>
     </div>
 </template>

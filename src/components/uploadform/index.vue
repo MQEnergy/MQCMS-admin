@@ -148,7 +148,7 @@
             },
             uploadUrl: {
                 type: String,
-                default: '/admin/attachment/store'
+                default: '/admin/attachment/upload'
             },
             imageListUrl: {
                 type: String,

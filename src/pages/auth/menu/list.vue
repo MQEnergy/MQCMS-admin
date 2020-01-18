@@ -1,17 +1,19 @@
 <template>
     <div class="i-table-no-border">
-        <Button type="primary" icon="md-add" @click="handleOpenCreate">新建</Button>
-        <Button icon="md-list" class="ivu-ml-8" v-show="selectedData.length">批量操作</Button>
-        <Dropdown class="ivu-ml-8" v-show="selectedData.length" @on-click="handleClickItem">
-            <Button>
-                更多操作
-                <Icon type="ios-arrow-down" />
-            </Button>
-            <DropdownMenu slot="list">
-                <DropdownItem name="delete">删除</DropdownItem>
-            </DropdownMenu>
-        </Dropdown>
-        <Alert show-icon class="ivu-mt">
+        <!-- 搜索 -->
+        <search-form
+            ref="searchForm"
+            :show-multi-action="false"
+            :base-search-form="baseSeachForm"
+            :advanced-search-form="advancedSearchForm"
+            @on-create-form="handleOpenUpdateCreate"
+            @on-search="searchData"
+            @on-reset="getData"
+            @on-multi-del="handleMultiDel"
+            @on-export="handleExport"
+        />
+        <!-- 列表 -->
+        <Alert show-icon>
             <div v-font="14">
                 已选择 <strong v-color="'#2d8cf0'">{{ selectedData.length }}</strong> 项
                 <a class="ivu-ml" @click="handleClearSelect">清空</a>
@@ -30,52 +32,54 @@
             @on-select-all="handleSelectAll"
             @on-select-all-cancel="handleSelectAllCancel"
         >
-            <template slot-scope="{ row }" slot="id">
-                <div>{{ row.id }}</div>
+            <template slot-scope="{ row }" slot="tag_name">
+                <div>
+                    <Poptip trigger="hover">
+                        <Icon v-color="'#ff9900'" style="color: #666; cursor: pointer;" type="ios-information-circle" />
+                        <div slot="content" style="padding: 10px;">
+                            <p><span v-color="'#999'">标题(SEO)：</span>{{ row.tag_title || '无' }}</p>
+                            <p><span v-color="'#999'">描述(SEO)：</span>{{ row.tag_desc || '无' }}</p>
+                            <p><span v-color="'#999'">关键词(SEO)：</span>{{ row.tag_keyword || '无' }}</p>
+                        </div>
+                    </Poptip>
+                    {{ row.tag_name }}
+                </div>
             </template>
-            <template slot-scope="{ row }" slot="user_name">
-                <div>{{ row.user_name }}</div>
+            <template slot-scope="{ row }" slot="is_hot">
+                <Tag v-if="row.is_hot === 0" color="primary">正常</Tag>
+                <Tag v-else color="error">热门</Tag>
             </template>
-            <template slot-scope="{ row }" slot="real_name">
-                <div>{{ row.real_name }}</div>
+            <template slot-scope="{ row }" slot="tag_type">
+                <Tag v-if="row.tag_type === 1" color="primary">系统创建</Tag>
+                <Tag v-else color="success">用户创建</Tag>
             </template>
             <template slot-scope="{ row }" slot="status">
                 <Badge v-if="row.status === 0" status="default" text="禁用" />
-                <Badge v-if="row.status === 1" status="processing" text="正常" />
-            </template>
-            <template slot-scope="{ row }" slot="created_at">
-                {{ row.created_at }}
+                <Badge v-else status="processing" text="正常" />
             </template>
             <template slot-scope="{ row, index }" slot="action">
-                <a @click="handleUpdate(index)">编辑</a>
+                <a @click="handleOpenUpdateCreate(true, row.id)">编辑</a>
+                <Divider type="vertical" />
+                <a v-color="'#ed4014'" @click="handleDelete(index)">删除</a>
             </template>
         </Table>
         <div class="ivu-mt ivu-text-center">
             <Page :total="total" show-total :current.sync="current" @on-change="handleChange"/>
         </div>
-
-        <Modal v-model="showCreate" title="新建用户" :loading="creating" @on-ok="handleCreate" @on-cancel="handleCancel">
-            <Form ref="create" :model="createData" :rules="createRules" label-position="left" :label-width="80">
-                <FormItem label="用户名：" prop="user_name">
-                    <Input v-model="createData.user_name" placeholder="请输入用户名" />
-                </FormItem>
-                <FormItem label="姓名：" prop="real_name">
-                    <Input v-model="createData.real_name" placeholder="请输入真实姓名" />
-                </FormItem>
-                <FormItem label="手机号：" prop="phone">
-                    <Input v-model="createData.phone" placeholder="请输入手机号" />
-                </FormItem>
-                <FormItem label="状态：" prop="status">
-                    <Switch v-model="createData.statusFormat" @on-change="handleSwitchChange" />
-                </FormItem>
-            </Form>
-        </Modal>
+        <!-- 创建编辑 -->
+        <create-form ref="createForm" @on-create-form="handleOpenUpdateCreate" @on-ok="getData" />
     </div>
 </template>
 <script>
-    import { UserIndex, UserStore, UserUpdate } from '@/api/user';
-
+    import { TagSearch, TagIndex, TagDelete } from '@/api/tag';
+    import CreateForm from './create-form';
+    import SearchForm from '@/components/searchform/index';
+    
     export default {
+        components: {
+            SearchForm,
+            CreateForm
+        },
         data () {
             return {
                 columns: [
@@ -90,19 +94,55 @@
                         minWidth: 80
                     },
                     {
-                        title: '用户名',
-                        key: 'user_name',
+                        title: '标签名称',
+                        slot: 'tag_name',
+                        key: 'tag_name',
                         minWidth: 100
                     },
                     {
-                        title: '真实姓名',
-                        key: 'real_name',
+                        title: '使用次数',
+                        key: 'used_count',
                         minWidth: 100
                     },
                     {
-                        title: '手机号',
-                        key: 'phone',
-                        minWidth: 100
+                        title: '是否热门',
+                        slot: 'is_hot',
+                        minWidth: 100,
+                        filters: [
+                            {
+                                label: '正常',
+                                value: 0
+                            },
+                            {
+                                label: '热门',
+                                value: 1
+                            }
+                        ],
+                        filterMultiple: true,
+                        filterRemote (value) {
+                            // 切换过滤条件时，将条件保存到本地
+                            this.filterHotType = value;
+                        }
+                    },
+                    {
+                        title: '标签类型',
+                        slot: 'tag_type',
+                        minWidth: 100,
+                        filters: [
+                            {
+                                label: '系统创建',
+                                value: 1
+                            },
+                            {
+                                label: '用户创建',
+                                value: 2
+                            }
+                        ],
+                        filterMultiple: true,
+                        filterRemote (value) {
+                            // 切换过滤条件时，将条件保存到本地
+                            this.filterTagType = value;
+                        }
                     },
                     {
                         title: '状态',
@@ -121,7 +161,7 @@
                         filterMultiple: true,
                         filterRemote (value) {
                             // 切换过滤条件时，将条件保存到本地
-                            this.filterType = value;
+                            this.filterStatusType = value;
                         }
                     },
                     {
@@ -145,28 +185,95 @@
                 size: 10,
                 sortType: 'normal', // 当前排序类型，可选值为：normal（默认） || asc（升序）|| desc（降序）,
                 sortColumns: '',
-                filterType: undefined,
-                showCreate: false,
-                createData: {
-                    user_name: '',
-                    real_name: '',
-                    phone: '',
-                    status: 1,
-                    statusFormat: true
-                },
-                createRules: {
-                    user_name: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
-                    ],
-                    real_name: [
-                        { required: true, message: '请输入真实姓名', trigger: 'blur' }
-                    ],
-                    phone: [
-                        { required: true, message: '请输入手机号', trigger: 'blur' }
+                filterStatusType: undefined,
+                filterHotType: undefined,
+                filterTagType: undefined,
+                searchForm: {},
+                baseSeachForm: {
+                    type: 'id',
+                    keyword: '',
+                    options: [
+                        {
+                            name: '标签ID',
+                            value: 'id'
+                        },
+                        {
+                            name: '标签名称',
+                            value: 'tag_name'
+                        },
+                        {
+                            name: '标签标题(SEO)',
+                            value: 'tag_title'
+                        }
                     ]
                 },
-                creating: true,
-                updateIndex: -1
+                advancedSearchForm: [
+                    {
+                        label_name: '是否热门：',
+                        label_prop: 'is_hot',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '0',
+                                name: '正常'
+                            },
+                            {
+                                value: '1',
+                                name: '热门'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '标签类型：',
+                        label_prop: 'tag_type',
+                        ele_value: '',
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '1',
+                                name: '系统创建'
+                            },
+                            {
+                                value: '2',
+                                name: '用户创建'
+                            }
+                        ],
+                    },
+                    {
+                        label_name: '标签名称：',
+                        label_prop: 'tag_name',
+                        ele_value: '',
+                        ele_type: 'input',
+                        options: []
+                    },
+                    {
+                        label_name: '创建时间：',
+                        label_prop: 'created_at',
+                        ele_value: '',
+                        ele_type: 'daterange',
+                        options: {}
+                    },
+                    {
+                        label_name: '更新时间：',
+                        label_prop: 'updated_at',
+                        ele_value: '',
+                        ele_type: 'datetimerange',
+                        options: {}
+                    },
+                    {
+                        label_name: '标签状态：',
+                        label_prop: 'status',
+                        ele_value: '1',
+                        ele_type: 'switch',
+                        options: {
+                            open: '开',
+                            true_value: '1',
+                            close: '关',
+                            false_value: '0'
+                        }
+                    },
+                ]
             }
         },
         computed: {
@@ -185,21 +292,30 @@
                         return a[sortColumns] < b[sortColumns] ? 1 : -1;
                     });
                 }
-
-                // 动态计算过滤类型
-                if (this.filterType && this.filterType.length) {
+                // 状态动态计算过滤类型
+                if (this.filterStatusType && this.filterStatusType.length) {
                     data = data.filter(item => {
-                        return this.filterType.indexOf(item.status) >= 0;
+                        return this.filterStatusType.indexOf(item.status) >= 0;
                     });
                 }
-
+                // 是否热门动态计算过滤类型
+                if (this.filterHotType && this.filterHotType.length) {
+                    data = data.filter(item => {
+                        return this.filterHotType.indexOf(item.is_hot) >= 0;
+                    });
+                }
+                // 标签类型动态计算过滤类型
+                if (this.filterTagType && this.filterTagType.length) {
+                    data = data.filter(item => {
+                        return this.filterTagType.indexOf(item.tag_type) >= 0;
+                    });
+                }
                 // 判断是否有选中的数据
-                const selectedNames = this.selectedData.map(item => item.user_name);
+                const selectedNames = this.selectedData.map(item => item.tag_name);
                 data.map(item => {
-                    item._checked = selectedNames.indexOf(item.user_name) >= 0;
+                    item._checked = selectedNames.indexOf(item.tag_name) >= 0;
                     return item;
                 });
-
                 return data;
             },
             // 因为要动态计算总页数，所以还需要一个计算属性来返回最终给 Table 的 data
@@ -213,9 +329,23 @@
         methods: {
             getData () {
                 this.loading = true;
-                UserIndex({
+                TagIndex({
                     page: this.current,
                     limit: this.size
+                }).then(async res => {
+                    this.list = res.data;
+                    this.total = res.total;
+                }).finally(() => {
+                    this.loading = false;
+                });
+            },
+            searchData (searchForm) {
+                this.searchForm = searchForm;
+                this.loading = true;
+                TagSearch({
+                    page: this.current,
+                    limit: this.size,
+                    search: searchForm
                 }).then(async res => {
                     this.list = res.data;
                     this.total = res.total;
@@ -266,84 +396,58 @@
             handleClearSelect () {
                 this.selectedData = [];
             },
-            handleClickItem (name) {
-                if (name === 'delete') {
-                    this.selectedData.forEach(item => {
-                        const index = this.list.findIndex(i => i.id === item.id);
-                        if (index >= 0) {
-                            this.list.splice(index, 1);
-                        }
-                    });
-                    this.selectedData = [];
-                }
+            // 编辑创建数据
+            handleOpenUpdateCreate (status, updateIndex) {
+                this.$refs.createForm.handleShowUpdateCreate(status, updateIndex);
             },
-            handleOpenCreate () {
-                this.updateIndex = -1;
-                this.showCreate = true;
-            },
-            // 新增数据
-            handleCreate () {
-                this.$refs.create.validate((valid) => {
-                    if (valid) {
-                        if (this.updateIndex < 0) {
-                            // 新建
-                            UserStore(
-                                this.createData
-                            ).then(async res => {
-                                this.getData();
-                                this.$Message.success('创建成功');
-                            });
-                        } else {
-                            // 修改
-                            const info = this.list[this.updateIndex];
-                            this.createData.id = info.id;
-                            UserUpdate(this.createData).then(res => {
-                                const updateItemIndex = this.list.findIndex(item => item.id === info.id);
-                                this.list[updateItemIndex].user_name = this.createData.user_name;
-                                this.list[updateItemIndex].real_name = this.createData.real_name;
-                                this.list[updateItemIndex].phone = this.createData.phone;
-                                this.list[updateItemIndex].status = this.createData.status;
-                                this.$Message.success('修改成功');
-                            });
-                        }
-                        this.showCreate = false;
-                        this.creating = false;
-                        this.$nextTick(() => {
-                            this.creating = true;
-                        });
-                    } else {
-                        this.creating = false;
-                        this.$nextTick(() => {
-                            this.creating = true;
+            handleDelete (index) {
+                this.updateIndex = index;
+                this.$Modal.confirm({
+                    title: '删除提示',
+                    content: '确定删除该条记录吗？',
+                    onOk: () => {
+                        TagDelete({
+                            id: this.list[index].id
+                        }).then(res => {
+                            this.$Message.success('删除成功');
+                            this.current = 1;
+                            this.getData();
+                        }).finally(() => {
                         });
                     }
                 });
             },
-            // 编辑数据
-            handleUpdate (index) {
-                this.updateIndex = index;
-
-                const item = this.list[index];
-                this.createData = {
-                    user_name: item.user_name,
-                    real_name: item.real_name,
-                    phone: item.phone,
-                    status: item.status,
-                    statusFormat: item.status === 1
-                };
-                this.showCreate = true;
-            },
-            handleCancel () {
-                this.$refs.create.resetFields();
+            handleMultiDel () {
+                console.log(this.selectedData);
+                if (this.selectedData.length === 0) {
+                    this.$Message.error('请选择至少一个元素');
+                    return false;
+                }
+                const ids = this.selectedData.map(item => item.id);
+                this.$Modal.confirm({
+                    title: '删除提示',
+                    content: '确定要批量删除吗？',
+                    onOk: () => {
+                        this.$Message.success('删除成功: ' + ids);
+                    }
+                });
             },
             handleChange (page) {
                 this.current = page;
-                this.getData();
+                if (this.searchForm) {
+                    this.searchData(this.searchForm);
+                } else {
+                    this.getData();
+                }
             },
-            handleSwitchChange (status) {
-                this.createData.status = status ? 1 : 0;
-                this.createData.statusFormat = status;
+            handleExport () {
+                this.$Message.success('导出成功');
             }
         }
     }
 </script>
+<style scoped>
+    .ivu-table-wrapper {
+        overflow: visible;
+    }
+</style>
