@@ -1,7 +1,7 @@
 <template>
-    <div class="create-form">
+    <div>
         <Modal width="600" :mask-closable="false" v-model="showCreate" title="新建用户" :loading="creating" @on-ok="handleCreate" @on-cancel="handleCancel">
-            <Form ref="create" :model="createData" :rules="createRules" label-position="left" :label-width="80">
+            <Form class="create-form" ref="create" :model="createData" :rules="createRules" label-position="left" :label-width="80">
                 <FormItem label="账户：" prop="account">
                     <Input v-model="createData.account" placeholder="请输入账户名" />
                 </FormItem>
@@ -126,7 +126,7 @@
     }
 </script>
 <style lang="less">
-    .ivu-input-icon {
+    .create-form .ivu-input-icon {
         right: 90px !important;
     }
 </style>
