@@ -229,7 +229,22 @@
                                     :before-change="handleSwitchBeforeChange()"
                                     :loading="element.ele_attr.loading"
                                     @on-change="handleSwitchChange"
-                            />
+                            >
+                                <template v-if="element.ele_attr.custom.name === 'span'">
+                                    <span :slot="element.ele_attr.custom.slot[0]">{{ element.ele_attr.custom.type[0] }}</span>
+                                    <span :slot="element.ele_attr.custom.slot[1]">{{ element.ele_attr.custom.type[1] }}</span>
+                                </template>
+                                <template v-if="element.ele_attr.custom.name === 'icon'">
+                                    <template v-if="!element.ele_attr.custom.is_custom">
+                                        <Icon :type="element.ele_attr.custom.type[0]" :slot="element.ele_attr.custom.slot[0]" />
+                                        <Icon :type="element.ele_attr.custom.type[1]" :slot="element.ele_attr.custom.slot[1]" />
+                                    </template>
+                                    <template v-else>
+                                        <Icon :custom="formConfig.icon.font_family + ' ' + formConfig.icon.css_prefix_text + element.ele_attr.custom.type[0]" :slot="element.ele_attr.custom.slot[0]" size="12" />
+                                        <Icon :custom="formConfig.icon.font_family + ' ' + formConfig.icon.css_prefix_text + element.ele_attr.custom.type[1]" :slot="element.ele_attr.custom.slot[1]" size="12" />
+                                    </template>
+                                </template>
+                            </Switch>
                         </template>
                         <template v-if="element.ele_name === 'rate'">
                             <Rate
