@@ -1,22 +1,24 @@
 <template>
     <div class="icon-container">
         <div class="icon-search ivu-mt-8 ivu-mb">
-            <Input v-model="keyword" @input="handleSearchIcon" size="large" placeholder="输入英文关键词搜索 如：success" clearable />
+            <Input v-model="keyword" @input="handleSearchIcon" size="large" placeholder="输入英文关键词搜索 如：logo" clearable />
         </div>
         <Tabs v-model="currentTab" type="card" :animated="false" @on-click="handleTabClick">
             <TabPane label="系统" name="system"></TabPane>
             <TabPane label="自定义" name="custom"></TabPane>
         </Tabs>
-        <Row :gutter="10">
-            <Col :span="4" v-for="(item, index) in iconList" :key="index">
-                <div class="icon-cell" @click="handleChooseIcon(item, index)" >
-                    <div :class="item.is_active ? 'active' : ''"></div>
-                    <Icon v-if="!item.is_custom" :type="item.font_class" size="30" />
-                    <Icon v-else :class="fontFamily" :custom="cssPrefixText + item.font_class" size="30" />
-                    <p>{{ item.name }}</p>
-                </div>
-            </Col>
-        </Row>
+        <div class="icon-list">
+            <Row :gutter="10">
+                <Col :span="4" v-for="(item, index) in iconList" :key="index">
+                    <div class="icon-cell" @click="handleChooseIcon(item, index)" >
+                        <div :class="item.is_active ? 'active' : ''"></div>
+                        <Icon v-if="!item.is_custom" :type="item.font_class" size="30" />
+                        <Icon v-else :class="fontFamily" :custom="cssPrefixText + item.font_class" size="30" />
+                        <p>{{ item.name }}</p>
+                    </div>
+                </Col>
+            </Row>
+        </div>
     </div>
 </template>
 
@@ -45,14 +47,10 @@
                 this.$emit('on-choose-icon', item, index);
             },
             handleSearchIcon () {
-                let list = this.iconList;
-                if (this.keyword !== '') {
-                    list = list.filter(item => {
-                        return item.name.indexOf(this.keyword) >= 0;
-                    })
-                } else {
-                    list = this.currentTab === 'system' ? data.sysIconList : data.customIcon.glyphs;
-                }
+                let list = this.currentTab === 'system' ? data.sysIconList : data.customIcon.glyphs;
+                list = list.filter(item => {
+                    return item.name.indexOf(this.keyword) >= 0;
+                });
                 this.iconList = list;
             },
             handleTabClick (name) {
@@ -70,7 +68,6 @@
 <style lang="less" scoped>
     .icon-container {
         height: 520px;
-        overflow-y: scroll;
         .icon-search {
             max-width: 500px;
             margin: 0px auto;
@@ -92,6 +89,11 @@
             width: 100%;
             top: 0px;
             left: 0px;
+        }
+        .icon-list {
+            height: 420px;
+            overflow-y: scroll;
+            overflow-x: hidden;
         }
     }
 

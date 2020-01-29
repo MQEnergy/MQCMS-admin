@@ -27,6 +27,7 @@
                         <RadioGroup
                                 v-model="currentElement.ele_attr.custom.name"
                                 type="button"
+                                @on-change="handleRadioChange"
                         >
                             <Radio label="span">span</Radio>
                             <Radio label="icon">icon</Radio>
@@ -35,12 +36,12 @@
                     <div style="background: #f0f1f3; padding: 10px;" >
                         <FormItem label="自定义内容">
                             <template v-if="currentElement.ele_attr.custom.name === 'span'">
-                                开启：<Input v-model="currentElement.ele_attr.custom.type[0]" v-width="100" /><br>
-                                关闭：<Input v-model="currentElement.ele_attr.custom.type[1]" v-width="100" />
+                                开启：<Input v-model="currentElement.ele_attr.custom.type[0]" v-width="100" clearable /><br>
+                                关闭：<Input v-model="currentElement.ele_attr.custom.type[1]" v-width="100" clearable />
                             </template>
                             <template v-else>
-                                开启：<Button type="dashed" @click="handleSelectIcon(1)">{{ currentElement.ele_attr.custom.type[0] ? currentElement.ele_attr.custom.type[0] : '选择icon' }}</Button><br>
-                                关闭：<Button type="dashed" @click="handleSelectIcon(2)">{{ currentElement.ele_attr.custom.type[1] ? currentElement.ele_attr.custom.type[1] : '选择icon' }}</Button>
+                                开启：<Button type="dashed" @click="handleSelectIcon(1)">{{ currentElement.ele_attr.custom.type[0] !== '开' ? currentElement.ele_attr.custom.type[0] : '选择icon' }}</Button><br>
+                                关闭：<Button type="dashed" @click="handleSelectIcon(2)">{{ currentElement.ele_attr.custom.type[1] !== '关' ? currentElement.ele_attr.custom.type[1] : '选择icon' }}</Button>
                             </template>
                         </FormItem>
                     </div>
@@ -145,11 +146,12 @@
                 this.currentElement.ele_attr.custom.type[this.currentIndex] = this.currentIcon.font_class;
             },
             handleModalCancel () {
-                this.currentIcon = {};
                 this.modalSeen = false;
             },
             handleChooseIcon (item, index) {
                 this.currentIcon = item;
+            },
+            handleRadioChange (name) {
             }
         }
     }
