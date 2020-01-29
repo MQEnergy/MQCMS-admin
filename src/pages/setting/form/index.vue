@@ -349,6 +349,7 @@
                     <div class="list-group-container">
                         <Tabs type="card">
                             <TabPane label="字段属性">
+                                <empty v-if="currentElement === undefined" empty-text="请将左边组件拖入到可视区域" :is-back="false" />
                                 <attribute @on-element-size="handleElementSize" :current-element="currentElement" :form-config="formConfig" />
                             </TabPane>
                             <TabPane label="表单属性">

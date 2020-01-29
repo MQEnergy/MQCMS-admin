@@ -8,7 +8,7 @@
                 :tab-active-key="tabActiveKey"
                 @on-tab-change="handleChangeTab"
             >
-                <div slot="content" class="ivu-mt ivu-mb" style="max-width: 500px;margin: 0 auto;">
+                <div slot="content" class="ivu-mt ivu-mb" style="max-width: 500px; margin: 0 auto;">
                     <Input search size="large" enter-button="搜索" placeholder="请输入应用名称搜索" />
                 </div>
             </page-header>
