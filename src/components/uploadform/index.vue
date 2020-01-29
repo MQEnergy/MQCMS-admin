@@ -325,6 +325,7 @@
                 });
             },
             handleDelCancel () {
+                this.$emit('on-select-image', undefined, 0);
             },
             handleChange (page) {
                 this.currentPage = page;

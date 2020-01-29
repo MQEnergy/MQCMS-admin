@@ -264,10 +264,10 @@
                                                          <template v-if="element.ele_name === 'upload'">
                                                              <Tooltip placement="right-start" theme="light">
                                                                  <div slot="content">
-                                                                     <template v-if="element.ele_info">
-                                                                         <img v-if="element.ele_info.attach_type === 1" :src="element.ele_info.attach_full_url" style="width: 60px; height: 60px;" >
-                                                                         <video v-if="element.ele_info.attach_type === 2" style="width: 60px; height: 60px;" >
-                                                                             <source :src="element.ele_info.attach_full_url" type="video/mp4">
+                                                                     <template v-if="element.ele_attr.ele_info && element.ele_attr.ele_full_value">
+                                                                         <img v-if="element.ele_attr.ele_info.attach_type === 1" :src="element.ele_attr.ele_full_value" style="width: 60px; height: 60px;" >
+                                                                         <video v-if="element.ele_attr.ele_info.attach_type === 2" style="width: 60px; height: 60px;" >
+                                                                             <source :src="element.ele_attr.ele_full_value" type="video/mp4">
                                                                              Your browser does not support the video tag.
                                                                          </video>
                                                                      </template>
@@ -275,7 +275,7 @@
                                                                          暂无预览
                                                                      </template>
                                                                  </div>
-                                                                <Button :size="element.ele_size" :icon="formConfig.upload.btn_icon" @click="handleUploadSeen">{{ formConfig.upload.btn_title }}</Button>
+                                                                <Button :size="element.ele_size" :icon="formConfig.upload.btn_icon" @click="handleUploadSeen(element, index)">{{ formConfig.upload.btn_title }}</Button>
                                                              </Tooltip>
                                                          </template>
                                                          <template v-if="element.ele_name === 'switch'">
@@ -334,13 +334,12 @@
                                     :title="formConfig.upload.modal_title"
                                     :width="formConfig.upload.modal_width"
                                     :mask-closable="formConfig.upload.modal_mask_closable"
-                                    @on-ok="handleModalOk"
-                                    @on-cancel="handleModalCancel">
+                                    @on-ok="handleModalImgOk"
+                                    @on-cancel="handleModalImgCancel">
                                     <upload-form
                                         v-if="uploadSeen"
                                         ref="uploadForm"
                                         @on-success="handleSuccess"
-                                        @on-show-image="handleShowImage"
                                         @on-select-image="handleSelectImage"
                                         :multiple="formConfig.upload.multiple"
                                         :upload-url="formConfig.upload.upload_url"
@@ -408,8 +407,8 @@
                 :title="formConfig.show.modal_title"
                 :width="formConfig.show.modal_width"
                 :mask-closable="formConfig.show.modal_mask_closable"
-                @on-ok="handleModalOk"
-                @on-cancel="handleModalCancel">
+                @on-ok="handleModalShowOk"
+                @on-cancel="handleModalShowCancel">
             <show :dragged-list="draggedList" />
         </Modal>
     </div>
@@ -477,24 +476,28 @@
             handleSwitchChange (value) {
                 this.$emit('on-switch-change', value);
             },
-            handleUploadSeen () {
+            handleUploadSeen (element, index) {
+                this.currentElement = element;
                 this.uploadSeen = true;
             },
-            handleModalOk () {
-                this.currentElement.ele_value = this.currentElement.ele_info ? this.currentElement.ele_info.attach_url : '';
-                console.log('handleModalOk');
+            handleModalShowOk () {
+                console.log('handleModalShowOk');
             },
-            handleModalCancel () {
+            handleModalShowCancel () {
+                this.uploadSeen = false;
+            },
+            handleModalImgOk () {
+                this.currentElement.ele_value = this.currentElement.ele_attr.ele_info ? this.currentElement.ele_attr.ele_info.attach_url : '';
+                this.currentElement.ele_attr.ele_full_value = this.currentElement.ele_attr.ele_info ? this.currentElement.ele_attr.ele_info.attach_full_url : '';
+            },
+            handleModalImgCancel () {
                 this.uploadSeen = false;
             },
             handleSuccess () {
                 console.log('handleSuccess');
             },
-            handleShowImage () {
-                console.log('handleShowImage');
-            },
             handleSelectImage (item, index) {
-                this.currentElement.ele_info = item;
+                this.currentElement.ele_attr.ele_info = item;
             },
             handleSelectRemoteMethod () {
                 console.log('handleSelectRemoteMethod');
@@ -530,7 +533,6 @@
             handleDropDownClick (name) {
                 if (name === 'show') {
                     this.elementShowSeen = true;
-                    console.log(this.currentElement)
                 }
             },
             handleElementSize (type) {
