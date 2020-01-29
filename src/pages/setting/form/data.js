@@ -27,12 +27,31 @@ export default {
             modal_title: '详情',
             modal_width: '800',
             modal_mask_closable: false
+        },
+        icon: {
+            font_family: "i-icon",
+            css_prefix_text: "i-icon-",
         }
     },
     list: [
         {
             ele_id: 1,
-            ele_title: '单行文本',
+            ele_title: '文本分割线',
+            ele_name: 'devider',
+            ele_hash: '',
+            ele_value: '分割文本',
+            ele_size: 'default', // 尺寸，可选值为 small 或 default
+            ele_attr: {
+                color: '#666',
+                colors: ['#000', '#17233d', '#515a6e', '#808695', '#c5c8ce', '#dcdee2', '#e8eaec', '#f8f8f9', '#2d8cf0', '#5cadff', '#2b85e4', '#2db7f5', '#19be6b', '#ff9900', '#ed4014'],
+                dashed: false,
+                orientation: 'center', // 分割线标题的位置，可选值为 left、right 或 center
+                type: 'horizontal' // 水平还是垂直类型，可选值为 horizontal 或 vertical
+            }
+        },
+        {
+            ele_id: 2,
+            ele_title: 'input组件',
             ele_name: 'input',
             ele_hash: '',
             label_width: 80,
@@ -47,7 +66,7 @@ export default {
                 disabled: false,
                 readonly: false,
                 required: false,
-                maxlength: '', // 最大输入长度
+                maxlength: 200, // 最大输入长度
                 show_word_limit: false, // 是否显示输入字数统计，可以配合 maxlength 使用
                 password: false, // 是否显示切换密码图标
                 icon: '', // 输入框尾部图标，仅在 text 类型下有效
@@ -68,7 +87,7 @@ export default {
             options: []
         },
         {
-            ele_id: 2,
+            ele_id: 3,
             ele_title: '单选框组',
             ele_name: 'radio_group',
             ele_hash: '',
@@ -86,24 +105,24 @@ export default {
             options: [
                 {
                     label: "1",
-                    icon: '', // icon显示
                     value: "是",
+                    icon: '', // icon显示
                     disabled: false,
-                    true_value: true,
-                    false_value: false
+                    true_value: true, // 单个radio的时候使用
+                    false_value: false // 单个radio的时候使用
                 },
                 {
                     label: "0",
-                    icon: '', // icon显示
                     value: "否",
+                    icon: '', // icon显示
                     disabled: false,
-                    true_value: true,
+                    true_value: true, // 单个radio的时候使用
                     false_value: false
                 }
             ]
         },
         {
-            ele_id: 3,
+            ele_id: 4,
             ele_title: '多选框组',
             ele_name: 'checkbox_group',
             ele_hash: '',
@@ -120,22 +139,22 @@ export default {
             options: [
                 {
                     label: "项目一",
-                    icon: '',
                     disabled: false,
-                    true_value: true, // 选中时的值，当使用类似 1 和 0 来判断是否选中时会很有用
-                    false_value: false // 没有选中时的值，当使用类似 1 和 0 来判断是否选中时会很有用
+                    icon: '',
+                    true_value: true, // 单个checkbox的时候使用 选中时的值，当使用类似 1 和 0 来判断是否选中时会很有用
+                    false_value: false // 单个checkbox的时候使用 没有选中时的值，当使用类似 1 和 0 来判断是否选中时会很有用
                 },
                 {
                     label: "项目二",
-                    icon: '',
                     disabled: false,
+                    icon: '',
                     true_value: true,
                     false_value: false
                 }
             ]
         },
         {
-            ele_id: 4,
+            ele_id: 5,
             ele_title: '日期组件',
             ele_name: 'datepicker',
             ele_hash: '',
@@ -179,13 +198,14 @@ export default {
             options: {}
         },
         {
-            ele_id: 5,
-            ele_title: 'select选择',
+            ele_id: 6,
+            ele_title: 'select组件',
             ele_name: 'select',
             ele_hash: '',
             label_width: 80,
             ele_prop: 'select',
             ele_size: 'default',
+            ele_value: "",
             size_active: false,
             is_active: false,
             ele_attr: {
@@ -205,28 +225,30 @@ export default {
                 element_id: '',
                 transfer_class_name: '', // 3.3.0 开启 transfer 时，给浮层添加额外的 class 名称
                 prefix: '', // 3.4.0 在 Select 内显示图标
-                max_tag_count: 0, // 3.4.0 多选时最多显示多少个 tag
+                max_tag_count: 3, // 3.4.0 多选时最多显示多少个 tag
+                max_tag_placeholder: '', // 3.4.0 隐藏 tag 时显示的内容，参数是剩余项数量
                 allow_create: false, // 4.0.0 是否允许用户创建新条目，需开启 filterable
                 capture: true, // 4.0.0 是否开启 capture 模式，也可通过全局配置
             },
-            ele_value: '',
             options: [
                 {
-                    label: "项目一",
+                    label: "项目1",
                     value: "项目1",
+                    desc: '', // 选项右侧描述
                     disabled: false, // 是否禁用option当前项
-                    tag: '' // 设置后，在多选时，标签内容会优先显示设置的值
+                    tag: '项目1' // 设置后，在多选时，标签内容会优先显示设置的值
                 },
                 {
-                    label: "项目二",
+                    label: "项目2",
                     value: "项目2",
+                    desc: '', // 选项右侧描述
                     disabled: false, // 是否禁用option当前项
-                    tag: '' // 设置后，在多选时，标签内容会优先显示设置的值
+                    tag: '项目2' // 设置后，在多选时，标签内容会优先显示设置的值
                 }
             ]
         },
         {
-            ele_id: 6,
+            ele_id: 7,
             ele_title: '上传组件',
             ele_name: 'upload', // 为自定义上传组件
             ele_hash: '',
@@ -236,14 +258,12 @@ export default {
             size_active: false,
             is_active: false,
             ele_attr: {
-
-
             },
             ele_value: '',
             options: []
         },
         {
-            ele_id: 7,
+            ele_id: 8,
             ele_title: 'switch组件',
             ele_name: 'switch',
             ele_hash: '',
@@ -255,25 +275,25 @@ export default {
             ele_attr: {
                 disabled: false,
                 loading: false,
-                true_value: true,
-                false_value: false,
+                true_value: "1",
+                false_value: "0",
                 true_color: '',
                 false_color: '',
                 custom: {
-                    name: 'span',
+                    name: 'span', // span icon
                     slot: ['open', 'close'],
-                    type: ['开', '关']
+                    type: ['开', '关'],
+                    is_custom: false
                     // name: 'icon',
                     // slot: ['open', 'close'],
                     // type: ['md-checkmark', 'md-close']
                 }
             },
-            ele_value: '',
-            placeholder: '',
+            ele_value: "1",
             options: []
         },
         {
-            ele_id: 8,
+            ele_id: 9,
             ele_title: '评分组件',
             ele_name: 'rate',
             ele_hash: 'rate',
@@ -293,7 +313,6 @@ export default {
                 custom_icon: ''
             },
             ele_value: 0,
-            placeholder: '',
             options: []
         }
     ]
