@@ -258,7 +258,8 @@ export default {
             size_active: false,
             is_active: false,
             ele_attr: {
-                ele_full_value: '',
+                attach_full_url: '',
+                attach_type: 1,
                 ele_info: undefined,
             },
             ele_value: '',

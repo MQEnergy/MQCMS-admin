@@ -264,10 +264,10 @@
                                                          <template v-if="element.ele_name === 'upload'">
                                                              <Tooltip placement="right-start" theme="light">
                                                                  <div slot="content">
-                                                                     <template v-if="element.ele_attr.ele_info && element.ele_attr.ele_full_value">
-                                                                         <img v-if="element.ele_attr.ele_info.attach_type === 1" :src="element.ele_attr.ele_full_value" style="width: 60px; height: 60px;" >
-                                                                         <video v-if="element.ele_attr.ele_info.attach_type === 2" style="width: 60px; height: 60px;" >
-                                                                             <source :src="element.ele_attr.ele_full_value" type="video/mp4">
+                                                                     <template v-if="element.ele_attr.ele_info && element.ele_attr.attach_full_url">
+                                                                         <img v-if="element.ele_attr.attach_type === 1" :src="element.ele_attr.attach_full_url" style="width: 60px; height: 60px;" >
+                                                                         <video v-if="element.ele_attr.attach_type === 2" style="width: 60px; height: 60px;" >
+                                                                             <source :src="element.ele_attr.attach_full_url" type="video/mp4">
                                                                              Your browser does not support the video tag.
                                                                          </video>
                                                                      </template>
@@ -487,8 +487,11 @@
                 this.uploadSeen = false;
             },
             handleModalImgOk () {
-                this.currentElement.ele_value = this.currentElement.ele_attr.ele_info ? this.currentElement.ele_attr.ele_info.attach_url : '';
-                this.currentElement.ele_attr.ele_full_value = this.currentElement.ele_attr.ele_info ? this.currentElement.ele_attr.ele_info.attach_full_url : '';
+                if (this.currentElement.ele_attr.ele_info) {
+                    this.currentElement.ele_value = this.currentElement.ele_attr.ele_info.attach_url;
+                    this.currentElement.ele_attr.attach_full_url = this.currentElement.ele_attr.ele_info.attach_full_url;
+                    this.currentElement.ele_attr.attach_type = this.currentElement.ele_attr.ele_info.attach_type;
+                }
             },
             handleModalImgCancel () {
                 this.uploadSeen = false;
