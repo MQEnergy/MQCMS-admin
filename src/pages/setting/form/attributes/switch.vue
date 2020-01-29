@@ -34,7 +34,7 @@
                         </RadioGroup>
                     </FormItem>
                     <div style="background: #f0f1f3; padding: 10px;" >
-                        <FormItem label="自定义内容">
+                        <FormItem label="自定义内容" style="margin-bottom: 10px;">
                             <template v-if="currentElement.ele_attr.custom.name === 'span'">
                                 开启：<Input v-model="currentElement.ele_attr.custom.type[0]" v-width="100" clearable /><br>
                                 关闭：<Input v-model="currentElement.ele_attr.custom.type[1]" v-width="100" clearable />
@@ -43,8 +43,13 @@
                                 开启：
                                 <Tooltip placement="top">
                                     <div slot="content">
-                                        <Icon v-if="!currentElement.ele_attr.custom.is_custom" :type="currentElement.ele_attr.custom.type[0]" size="30" />
-                                        <Icon v-else :class="formConfig.config.icon.font_family" :custom="formConfig.config.icon.css_prefix_text + currentElement.ele_attr.custom.type[0]" size="30" />
+                                        <template v-if="currentElement.ele_attr.custom.type[0] !== '开'">
+                                            <Icon v-if="!currentElement.ele_attr.custom.is_custom" :type="currentElement.ele_attr.custom.type[0]" size="30" />
+                                            <Icon v-else :class="formConfig.config.icon.font_family" :custom="formConfig.config.icon.css_prefix_text + currentElement.ele_attr.custom.type[0]" size="30" />
+                                        </template>
+                                        <template v-else>
+                                            暂无预览
+                                        </template>
                                     </div>
                                     <Button type="dashed" @click="handleSelectIcon(1)">
                                         {{ currentElement.ele_attr.custom.type[0] !== '开' ? currentElement.ele_attr.custom.type[0] : '选择icon' }}
@@ -53,8 +58,13 @@
                                 关闭：
                                 <Tooltip placement="top">
                                     <div slot="content">
-                                        <Icon v-if="!currentElement.ele_attr.custom.is_custom" :type="currentElement.ele_attr.custom.type[1]" size="30" />
-                                        <Icon v-else :class="formConfig.config.icon.font_family" :custom="formConfig.config.icon.css_prefix_text + currentElement.ele_attr.custom.type[1]" size="30" />
+                                        <template v-if="currentElement.ele_attr.custom.type[1] !== '关'">
+                                            <Icon v-if="!currentElement.ele_attr.custom.is_custom" :type="currentElement.ele_attr.custom.type[1]" size="30" />
+                                            <Icon v-else :class="formConfig.config.icon.font_family" :custom="formConfig.config.icon.css_prefix_text + currentElement.ele_attr.custom.type[1]" size="30" />
+                                        </template>
+                                        <template v-else>
+                                            暂无预览
+                                        </template>
                                     </div>
                                     <Button type="dashed" @click="handleSelectIcon(2)">
                                         {{ currentElement.ele_attr.custom.type[1] !== '关' ? currentElement.ele_attr.custom.type[1] : '选择icon' }}

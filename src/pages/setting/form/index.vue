@@ -346,11 +346,14 @@
             <Col :xl="8" :lg="8" :md="24" :sm="24" :xs="24">
                 <Card :bordered="false" dis-hover>
                     <div slot="title">属性设置</div>
-                    <div class="list-group-container">
+                    <div class="list-group-container" style="overflow-y: hidden">
                         <Tabs type="card">
                             <TabPane label="字段属性">
-                                <empty v-if="currentElement === undefined" empty-text="请将左边组件拖入到可视区域" :is-back="false" />
-                                <attribute @on-element-size="handleElementSize" :current-element="currentElement" :form-config="formConfig" />
+                                <div style="height: 540px; overflow-y: scroll">
+                                    <empty v-if="currentElement === undefined" empty-text="请将左边组件拖入到可视区域" :is-back="false" />
+                                    <attribute @on-element-size="handleElementSize" :current-element="currentElement" :form-config="formConfig" />
+                                    <pre>{{ listString }}</pre>
+                                </div>
                             </TabPane>
                             <TabPane label="表单属性">
                                 <Form
@@ -380,7 +383,6 @@
                                 </Form>
                             </TabPane>
                         </Tabs>
-                        <pre>{{ listString }}</pre>
                     </div>
                 </Card>
             </Col>
@@ -570,6 +572,7 @@
         height: 585px;
         max-height: 800px;
         overflow-y: scroll;
+        overflow-x: hidden;
     }
     .list-group {
         min-height: 585px;
