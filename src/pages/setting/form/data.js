@@ -259,6 +259,7 @@ export default {
             is_active: false,
             ele_attr: {
             },
+            ele_info: undefined,
             ele_value: '',
             options: []
         },

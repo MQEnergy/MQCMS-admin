@@ -94,12 +94,6 @@
                             <Radio label="large">large</Radio>
                         </RadioGroup>
                     </FormItem>
-                    <FormItem label="是否按钮(group_type)">
-                        <RadioGroup v-model="currentElement.ele_attr.group_type">
-                            <Radio label="">否</Radio>
-                            <Radio label="button">是</Radio>
-                        </RadioGroup>
-                    </FormItem>
                     <FormItem label="额外属性">
                         <Checkbox v-model="currentElement.ele_attr.disabled" :true-value="true" :false-value="false">disabled</Checkbox>
                         <Checkbox v-model="currentElement.ele_attr.loading" :true-value="true" :false-value="false">loading</Checkbox>

@@ -51,7 +51,7 @@
                             <empty :is-back="false" v-else-if="imageList.length === 0" />
                             <div class="upload-form-left-container-container" v-else>
                                 <div class="upload-form-left-container-container-img-list">
-                                    <div class="upload-form-left-container-container-img-item" v-for="(item, index) in imageList" :key="index" @click="handleSelectStoreImg(index)">
+                                    <div class="upload-form-left-container-container-img-item" v-for="(item, index) in imageList" :key="index" @click="handleSelectStoreImg(item, index)">
                                         <img v-if="item.attach_type === 1" :src="item.attach_full_url" >
                                         <video v-if="item.attach_type === 2">
                                             <source :src="item.attach_full_url" type="video/mp4">
@@ -293,20 +293,22 @@
             },
             handleUploadSuccess (res, file, uploadedFileList) {
                 this.$Message.success('上传成功');
-                console.info('file: ', file, 'uploadedFileList: ', uploadedFileList)
+                console.info('file: ', file, 'uploadedFileList: ', uploadedFileList);
+                this.$emit('on-select-image', file.response, 0);
             },
             handleUploadError (err, response, file) {
                 this.$Message.error(response.message);
             },
-            handleSelectStoreImg (index) {
+            handleSelectStoreImg (item, index) {
                 this.currentItem = undefined;
-                this.currentItem = this.imgList[index];
-                this.imgList[index].isChoose = true;
+                this.currentItem = item;
+                item.isChoose = true;
                 this.imgList.forEach((val, key) => {
                     if (key !== index) {
                         val.isChoose = false;
                     }
-                })
+                });
+                this.$emit('on-select-image', item, index);
             },
             handleDelSubmit () {
                 return request({

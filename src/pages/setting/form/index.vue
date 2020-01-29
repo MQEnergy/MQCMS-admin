@@ -262,7 +262,21 @@
                                                              </Select>
                                                          </template>
                                                          <template v-if="element.ele_name === 'upload'">
-                                                             <Button :size="element.ele_size" :icon="formConfig.upload.btn_icon" @click="handleUploadSeen">{{ formConfig.upload.btn_title }}</Button>
+                                                             <Tooltip placement="right-start" theme="light">
+                                                                 <div slot="content">
+                                                                     <template v-if="element.ele_info">
+                                                                         <img v-if="element.ele_info.attach_type === 1" :src="element.ele_info.attach_full_url" style="width: 60px; height: 60px;" >
+                                                                         <video v-if="element.ele_info.attach_type === 2" style="width: 60px; height: 60px;" >
+                                                                             <source :src="element.ele_info.attach_full_url" type="video/mp4">
+                                                                             Your browser does not support the video tag.
+                                                                         </video>
+                                                                     </template>
+                                                                     <template v-else>
+                                                                         暂无预览
+                                                                     </template>
+                                                                 </div>
+                                                                <Button :size="element.ele_size" :icon="formConfig.upload.btn_icon" @click="handleUploadSeen">{{ formConfig.upload.btn_title }}</Button>
+                                                             </Tooltip>
                                                          </template>
                                                          <template v-if="element.ele_name === 'switch'">
                                                              <Switch
@@ -327,6 +341,7 @@
                                         ref="uploadForm"
                                         @on-success="handleSuccess"
                                         @on-show-image="handleShowImage"
+                                        @on-select-image="handleSelectImage"
                                         :multiple="formConfig.upload.multiple"
                                         :upload-url="formConfig.upload.upload_url"
                                         :image-list-url="formConfig.upload.image_list_url"
@@ -466,6 +481,7 @@
                 this.uploadSeen = true;
             },
             handleModalOk () {
+                this.currentElement.ele_value = this.currentElement.ele_info ? this.currentElement.ele_info.attach_url : '';
                 console.log('handleModalOk');
             },
             handleModalCancel () {
@@ -476,6 +492,9 @@
             },
             handleShowImage () {
                 console.log('handleShowImage');
+            },
+            handleSelectImage (item, index) {
+                this.currentElement.ele_info = item;
             },
             handleSelectRemoteMethod () {
                 console.log('handleSelectRemoteMethod');
