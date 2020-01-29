@@ -40,8 +40,26 @@
                                 关闭：<Input v-model="currentElement.ele_attr.custom.type[1]" v-width="100" clearable />
                             </template>
                             <template v-else>
-                                开启：<Button type="dashed" @click="handleSelectIcon(1)">{{ currentElement.ele_attr.custom.type[0] !== '开' ? currentElement.ele_attr.custom.type[0] : '选择icon' }}</Button><br>
-                                关闭：<Button type="dashed" @click="handleSelectIcon(2)">{{ currentElement.ele_attr.custom.type[1] !== '关' ? currentElement.ele_attr.custom.type[1] : '选择icon' }}</Button>
+                                开启：
+                                <Tooltip placement="top">
+                                    <div slot="content">
+                                        <Icon v-if="!currentElement.ele_attr.custom.is_custom" :type="currentElement.ele_attr.custom.type[0]" size="30" />
+                                        <Icon v-else :class="formConfig.config.icon.font_family" :custom="formConfig.config.icon.css_prefix_text + currentElement.ele_attr.custom.type[0]" size="30" />
+                                    </div>
+                                    <Button type="dashed" @click="handleSelectIcon(1)">
+                                        {{ currentElement.ele_attr.custom.type[0] !== '开' ? currentElement.ele_attr.custom.type[0] : '选择icon' }}
+                                    </Button>
+                                </Tooltip><br>
+                                关闭：
+                                <Tooltip placement="top">
+                                    <div slot="content">
+                                        <Icon v-if="!currentElement.ele_attr.custom.is_custom" :type="currentElement.ele_attr.custom.type[1]" size="30" />
+                                        <Icon v-else :class="formConfig.config.icon.font_family" :custom="formConfig.config.icon.css_prefix_text + currentElement.ele_attr.custom.type[1]" size="30" />
+                                    </div>
+                                    <Button type="dashed" @click="handleSelectIcon(2)">
+                                        {{ currentElement.ele_attr.custom.type[1] !== '关' ? currentElement.ele_attr.custom.type[1] : '选择icon' }}
+                                    </Button>
+                                </Tooltip>
                             </template>
                         </FormItem>
                     </div>
