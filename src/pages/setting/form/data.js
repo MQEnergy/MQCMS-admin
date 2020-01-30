@@ -3,18 +3,19 @@ export default {
         upload: {
             modal_title: '选择图片',
             modal_width: '800',
-            modal_mask_closable: false,
+            modal_mask_closable: false, // 设置modal点击遮罩关闭
             btn_title: '上传图片',
             btn_icon: 'md-camera',
-            multiple: false,
-            upload_url: '/admin/attachment/upload',
-            image_list_url: '/attachment/index',
-            del_image_url: '/attachment/delete',
-            is_local: true,
-            is_stock: true,
-            is_net: true,
-            is_del: true,
-            show_base_upload: true
+            is_custom: false, // 是否自定义icon
+            multiple: false, // 是否多图上传
+            upload_url: '/admin/attachment/upload', // 上传图片地址
+            image_list_url: '/attachment/index', // 获取图片列表地址
+            del_image_url: '/attachment/delete', // 删除图片地址
+            is_local: true, // 是否显示本地图片tab
+            is_stock: true, // 是否显示图库图片tab
+            is_net: true, // 是否显示网络图片tab
+            is_del: true, // 是否显示删除图片
+            show_base_upload: true // 是否显示iview上传组件（可自定义上传组件）
         },
         form: {
             label_width: 80,
@@ -29,15 +30,18 @@ export default {
             modal_mask_closable: false
         },
         icon: {
-            font_family: "i-icon",
-            css_prefix_text: "i-icon-",
+            modal_title: '选择图片',
+            modal_width: '800',
+            modal_mask_closable: false,
+            font_family: "i-icon", // 自定义iconfont的class
+            css_prefix_text: "i-icon-", // 自定义iconfont的class前缀
         }
     },
     list: [
         {
             ele_id: 1,
             ele_title: '文本分割线',
-            ele_name: 'devider',
+            ele_name: 'divider',
             ele_hash: '',
             ele_value: '分割文本',
             ele_size: 'default', // 尺寸，可选值为 small 或 default
@@ -261,6 +265,9 @@ export default {
                 attach_full_url: '',
                 attach_type: 1,
                 ele_info: undefined,
+                btn_title: '上传图片',
+                btn_icon: 'md-camera',
+                is_custom: false, // 是否自定义icon
             },
             ele_value: '',
             options: []

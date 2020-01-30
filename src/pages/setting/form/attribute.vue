@@ -4,9 +4,9 @@
         <attribute-radio-group v-if="currentElement.ele_name === 'radio_group'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
         <attribute-checkbox-group v-if="currentElement.ele_name === 'checkbox_group'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
         <attribute-select v-if="currentElement.ele_name === 'select'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
-        <attribute-divider v-if="currentElement.ele_name === 'devider'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
+        <attribute-divider v-if="currentElement.ele_name === 'divider'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
         <attribute-switch v-if="currentElement.ele_name === 'switch'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
-
+        <attribute-upload v-if="currentElement.ele_name === 'upload'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
     </div>
 </template>
 
@@ -17,6 +17,7 @@
     import AttributeCheckboxGroup from "@/pages/setting/form/attributes/checkbox_group";
     import AttributeDivider from "@/pages/setting/form/attributes/divider";
     import AttributeSwitch from "@/pages/setting/form/attributes/switch";
+    import AttributeUpload from "@/pages/setting/form/attributes/upload";
 
     export default {
         name: "attribute",
@@ -35,6 +36,7 @@
             }
         },
         components: {
+            AttributeUpload,
             AttributeSwitch,
             AttributeDivider,
             AttributeCheckboxGroup,

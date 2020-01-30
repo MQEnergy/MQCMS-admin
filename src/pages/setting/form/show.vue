@@ -2,7 +2,7 @@
     <div>
         <Form :class="formConfig.form.custom_class" ref="formInline" :model="formItem" :label-width="formConfig.form.label_width" :label-position="formConfig.form.label_position" >
             <div v-for="(element, index) in draggedList" :key="element.ele_hash" >
-                <template v-if="element.ele_name === 'devider'">
+                <template v-if="element.ele_name === 'divider'">
                     <Divider
                             :orientation="element.ele_attr.orientation"
                             :type="element.ele_attr.type"
@@ -12,7 +12,7 @@
                         {{ element.ele_value }}
                     </Divider>
                 </template>
-                <template v-if="element.ele_name !== 'devider'">
+                <template v-else>
                     <FormItem :label="element.ele_title" :prop="element.ele_prop" :label-width="element.label_width">
                         <template v-if="element.ele_name === 'input'">
                             <Input

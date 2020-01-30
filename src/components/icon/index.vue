@@ -5,7 +5,7 @@
         </div>
         <Tabs v-model="currentTab" type="card" :animated="false" @on-click="handleTabClick">
             <TabPane label="系统" name="system"></TabPane>
-            <TabPane label="自定义" name="custom"></TabPane>
+            <TabPane label="自定义" name="custom" v-if="isCustom"></TabPane>
         </Tabs>
         <div class="icon-list">
             <Row :gutter="10">
@@ -27,6 +27,12 @@
 
     export default {
         name: "icon-index",
+        props: {
+            isCustom: {
+                type: Boolean,
+                default: true
+            }
+        },
         data () {
             return {
                 iconList: data.sysIconList,
@@ -44,6 +50,7 @@
                         value.is_active = false;
                     }
                 });
+                item.is_custom = this.currentTab !== 'system';
                 this.$emit('on-choose-icon', item, index);
             },
             handleSearchIcon () {

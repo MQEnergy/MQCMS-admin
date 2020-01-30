@@ -23,7 +23,7 @@
                 <Radio label="list"><Icon type="md-menu" /></Radio>
                 <Radio label="thumb"><Icon type="md-apps" /></Radio>
             </RadioGroup>
-            <div style="position: relative;height: 100px;" v-if="loading">
+            <div style="position: relative; height: 100px;" v-if="loading">
                 <Spin fix size="large"></Spin>
             </div>
             <empty v-else-if="limitData.length === 0" />

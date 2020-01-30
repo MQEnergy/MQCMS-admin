@@ -50,7 +50,7 @@
                                                  </div>
                                              </div>
                                              <div @click="handleFormItemClick(element, index)" >
-                                                 <template v-if="element.ele_name === 'devider'">
+                                                 <template v-if="element.ele_name === 'divider'">
                                                      <Divider
                                                              :orientation="element.ele_attr.orientation"
                                                              :type="element.ele_attr.type"
@@ -60,7 +60,7 @@
                                                          {{ element.ele_value }}
                                                      </Divider>
                                                  </template>
-                                                 <div v-if="element.ele_name !== 'devider'">
+                                                 <div v-else>
                                                      <FormItem :label="element.ele_title" :prop="element.ele_prop" :label-width="element.label_width">
                                                          <template v-if="element.ele_name === 'input'">
                                                              <Input
@@ -275,7 +275,11 @@
                                                                          暂无预览
                                                                      </template>
                                                                  </div>
-                                                                <Button :size="element.ele_size" :icon="formConfig.upload.btn_icon" @click="handleUploadSeen(element, index)">{{ formConfig.upload.btn_title }}</Button>
+                                                                <Button :size="element.ele_size" @click="handleUploadSeen(element, index)">
+                                                                    <Icon v-if="!element.ele_attr.is_custom" :type="element.ele_attr.btn_icon" size="14" />
+                                                                    <Icon v-else :class="formConfig.icon.font_family" :custom="formConfig.icon.css_prefix_text + element.ele_attr.btn_icon" size="14" />
+                                                                    {{ formConfig.upload.btn_title }}
+                                                                </Button>
                                                              </Tooltip>
                                                          </template>
                                                          <template v-if="element.ele_name === 'switch'">
@@ -496,8 +500,8 @@
             handleModalImgCancel () {
                 this.uploadSeen = false;
             },
-            handleSuccess () {
-                console.log('handleSuccess');
+            handleSuccess (item) {
+                this.currentElement.ele_attr.ele_info = item;
             },
             handleSelectImage (item, index) {
                 this.currentElement.ele_attr.ele_info = item;

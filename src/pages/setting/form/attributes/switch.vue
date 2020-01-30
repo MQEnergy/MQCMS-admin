@@ -45,7 +45,7 @@
                                     <div slot="content">
                                         <template v-if="currentElement.ele_attr.custom.type[0] !== '开'">
                                             <Icon v-if="!currentElement.ele_attr.custom.is_custom" :type="currentElement.ele_attr.custom.type[0]" size="30" />
-                                            <Icon v-else :class="formConfig.config.icon.font_family" :custom="formConfig.config.icon.css_prefix_text + currentElement.ele_attr.custom.type[0]" size="30" />
+                                            <Icon v-else :class="formConfig.icon.font_family" :custom="formConfig.icon.css_prefix_text + currentElement.ele_attr.custom.type[0]" size="30" />
                                         </template>
                                         <template v-else>
                                             暂无预览
@@ -60,7 +60,7 @@
                                     <div slot="content">
                                         <template v-if="currentElement.ele_attr.custom.type[1] !== '关'">
                                             <Icon v-if="!currentElement.ele_attr.custom.is_custom" :type="currentElement.ele_attr.custom.type[1]" size="30" />
-                                            <Icon v-else :class="formConfig.config.icon.font_family" :custom="formConfig.config.icon.css_prefix_text + currentElement.ele_attr.custom.type[1]" size="30" />
+                                            <Icon v-else :class="formConfig.icon.font_family" :custom="formConfig.icon.css_prefix_text + currentElement.ele_attr.custom.type[1]" size="30" />
                                         </template>
                                         <template v-else>
                                             暂无预览
@@ -103,8 +103,8 @@
             <Modal
                     v-model="modalSeen"
                     title="选择icon"
-                    :width="formConfig.upload.modal_width"
-                    :mask-closable="formConfig.upload.modal_mask_closable"
+                    :width="formConfig.icon.modal_width"
+                    :mask-closable="formConfig.icon.modal_mask_closable"
                     @on-ok="handleModalOk"
                     @on-cancel="handleModalCancel">
                 <icon-index @on-choose-icon="handleChooseIcon" />
