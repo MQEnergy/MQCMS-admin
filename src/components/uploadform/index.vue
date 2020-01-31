@@ -297,11 +297,16 @@
             }
         },
         mounted () {
-            if (this.imageListUrl !== '') {
-                this.handleImageList();
-            }
+            this.handleInit();
         },
         methods: {
+            handleInit () {
+                if (this.imageListUrl !== '') {
+                    if (this.currentTabName === 'stock') {
+                        this.handleImageList();
+                    }
+                }
+            },
             handleImageList () {
                 this.loading = true;
                 return request({
