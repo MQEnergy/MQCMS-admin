@@ -1,6 +1,6 @@
 <template>
     <div class="ivu-pt-16">
-        <Row :gutter="24">
+        <Row :gutter="16">
             <Col :xl="6" :lg="6" :md="24" :sm="24" :xs="24" class="ivu-mb">
                 <Card :bordered="false" dis-hover>
                     <div slot="title">基础组件</div>
