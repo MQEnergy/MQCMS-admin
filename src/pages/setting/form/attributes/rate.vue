@@ -34,6 +34,9 @@
                     <FormItem label="标签宽度(label-width)">
                         <InputNumber :max="200" :min="0" :step="10" v-model="currentElement.label_width" placeholder="请输入字段宽度"></InputNumber>
                     </FormItem>
+                    <FormItem label="自定义class">
+                        <Input v-model="currentElement.custom_class" placeholder="请输入自定义class" />
+                    </FormItem>
                     <FormItem label="star总数">
                         <InputNumber :max="20" :min="3" :step="1" v-model="currentElement.ele_attr.count" placeholder="请输入star总数"></InputNumber>
                     </FormItem>

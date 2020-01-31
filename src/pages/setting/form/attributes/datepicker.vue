@@ -57,7 +57,9 @@
                             <Radio label="large">large</Radio>
                         </RadioGroup>
                     </FormItem>
-
+                    <FormItem label="自定义class">
+                        <Input v-model="currentElement.custom_class" placeholder="请输入自定义class" />
+                    </FormItem>
                     <FormItem label="额外属性">
                         <Checkbox v-model="currentElement.ele_attr.clearable" :true-value="true" :false-value="false">clearable</Checkbox>
                         <Checkbox v-model="currentElement.ele_attr.disabled" :true-value="true" :false-value="false">disabled</Checkbox>

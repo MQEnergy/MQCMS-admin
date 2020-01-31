@@ -62,6 +62,9 @@
                             <Radio label="large">large</Radio>
                         </RadioGroup>
                     </FormItem>
+                    <FormItem label="自定义class">
+                        <Input v-model="currentElement.custom_class" placeholder="请输入自定义class" />
+                    </FormItem>
                     <FormItem label="是否按钮(group_type)">
                         <RadioGroup v-model="currentElement.ele_attr.group_type">
                             <Radio label="">否</Radio>

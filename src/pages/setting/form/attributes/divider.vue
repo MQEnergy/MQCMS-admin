@@ -34,6 +34,9 @@
                             <Radio label="small">small</Radio>
                         </RadioGroup>
                     </FormItem>
+                    <FormItem label="自定义class">
+                        <Input v-model="currentElement.custom_class" placeholder="请输入自定义class" />
+                    </FormItem>
                     <FormItem label="分割线标题的位置">
                         <RadioGroup v-model="currentElement.ele_attr.orientation" type="button">
                             <Radio label="left">left</Radio>

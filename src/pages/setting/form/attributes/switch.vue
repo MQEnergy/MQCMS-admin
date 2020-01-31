@@ -94,6 +94,9 @@
                             <Radio label="large">large</Radio>
                         </RadioGroup>
                     </FormItem>
+                    <FormItem label="自定义class">
+                        <Input v-model="currentElement.custom_class" placeholder="请输入自定义class" />
+                    </FormItem>
                     <FormItem label="额外属性">
                         <Checkbox v-model="currentElement.ele_attr.disabled" :true-value="true" :false-value="false">disabled</Checkbox>
                         <Checkbox v-model="currentElement.ele_attr.loading" :true-value="true" :false-value="false">loading</Checkbox>
@@ -174,6 +177,8 @@
                 this.currentIcon = item;
             },
             handleRadioChange (name) {
+                this.currentElement.ele_attr.custom.type[0] = '开';
+                this.currentElement.ele_attr.custom.type[1] = '关';
             }
         }
     }
