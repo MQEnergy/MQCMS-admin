@@ -24,13 +24,13 @@
                                 <Icon type="md-help-circle" />
                             </Tooltip>
                         </div>
-                        <Tooltip placement="top" theme="light" style="width: 100%">
+                        <Tooltip placement="top" theme="light" style="width: 100%" @on-popper-show="handlePopperShow">
                             <div slot="content">
                                 <template v-if="currentElement.ele_attr.ele_info && currentElement.ele_attr.attach_full_url">
                                     <img v-if="currentElement.ele_attr.attach_type === 1" :src="currentElement.ele_attr.attach_full_url" style="width: 60px; height: 60px;" >
-                                    <video v-if="currentElement.ele_attr.attach_type === 2" style="width: 60px; height: 60px;" >
-                                        <source :src="currentElement.ele_attr.attach_full_url" type="video/mp4">
-                                        Your browser does not support the video tag.
+                                    <video ref="videoInfo" v-if="currentElement.ele_attr.attach_type === 2" style="width: 60px; height: 60px;" muted autoplay>
+                                        <source :src="currentElement.ele_attr.attach_full_url" :type="currentElement.ele_attr.ele_info.attach_minetype">
+                                        此视频暂无法播放，请稍后再试
                                     </video>
                                 </template>
                                 <template v-else>
@@ -226,6 +226,14 @@
             handleChooseIcon (item, index) {
                 this.currentIcon = item;
             },
+            handlePopperShow () {
+                if (this.currentElement.ele_attr.attach_type === 2) {
+                    this.$nextTick(() => {
+                        this.$refs.videoInfo.load();
+                        this.$refs.videoInfo.play();
+                    });
+                }
+            }
         }
     }
 </script>

@@ -7,6 +7,8 @@
         <attribute-divider v-if="currentElement.ele_name === 'divider'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
         <attribute-switch v-if="currentElement.ele_name === 'switch'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
         <attribute-upload v-if="currentElement.ele_name === 'upload'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
+        <attribute-rate v-if="currentElement.ele_name === 'rate'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
+        <attribute-datepicker v-if="currentElement.ele_name === 'datepicker'" :current-element="currentElement" :form-config="formConfig" @on-element-size="handleElementSize" />
     </div>
 </template>
 
@@ -18,6 +20,8 @@
     import AttributeDivider from "@/pages/setting/form/attributes/divider";
     import AttributeSwitch from "@/pages/setting/form/attributes/switch";
     import AttributeUpload from "@/pages/setting/form/attributes/upload";
+    import AttributeRate from "@/pages/setting/form/attributes/rate";
+    import AttributeDatepicker from "@/pages/setting/form/attributes/datepicker";
 
     export default {
         name: "attribute",
@@ -36,6 +40,8 @@
             }
         },
         components: {
+            AttributeDatepicker,
+            AttributeRate,
             AttributeUpload,
             AttributeSwitch,
             AttributeDivider,

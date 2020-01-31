@@ -3,7 +3,7 @@
         <div class="icon-search ivu-mt-8 ivu-mb">
             <Input v-model="keyword" @input="handleSearchIcon" size="large" placeholder="输入英文关键词搜索 如：logo" clearable />
         </div>
-        <Tabs v-model="currentTab" type="card" :animated="false" @on-click="handleTabClick">
+        <Tabs v-model="currentTabName" type="card" :animated="false" @on-click="handleTabClick">
             <TabPane label="系统" name="system"></TabPane>
             <TabPane label="自定义" name="custom" v-if="isCustom"></TabPane>
         </Tabs>
@@ -31,15 +31,22 @@
             isCustom: {
                 type: Boolean,
                 default: true
+            },
+            currentTab: {
+                type: String,
+                default: 'system'
+            },
+            keyword: {
+                type: String,
+                default: ''
             }
         },
         data () {
             return {
+                currentTabName: this.currentTab,
                 iconList: data.sysIconList,
                 fontFamily: data.customIcon.font_family,
                 cssPrefixText: data.customIcon.css_prefix_text,
-                currentTab: 'system',
-                keyword: ''
             }
         },
         methods: {
@@ -50,22 +57,19 @@
                         value.is_active = false;
                     }
                 });
-                item.is_custom = this.currentTab !== 'system';
+                item.is_custom = this.currentTabName !== 'system';
                 this.$emit('on-choose-icon', item, index);
             },
             handleSearchIcon () {
-                let list = this.currentTab === 'system' ? data.sysIconList : data.customIcon.glyphs;
+                let list = this.currentTabName === 'system' ? data.sysIconList : data.customIcon.glyphs;
                 list = list.filter(item => {
+                    item.is_active = false;
+                    item.is_custom = this.currentTabName !== 'system';
                     return item.name.indexOf(this.keyword) >= 0;
                 });
                 this.iconList = list;
             },
             handleTabClick (name) {
-                if (name === 'system') {
-                    this.iconList = data.sysIconList;
-                } else {
-                    this.iconList = data.customIcon.glyphs;
-                }
                 this.handleSearchIcon();
             }
         }

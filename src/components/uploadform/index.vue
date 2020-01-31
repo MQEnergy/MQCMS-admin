@@ -1,6 +1,6 @@
 <template>
     <div class="upload-form">
-        <Tabs :animated="false" type="card" @on-click="handleTabClick">
+        <Tabs v-model="currentTabName" :animated="false" type="card" @on-click="handleTabClick">
             <TabPane name="local" v-if="isLocal" label="本地图片">
                 <div v-if="showBaseUpload">
                     <Upload
@@ -216,10 +216,15 @@
             showBaseUpload: {
                 type: Boolean,
                 default: true
+            },
+            currentTab: {
+                type: String,
+                default: 'local'
             }
         },
         data () {
             return {
+                currentTabName: this.currentTab,
                 file: null,
                 uploadedFileList: [],
                 imgList: [],
@@ -402,9 +407,10 @@
                 this.currentItem = item;
                 if (item.attach_type === 2) {
                     this.$nextTick(() => {
-                        this.$refs.videoInfo.src = item.attach_full_url;
-                        this.$refs.videoInfo.load();
-                        this.$refs.videoInfo.play();
+                        if (this.$refs.videoInfo) {
+                            this.$refs.videoInfo.load();
+                            this.$refs.videoInfo.play();
+                        }
                     });
                 }
                 this.imgList.forEach((val, key) => {
@@ -454,7 +460,7 @@
                     this.$nextTick(() => {
                         this.playerOptions.sources[0].src = this.currentItem.attach_full_url;
                         this.playerOptions.sources[0].type = this.currentItem.attach_minetype;
-                        this.player.load();
+                        this.player && this.player.load();
                     });
                 }
                 this.imgVisible = true;
@@ -462,7 +468,7 @@
             handleCloseModal () {
                 if (this.currentItem.attach_type === 2) {
                     this.$nextTick(() => {
-                        this.player.pause();
+                        this.player && this.player.pause();
                     });
                 }
                 this.imgVisible = false;

@@ -59,6 +59,7 @@ export default {
             ele_name: 'input',
             ele_hash: '',
             label_width: 80,
+            ele_width: '',
             ele_prop: 'input',
             ele_size: 'default',
             size_active: false,
@@ -96,6 +97,7 @@ export default {
             ele_name: 'radio_group',
             ele_hash: '',
             label_width: 80,
+            ele_width: '100',
             ele_prop: '',
             ele_size: 'default',
             size_active: false,
@@ -131,6 +133,7 @@ export default {
             ele_name: 'checkbox_group',
             ele_hash: '',
             label_width: 80,
+            ele_width: '',
             ele_prop: '',
             ele_size: 'default',
             size_active: false,
@@ -163,6 +166,7 @@ export default {
             ele_name: 'datepicker',
             ele_hash: '',
             label_width: 80,
+            ele_width: '',
             ele_prop: '',
             ele_size: 'default',
             size_active: false,
@@ -195,7 +199,7 @@ export default {
                 transfer: false, // 是否将弹层放置于 body 内，在 Tabs、带有 fixed 的 Table 列内使用时，建议添加此属性，它将不受父级样式影响，从而达到更好的效果
                 element_id: '', //
                 time_picker_options: {}, // 可以在 type 为 datetime 和 datetimerange 下，配置 TimePicker 的属性，比如时间间隔 steps：:time-picker-options="{steps: [1, 10, 10]}"
-                separator: '', // 两个日期间的分隔符
+                separator: '--', // 两个日期间的分隔符
                 capture: true // 是否开启 capture 模式，也可通过全局配置
             },
             ele_value: "",
@@ -207,6 +211,7 @@ export default {
             ele_name: 'select',
             ele_hash: '',
             label_width: 80,
+            ele_width: '',
             ele_prop: 'select',
             ele_size: 'default',
             ele_value: "",
@@ -257,6 +262,7 @@ export default {
             ele_name: 'upload', // 为自定义上传组件
             ele_hash: '',
             label_width: 80,
+            ele_width: '',
             ele_prop: 'upload',
             ele_size: 'default',
             size_active: false,
@@ -278,6 +284,7 @@ export default {
             ele_name: 'switch',
             ele_hash: '',
             label_width: 90,
+            ele_width: '',
             ele_prop: 'switch',
             ele_size: 'default',
             size_active: false,
@@ -308,6 +315,7 @@ export default {
             ele_name: 'rate',
             ele_hash: 'rate',
             label_width: 80,
+            ele_width: '',
             ele_prop: '',
             ele_size: 'default',
             size_active: false,
@@ -318,9 +326,9 @@ export default {
                 show_text: false,
                 disabled: false,
                 clearable: false,
-                character: '',
-                icon: '',
-                custom_icon: ''
+                rate_custom: '', // rate自定义内容
+                rate_type: 'icon', // rate自定义类型 character : 自定义字符，icon：自定义icon
+                is_custom: false // 在选择自定义字符时候有效 true：custom_icon（自定义icon）； false：icon（系统icon）
             },
             ele_value: 0,
             options: []
