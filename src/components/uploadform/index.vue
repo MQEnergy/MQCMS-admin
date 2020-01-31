@@ -452,10 +452,15 @@
                 }
             },
             handlePreviewImage (file) {
-                this.imgVisible = true;
                 this.currentItem = file.response;
+                this.handleVideoPreview();
+                this.imgVisible = true;
             },
             handlePreviewRightImage () {
+                this.handleVideoPreview();
+                this.imgVisible = true;
+            },
+            handleVideoPreview () {
                 if (this.currentItem.attach_type === 2) {
                     this.$nextTick(() => {
                         this.playerOptions.sources[0].src = this.currentItem.attach_full_url;
@@ -463,7 +468,6 @@
                         this.player && this.player.load();
                     });
                 }
-                this.imgVisible = true;
             },
             handleCloseModal () {
                 if (this.currentItem.attach_type === 2) {
