@@ -532,7 +532,7 @@
             border-right: 1px solid #eee;
             &-spin {
                 position: relative;
-                height: 200px;
+                height: 420px;
             }
             &-container {
                 &-search-form {
