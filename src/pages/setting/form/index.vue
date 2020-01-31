@@ -424,10 +424,10 @@
                     <div class="list-group-container" style="overflow-y: hidden">
                         <Tabs type="card">
                             <TabPane label="字段属性">
-                                <div style="height: 540px; overflow-y: scroll">
+                                <div style="height: 535px; overflow-y: scroll">
                                     <empty v-if="currentElement === undefined" empty-text="请将左边组件拖入到可视区域" :is-back="false" />
                                     <attribute @on-element-size="handleElementSize" :current-element="currentElement" :form-config="formConfig" />
-                                    <pre>{{ listString }}</pre>
+<!--                                    <pre>{{ listString }}</pre>-->
                                 </div>
                             </TabPane>
                             <TabPane label="表单属性">
@@ -661,7 +661,7 @@
         }
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .flip-list-move {
         transition: transform 0.5s;
     }
