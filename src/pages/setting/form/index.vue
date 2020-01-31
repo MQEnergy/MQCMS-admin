@@ -162,8 +162,11 @@
 <script>
     import { codemirror } from 'vue-codemirror';
     import 'codemirror/lib/codemirror.css';
-    import 'codemirror/theme/material.css'
-    import 'codemirror/mode/javascript/javascript'
+    import 'codemirror/theme/material.css';
+    // import 'codemirror/theme/duotone-light.css';
+    // import 'codemirror/theme/xq-light.css';
+    // import 'codemirror/theme/dracula.css';
+    import 'codemirror/mode/javascript/javascript';
 
     import Draggable from "vuedraggable";
     import random_str from "@/libs/random_str";
@@ -218,6 +221,9 @@
                     tabSize: 4,
                     mode: 'application/json',
                     theme: 'material',
+                    // theme: 'duotone-light',
+                    // theme: 'xq-light',
+                    // theme: 'dracula',
                     lineNumbers: true,
                     line: true,
                 }
