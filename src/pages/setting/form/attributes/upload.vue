@@ -69,7 +69,13 @@
                         </Button>
                         <Input v-model="currentElement.ele_attr.btn_title" placeholder="按钮名称" v-width="120" />
                     </FormItem>
-                    <FormItem label="上传图片地址">
+                    <FormItem>
+                        <div slot="label">
+                            上传图片地址
+                            <Tooltip max-width="200" content="查看使用帮助文档http://help.mqcms.net" placement="top">
+                                <Icon type="md-help-circle" />
+                            </Tooltip>
+                        </div>
                         <Input v-model="formConfig.upload.upload_url" placeholder="请输入上传图片地址" />
                     </FormItem>
                     <FormItem>

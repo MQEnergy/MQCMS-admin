@@ -16,6 +16,7 @@
                     <FormItem :label="element.ele_title" :prop="element.ele_prop" :label-width="element.label_width">
                         <template v-if="element.ele_name === 'input'">
                             <Input
+                                    v-width="element.ele_width"
                                     v-model="element.ele_value"
                                     :size="formConfig.form.size_active ? formConfig.form.size : element.ele_size"
                                     :type="element.ele_attr.type"
@@ -43,10 +44,10 @@
                         </template>
                         <template v-if="element.ele_name === 'radio_group'">
                             <RadioGroup
-                                    :size="formConfig.form.size_active ? formConfig.form.size : element.ele_size"
                                     v-if="element.ele_attr.group_type"
                                     v-model="element.ele_value"
                                     :vertical="element.ele_attr.group_vertical"
+                                    :size="formConfig.form.size_active ? formConfig.form.size : element.ele_size"
                                     :type="element.ele_attr.group_type"
                             >
                                 <Radio
@@ -120,14 +121,13 @@
                         <template v-if="element.ele_name === 'datepicker'">
                             <template v-if="element.ele_attr.type === 'date' || element.ele_attr.type === 'datetime'">
                                 <DatePicker
-                                        style="width: 100%"
+                                        v-width="element.ele_width ? element.ele_width : '100%'"
                                         :ref="'date_picker_' + element.ele_prop"
                                         :value="element.ele_value"
                                         :type="element.ele_attr.type"
                                         :format="element.ele_attr.format"
                                         :options="element.options"
                                         :placeholder="element.ele_attr.placeholder"
-                                        :spellcheck="element.ele_attr.spellcheck"
                                         :multiple="element.ele_attr.multiple"
                                         :show-week-numbers="element.ele_attr.show_week_numbers"
                                         :start-date="new Date(element.ele_attr.start_date_year, element.ele_attr.start_date_month, element.ele_attr.start_date_day)"
@@ -148,13 +148,13 @@
                             </template>
                             <template v-if="element.ele_attr.type === 'daterange' || element.ele_attr.type === 'datetimerange'">
                                 <DatePicker
+                                        v-width="element.ele_width ? element.ele_width : '100%'"
                                         :ref="'date_picker_' + element.ele_prop"
                                         :value="element.ele_value"
                                         :type="element.ele_attr.type"
                                         :format="element.ele_attr.format"
                                         :options="element.options"
                                         :placeholder="element.ele_attr.placeholder"
-                                        :spellcheck="element.ele_attr.spellcheck"
                                         :split-panels="element.ele_attr.split_panels"
                                         :show-week-numbers="element.ele_attr.show_week_numbers"
                                         :start-date="new Date(element.ele_attr.start_date_year, element.ele_attr.start_date_month, element.ele_attr.start_date_day)"
@@ -173,9 +173,33 @@
                                 >
                                 </DatePicker>
                             </template>
+                            <template v-if="element.ele_attr.type === 'year' || element.ele_attr.type === 'month'">
+                                <DatePicker
+                                        v-width="element.ele_width ? element.ele_width : '100%'"
+                                        :ref="'date_picker_' + element.ele_prop"
+                                        :value="element.ele_value"
+                                        :type="element.ele_attr.type"
+                                        :options="element.options"
+                                        :placeholder="element.ele_attr.placeholder"
+                                        :show-week-numbers="element.ele_attr.show_week_numbers"
+                                        :start-date="element.ele_attr.type === 'year' ? new Date(element.ele_attr.start_date_year) : new Date(element.ele_attr.start_date_year, element.ele_attr.start_date_month)"
+                                        :confirm="element.ele_attr.confirm"
+                                        :open="element.ele_attr.open"
+                                        :size="formConfig.form.size_active ? formConfig.form.size : element.ele_size"
+                                        :disabled="element.ele_attr.disabled"
+                                        :clearable="element.ele_attr.clearable"
+                                        :readonly="element.ele_attr.readonly"
+                                        :editable="element.ele_attr.editable"
+                                        :transfer="element.ele_attr.transfer"
+                                        :element-id="element.ele_attr.element_id"
+                                        :capture="element.ele_attr.capture"
+                                >
+                                </DatePicker>
+                            </template>
                         </template>
                         <template v-if="element.ele_name === 'select'">
                             <Select
+                                    v-width="element.ele_width"
                                     v-model="element.ele_value"
                                     :multiple="element.ele_attr.multiple"
                                     :disabled="element.ele_attr.disabled"
@@ -199,7 +223,6 @@
                                     :max-tag-placeholder="maxTagPlaceholder"
                                     :allow-create="element.ele_attr.allow_create"
                                     :capture="element.ele_attr.capture"
-                                    @on-change="handleSelectChange(element, index)"
                             >
                                 <Option
                                         v-for="(option, index) in element.options"
@@ -215,24 +238,31 @@
                             </Select>
                         </template>
                         <template v-if="element.ele_name === 'upload'">
-                            <Tooltip placement="right-start" theme="light">
+                            <Tooltip placement="right-start" theme="light" @on-popper-show="handlePopperShow(index)">
                                 <div slot="content">
                                     <template v-if="element.ele_attr.ele_info && element.ele_attr.attach_full_url">
                                         <img v-if="element.ele_attr.attach_type === 1" :src="element.ele_attr.attach_full_url" style="width: 60px; height: 60px;" >
-                                        <video v-if="element.ele_attr.attach_type === 2" style="width: 60px; height: 60px;" >
-                                            <source :src="element.ele_attr.attach_full_url" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
+                                        <template v-if="element.ele_attr.attach_type === 2">
+                                            <video ref="videoInfo" style="width: 60px; height: 60px;" muted autoplay>
+                                                <source :src="element.ele_attr.attach_full_url" :type="element.ele_attr.ele_info.attach_minetype">
+                                                此视频暂无法播放，请稍后再试
+                                            </video>
+                                        </template>
                                     </template>
                                     <template v-else>
                                         暂无预览
                                     </template>
                                 </div>
-                                <Button :size="element.ele_size" :icon="formConfig.upload.btn_icon" @click="handleUploadSeen(element, index)">{{ formConfig.upload.btn_title }}</Button>
+                                <Button :size="element.ele_size" v-width="element.ele_width" @click="handleUploadSeen(element, index)">
+                                    <Icon v-if="!element.ele_attr.is_custom" :type="element.ele_attr.btn_icon" size="16" />
+                                    <Icon v-else :class="formConfig.icon.font_family" :custom="formConfig.icon.css_prefix_text + element.ele_attr.btn_icon" size="16" />
+                                    {{ formConfig.upload.btn_title }}
+                                </Button>
                             </Tooltip>
                         </template>
                         <template v-if="element.ele_name === 'switch'">
                             <Switch
+                                    v-width="element.ele_width"
                                     v-model="element.ele_value"
                                     :size="formConfig.form.size_active ? formConfig.form.size : element.ele_size"
                                     :disabled="element.ele_attr.disabled"
@@ -240,7 +270,7 @@
                                     :false-value="element.ele_attr.false_value"
                                     :true-color="element.ele_attr.true_color"
                                     :false-color="element.ele_attr.false_color"
-                                    :before-change="handleSwitchBeforeChange()"
+                                    :before-change="handleSwitchBeforeChange"
                                     :loading="element.ele_attr.loading"
                                     @on-change="handleSwitchChange"
                             >
@@ -254,25 +284,54 @@
                                         <Icon :type="element.ele_attr.custom.type[1]" :slot="element.ele_attr.custom.slot[1]" />
                                     </template>
                                     <template v-else>
-                                        <Icon :custom="formConfig.icon.font_family + ' ' + formConfig.icon.css_prefix_text + element.ele_attr.custom.type[0]" :slot="element.ele_attr.custom.slot[0]" size="12" />
-                                        <Icon :custom="formConfig.icon.font_family + ' ' + formConfig.icon.css_prefix_text + element.ele_attr.custom.type[1]" :slot="element.ele_attr.custom.slot[1]" size="12" />
+                                        <Icon :class="formConfig.icon.font_family" :custom="formConfig.icon.css_prefix_text + element.ele_attr.custom.type[0]" :slot="element.ele_attr.custom.slot[0]" size="12" />
+                                        <Icon :class="formConfig.icon.font_family" :custom="formConfig.icon.css_prefix_text + element.ele_attr.custom.type[1]" :slot="element.ele_attr.custom.slot[1]" size="12" />
                                     </template>
                                 </template>
                             </Switch>
                         </template>
                         <template v-if="element.ele_name === 'rate'">
-                            <Rate
-                                    v-model="element.ele_value"
-                                    :count="element.ele_attr.count"
-                                    :allow-half="element.ele_attr.allow_half"
-                                    :show-text="element.ele_attr.show_text"
-                                    :disabled="element.ele_attr.disabled"
-                                    :clearable="element.ele_attr.clearable"
-                                    :character="element.ele_attr.character"
-                                    :icon="element.ele_attr.icon"
-                                    :custom-icon="element.ele_attr.custom_icon"
-                                    :on-change="handleRateChange"
-                            />
+                            <template v-if="element.ele_attr.rate_type === 'character'">
+                                <Rate
+                                        v-width="element.ele_width"
+                                        v-model="element.ele_value"
+                                        :count="element.ele_attr.count"
+                                        :allow-half="element.ele_attr.allow_half"
+                                        :show-text="element.ele_attr.show_text"
+                                        :disabled="element.ele_attr.disabled"
+                                        :clearable="element.ele_attr.clearable"
+                                        :character="element.ele_attr.rate_custom"
+                                        :on-change="handleRateChange"
+                                />
+                            </template>
+                            <template v-else>
+                                <template v-if="element.ele_attr.is_custom">
+                                    <Rate
+                                            v-width="element.ele_width"
+                                            v-model="element.ele_value"
+                                            :count="element.ele_attr.count"
+                                            :allow-half="element.ele_attr.allow_half"
+                                            :show-text="element.ele_attr.show_text"
+                                            :disabled="element.ele_attr.disabled"
+                                            :clearable="element.ele_attr.clearable"
+                                            :custom-icon="formConfig.icon.font_family + ' ' + formConfig.icon.css_prefix_text + element.ele_attr.rate_custom"
+                                            :on-change="handleRateChange"
+                                    />
+                                </template>
+                                <template v-else>
+                                    <Rate
+                                            v-width="element.ele_width"
+                                            v-model="element.ele_value"
+                                            :count="element.ele_attr.count"
+                                            :allow-half="element.ele_attr.allow_half"
+                                            :show-text="element.ele_attr.show_text"
+                                            :disabled="element.ele_attr.disabled"
+                                            :clearable="element.ele_attr.clearable"
+                                            :icon="element.ele_attr.rate_custom"
+                                            :on-change="handleRateChange"
+                                    />
+                                </template>
+                            </template>
                         </template>
                     </FormItem>
                 </template>
@@ -366,6 +425,16 @@
             },
             handleSuccess () {
                 console.log('handleSuccess');
+            },
+            handlePopperShow (index) {
+                if (this.draggedList[index].ele_attr.attach_type === 2) {
+                    this.$nextTick(() => {
+                        if (this.$refs.videoInfo[index]) {
+                            this.$refs.videoInfo[index].load();
+                            this.$refs.videoInfo[index].play();
+                        }
+                    });
+                }
             }
         }
     }

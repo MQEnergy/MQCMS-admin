@@ -8,7 +8,7 @@ export default {
             btn_icon: 'md-camera',
             is_custom: false, // 是否自定义icon
             multiple: false, // 是否多图上传
-            upload_url: '/admin/attachment/upload', // 上传图片地址
+            upload_url: '/attachment/upload', // 上传图片地址
             image_list_url: '/attachment/index', // 获取图片列表地址
             del_image_url: '/attachment/delete', // 删除图片地址
             is_local: true, // 是否显示本地图片tab

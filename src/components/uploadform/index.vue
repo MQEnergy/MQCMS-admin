@@ -13,7 +13,7 @@
                             :on-success="handleUploadSuccess"
                             :on-error="handleUploadError"
                             :on-preview="handlePreviewImage"
-                            :action="uploadUrl">
+                            :action="uploadHostUrl">
                         <div style="padding: 20px 0">
                             <Icon type="ios-cloud-upload" size="52" v-color="'#3399ff'"></Icon>
                             <p>点击或拖拽文件上传</p>
@@ -177,7 +177,7 @@
             },
             uploadUrl: {
                 type: String,
-                default: '/admin/attachment/upload'
+                default: '/attachment/upload'
             },
             imageListUrl: {
                 type: String,
@@ -294,6 +294,9 @@
             },
             player () {
                 return this.$refs.videoPlayer.player;
+            },
+            uploadHostUrl () {
+                return  this.getAppModuleUrl() + this.uploadUrl;
             }
         },
         mounted () {

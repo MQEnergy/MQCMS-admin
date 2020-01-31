@@ -9,6 +9,9 @@ export default {
         },
         getUploadUrl () {
             return process.env.VUE_APP_UPLOAD_HOST_URL;
+        },
+        getAppModuleUrl () {
+            return process.env.VUE_APP_API_MODULE;
         }
     }
 }

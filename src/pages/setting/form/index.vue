@@ -619,8 +619,10 @@
             handlePopperShow (index) {
                 if (this.currentElement.ele_attr.attach_type === 2) {
                     this.$nextTick(() => {
-                        this.$refs.videoInfo[index].load();
-                        this.$refs.videoInfo[index].play();
+                        if (this.$refs.videoInfo[index]) {
+                            this.$refs.videoInfo[index].load();
+                            this.$refs.videoInfo[index].play();
+                        }
                     });
                 }
             }
