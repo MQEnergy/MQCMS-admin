@@ -5,7 +5,7 @@
 import { cloneDeep } from 'lodash';
 
 /**
- * @description 根据当前路由，找打顶部菜单名称
+ * @description 根据当前路由，找到顶部菜单名称
  * @param {String} currentPath 当前路径
  * @param {Array} menuList 所有路径
  * */
@@ -161,3 +161,5 @@ function includeArray (list1, list2) {
 }
 
 export { includeArray };
+
+

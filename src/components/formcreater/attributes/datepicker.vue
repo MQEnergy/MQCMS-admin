@@ -84,13 +84,13 @@
         props: {
             currentElement: {
                 type: Object,
-                default: () => {
+                default () {
                     return {}
                 }
             },
             formConfig: {
                 type: Object,
-                default: () => {
+                default () {
                     return {}
                 }
             }
