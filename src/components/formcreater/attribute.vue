@@ -13,18 +13,18 @@
 </template>
 
 <script>
-    import AttributeInput from '@/pages/setting/form/attributes/input';
-    import AttributeRadioGroup from '@/pages/setting/form/attributes/radio_group';
-    import AttributeSelect from '@/pages/setting/form/attributes/select';
-    import AttributeCheckboxGroup from "@/pages/setting/form/attributes/checkbox_group";
-    import AttributeDivider from "@/pages/setting/form/attributes/divider";
-    import AttributeSwitch from "@/pages/setting/form/attributes/switch";
-    import AttributeUpload from "@/pages/setting/form/attributes/upload";
-    import AttributeRate from "@/pages/setting/form/attributes/rate";
-    import AttributeDatepicker from "@/pages/setting/form/attributes/datepicker";
+    import AttributeInput from './attributes/input';
+    import AttributeRadioGroup from './attributes/radio_group';
+    import AttributeSelect from './attributes/select';
+    import AttributeCheckboxGroup from "./attributes/checkbox_group";
+    import AttributeDivider from "./attributes/divider";
+    import AttributeSwitch from "./attributes/switch";
+    import AttributeUpload from "./attributes/upload";
+    import AttributeRate from "./attributes/rate";
+    import AttributeDatepicker from "./attributes/datepicker";
 
     export default {
-        name: "attribute",
+        name: "form-attribute",
         props: {
             currentElement: {
                 type: Object,

@@ -368,7 +368,7 @@
     import UploadForm from '@/components/uploadform';
 
     export default {
-        name: "show",
+        name: "form-show",
         components: {
             UploadForm
         },
