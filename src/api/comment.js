@@ -8,6 +8,14 @@ export function CommentIndex (params) {
     });
 }
 
+export function CommentSearch (data) {
+    return request({
+        url: '/comment/index',
+        method: 'post',
+        data
+    });
+}
+
 export function CommentStore (data) {
     return request({
         url: '/comment/store',

@@ -8,6 +8,14 @@ export function AuthIndex (params) {
     });
 }
 
+export function AuthSearch (data) {
+    return request({
+        url: '/auth/index',
+        method: 'post',
+        data
+    });
+}
+
 export function AuthStore (data) {
     return request({
         url: '/auth/store',

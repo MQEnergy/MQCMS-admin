@@ -9,6 +9,12 @@ const colorInserted = (el, binding) => {
     }
 };
 
+const bgColorInserted = (el, binding) => {
+    if (binding.value) {
+        el.style.backgroundColor = binding.value;
+    }
+};
+
 const resizeInserted = {
     resize: VResize
 };
@@ -40,5 +46,6 @@ export {
     resizeInserted,
     fontInserted,
     heightInserted,
-    widthInserted
+    widthInserted,
+    bgColorInserted
 }

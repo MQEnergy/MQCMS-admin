@@ -5,7 +5,7 @@
                 <Col v-bind="showAdvanced ? gridLeft : gridFullLeft">
                     <FormItem :label-width="0">
                         <Input class="search-form-base-row-input" v-model="baseSearchForm.keyword" @on-search="handleSubmit" clearable search enter-button="搜索" placeholder="请输入查询内容">
-                            <Select v-model="baseSearchForm.type" slot="prepend" style="width: 100px">
+                            <Select v-model="baseSearchForm.type" slot="prepend" style="width: 100px;">
                                 <Option
                                     v-for="(item, index) in baseSearchForm.options"
                                     :key="index"
