@@ -14,6 +14,12 @@ export default {
                 case 'datetimerange':
                     return format ? format : 'yyyy-MM-dd HH:mm';
                     break;
+                case 'year':
+                    return format ? format : 'yyyy';
+                    break;
+                case 'month':
+                    return format ? format : 'yyyy-MM';
+                    break;
                 default:
                     return format ? format : 'yyyy-MM-dd HH:mm';
                     break;

@@ -339,7 +339,6 @@
                     return JSON.stringify(this.currentElement, null, 2);
                 },
                 set () {
-
                 }
             },
             codeMirror () {

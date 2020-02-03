@@ -2,10 +2,18 @@
     <div class="search-form">
         <Form ref="searchForm" :label-width="labelWidth" :label-position="labelPosition">
             <Row class="search-form-base-row">
-                <Col v-bind="showAdvanced ? gridLeft : gridFullLeft">
+                <Col v-bind="gridLeft">
                     <FormItem :label-width="0">
-                        <Input class="search-form-base-row-input" v-model="baseSearchForm.keyword" @on-search="handleSubmit" clearable search enter-button="搜索" placeholder="请输入查询内容">
-                            <Select v-model="baseSearchForm.type" slot="prepend" style="width: 100px;">
+                        <Input
+                                :size="size"
+                                class="search-form-base-row-input"
+                                v-model="baseSearchForm.keyword"
+                                @on-search="handleSubmit"
+                                clearable
+                                search
+                                enter-button="搜索"
+                                placeholder="请输入查询内容">
+                            <Select v-model="baseSearchForm.type" slot="prepend" v-width="100">
                                 <Option
                                     v-for="(item, index) in baseSearchForm.options"
                                     :key="index"
@@ -14,28 +22,28 @@
                                 </Option>
                             </Select>
                         </Input>
-                        <Button v-if="showAdvanced" style="float: left" type="text" v-color="'#2d8cf0'"
+                        <Button :size="size" v-if="showAdvanced" style="float: left" type="text" v-color="'#2d8cf0'"
                                 @click="collapse = !collapse">
                             {{ collapse ? '普通搜索' : '高级搜索' }}
                             <Icon :type="collapse ? 'ios-arrow-up' : 'ios-arrow-down'" />
                         </Button>
                     </FormItem>
                 </Col>
-                <Col v-if="showAdvanced" v-bind="gridRight">
+                <Col v-bind="gridRight">
                     <FormItem :label-width="0" style="float: right;">
-                        <Button v-if="showRefresh" class="ivu-ml-8" type="success" icon="md-refresh"
+                        <Button v-if="showRefresh" :size="size" class="ivu-ml-8" type="success" icon="md-refresh"
                                 @click="handleRefresh">刷新
                         </Button>
-                        <Button v-if="showCreate" class="ivu-ml-8" type="primary" icon="md-add"
+                        <Button v-if="showCreate" :size="size" class="ivu-ml-8" type="primary" icon="md-add"
                                 @click="handleOpenCreate">新建
                         </Button>
-                        <Button v-if="showExport" class="ivu-ml-8" type="primary" icon="md-arrow-down"
+                        <Button v-if="showExport" :size="size" class="ivu-ml-8" type="primary" icon="md-arrow-down"
                                 @click="handleExport">导出
                         </Button>
-                        <Button v-if="showImport" class="ivu-ml-8" type="primary" icon="md-arrow-up"
+                        <Button v-if="showImport" :size="size" class="ivu-ml-8" type="primary" icon="md-arrow-up"
                                 @click="handleImport">导入
                         </Button>
-                        <Dropdown v-if="showMultiAction" class="ivu-ml-8" @on-click="handleMultiClick">
+                        <Dropdown v-if="showMultiAction" :size="size" class="ivu-ml-8" @on-click="handleMultiClick">
                             <Button>
                                 更多操作
                                 <Icon type="ios-arrow-down" />
@@ -47,32 +55,34 @@
                     </FormItem>
                 </Col>
             </Row>
-            <Row v-if="collapse" style="margin-top: 10px">
+            <Row v-if="showAdvanced && collapse" style="margin-top: 10px">
                 <Col v-bind="grid" v-for="(item, index) in advancedSearchForm" :key="index">
                     <FormItem :label="item.label_name" :prop="item.label_prop" :label-for="item.label_prop">
                         <template v-if="item.ele_type === 'select'">
-                            <Select v-model="item.ele_value" placeholder="请选择" clearable :element-id="item.label_prop">
-                                <Option v-for="(val, key) in item.options" :key="key" :value="val.value">{{ val.name
-                                    }}
+                            <Select v-model="item.ele_value" :size="size" placeholder="请选择" clearable :element-id="item.label_prop">
+                                <Option v-for="(val, key) in item.options" :key="key" :value="val.value">
+                                    {{ val.name }}
                                 </Option>
                             </Select>
                         </template>
                         <template v-else-if="item.ele_type === 'input'">
-                            <Input v-model="item.ele_value" placeholder="请输入关键词搜索" clearable :element-id="item.label_prop" />
+                            <Input v-model="item.ele_value" placeholder="请输入关键词搜索" :size="size" clearable :element-id="item.label_prop" />
                         </template>
                         <template v-else-if="item.ele_type === 'switch'">
                             <Switch @on-change="handleSwitchChange" v-model="item.ele_value"
                                     :true-value="item.options.true_value"
-                                    :false-value="item.options.false_value">
-                                <template v-show="item.options && Object.keys(item.options) > 0">
-                                    <span slot="open">{{ item.options.open }}</span>
-                                    <span slot="close">{{ item.options.close }}</span>
+                                    :false-value="item.options.false_value"
+                                    :size="size" >
+                                <template v-show="item.options.length > 0">
+                                    <span slot="open">{{ item.options[0].open }}</span>
+                                    <span slot="close">{{ item.options[0].close }}</span>
                                 </template>
                             </Switch>
                         </template>
-                        <template v-else-if="item.ele_type === 'date' || item.ele_type === 'datetime' || item.ele_type === 'daterange' || item.ele_type === 'datetimerange'">
+                        <template v-else-if="item.ele_type === 'date' || item.ele_type === 'datetime' || item.ele_type === 'daterange' || item.ele_type === 'datetimerange' || item.ele_type === 'year' || item.ele_type === 'month'">
                             <DatePicker
                                 style="width: 100%"
+                                :size="size"
                                 :ref="'date_picker_' + item.label_prop"
                                 @on-change="handleDateChange(item.label_prop, index)"
                                 :value="item.ele_value"
@@ -87,10 +97,10 @@
                 <Col v-bind="grid">
                     <slot name="content"></slot>
                 </Col>
-                <Col v-bind="grid" class="search-form-advanced-search-btn">
+                <Col v-if="showAdvanced" v-bind="grid" class="search-form-advanced-search-btn">
                     <FormItem>
-                        <Button type="primary" @click="handleSubmit">高级搜索</Button>
-                        <Button class="ivu-ml-8" @click="handleReset">重置</Button>
+                        <Button type="primary" :size="size" @click="handleSubmit">高级搜索</Button>
+                        <Button class="ivu-ml-8" :size="size" @click="handleReset">重置</Button>
                     </FormItem>
                 </Col>
             </Row>
@@ -105,6 +115,10 @@
         name: 'search-form',
         mixins: [ mixin ],
         props: {
+            size: {
+                type: String,
+                default: 'default'
+            },
             showRefresh: {
                 type: Boolean,
                 default: true
@@ -151,7 +165,7 @@
         data() {
             return {
                 gridLeft: {
-                    xl: 14,
+                    xl: 16,
                     lg: 14,
                     md: 12,
                     sm: 24,
@@ -161,7 +175,7 @@
                     span: 24
                 },
                 gridRight: {
-                    xl: 10,
+                    xl: 8,
                     lg: 10,
                     md: 12,
                     sm: 24,
@@ -209,6 +223,8 @@
                             case 'datetime':
                             case 'daterange':
                             case 'datetimerange':
+                            case 'year':
+                            case 'month':
                                 timeArr[item.label_prop] = item.ele_value;
                                 this.searchForm.time = timeArr;
                                 break;
@@ -251,6 +267,8 @@
                             case 'datetime':
                             case 'daterange':
                             case 'datetimerange':
+                            case 'year':
+                            case 'month':
                                 timeArr[item.label_prop] = item.ele_value;
                                 this.searchForm.time = timeArr;
                                 break;

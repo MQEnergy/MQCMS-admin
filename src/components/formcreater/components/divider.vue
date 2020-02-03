@@ -1,6 +1,7 @@
 <template>
     <div>
         <Divider
+                :size="formConfig.form.size_active ? formConfig.form.size : element.ele_size"
                 :class="element.custom_class"
                 :orientation="element.ele_attr.orientation"
                 :type="element.ele_attr.type"

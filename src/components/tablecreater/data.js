@@ -1,32 +1,15 @@
 export default {
     config: {
-        upload: {
-            modal_title: '选择图片',
-            modal_width: '800',
-            modal_mask_closable: false, // 设置modal点击遮罩关闭
-            btn_title: '上传图片',
-            btn_icon: 'md-camera',
-            is_custom: false, // 是否自定义icon
-            multiple: false, // 是否多图上传
-            upload_url: '/attachment/upload', // 上传图片地址
-            image_list_url: '/attachment/index', // 获取图片列表地址
-            del_image_url: '/attachment/delete', // 删除图片地址
-            is_local: true, // 是否显示本地图片tab
-            is_stock: true, // 是否显示图库图片tab
-            is_net: true, // 是否显示网络图片tab
-            is_del: true, // 是否显示删除图片
-            show_base_upload: true // 是否显示iview上传组件（可自定义上传组件）
-        },
-        form: {
+        table: {
             label_width: 80,
             label_position: 'right',
-            size: 'default',
+            size: 'default', // 表格大小 large default small
             size_active: true,
             custom_class: ''
         },
         show: {
             modal_title: '详情',
-            modal_width: '800',
+            modal_width: '1000',
             modal_mask_closable: false
         },
         icon: {
@@ -40,24 +23,125 @@ export default {
     list: [
         {
             ele_id: 1,
-            ele_title: '文本分割线',
-            ele_name: 'divider',
+            ele_title: '搜索组件',
+            ele_name: 'search',
             ele_hash: '',
             custom_class: '',
-            ele_value: '分割文本',
-            ele_size: 'default', // 尺寸，可选值为 small 或 default
+            sele_value: '分割文本',
+            ele_size: 'default', // large default small
             size_active: false,
             is_active: false,
             ele_attr: {
-                color: '#666',
-                colors: ['#000', '#17233d', '#515a6e', '#808695', '#c5c8ce', '#dcdee2', '#e8eaec', '#f8f8f9', '#2d8cf0', '#5cadff', '#2b85e4', '#2db7f5', '#19be6b', '#ff9900', '#ed4014'],
-                dashed: false,
-                orientation: 'center', // 分割线标题的位置，可选值为 left、right 或 center
-                type: 'horizontal' // 水平还是垂直类型，可选值为 horizontal 或 vertical
+                base_search_form: {
+                    type: 'id',
+                    keyword: '',
+                    options: [
+                        {
+                            name: 'ID',
+                            value: 'id'
+                        }
+                    ]
+                }, // 普通搜索参数
+                advanced_search_form: [
+                    {
+                        label_name: 'label_name:',
+                        label_prop: 'label_prop',
+                        ele_value: '',
+                        ele_type: 'input',
+                        options: []
+                    },
+                ], // 高级搜索参数
+                show_refresh: true, // 展示刷新按钮
+                show_export: false, // 展示导出按钮
+                show_import: false, // 展示导入按钮
+                show_create: true, // 展示创建按钮
+                show_advanced: true, // 展示高级搜索按钮
+                show_multi_action: false, // 展示更多操作按钮
+                multi_actions: [
+                    {
+                        name: '批量删除',
+                        value: 'on-multi-del'
+                    }
+                ], // 更多操作方法数组
             }
         },
         {
             ele_id: 2,
+            ele_title: '表格组件',
+            ele_name: 'table',
+            ele_hash: '',
+            custom_class: '',
+            ele_size: 'default', // large default small
+            size_active: false,
+            is_active: false,
+            ele_attr: {
+                data: [], // 查询的数据
+                columns: [], // 查询的列
+                stripe: false, // 是否显示间隔斑马纹
+                border: false, // 是否显示纵向边框
+                show_header: true, // 是都显示头部
+                width: 'auto', // 表格宽度，单位 px
+                height: '', // 表格高度，单位 px，设置后，如果表格内容大于此值，会固定表头
+                max_height: '', // 表格最大高度，单位 px，设置后，如果表格内容大于此值，会固定表头
+                loading: false, // 表格是否加载中
+                disabled_hover: false, // 禁用鼠标悬停时的高亮
+                highlight_row: {
+                    value: false,
+                    event: 'on-current-change' // 开启 highlight-row 后有效，当表格的当前行发生变化的时候会触发 currentRow：当前高亮行的数据 boldCurrentRow：上一次高亮的数据
+                }, // 是否支持高亮选中的行，即单选
+                row_class_name: 'on-row-class-name', // 行的 className 的回调方法，传入参数：row：当前行数据 index：当前行的索引
+                no_data_text: '暂无数据', // 数据为空时显示的提示内容
+                no_filtered_data_text: '暂无筛选结果', // 筛选数据为空时显示的提示内容
+                draggable: false, // 是否开启拖拽调整行顺序，需配合 @on-drag-drop 事件使用
+                tooltip_theme: 'dark', // 列使用 tooltip 时，配置它的主题，可选值为 dark 或 light
+                row_key: false, // 是否强制使用内置的 row-key，开启后可能会影响性能，4.1.0 支持 String
+                span_method: 'on-span-method', // 合并行或列的计算方法
+                show_summary: false, // 是否在表尾显示合计行
+                sum_text: '合计', // 合计行第一列的文本
+                summary_method: 'on-summary-method', // 自定义的合计计算方法
+                indent_size: '16', // 树形数据缩进宽度，单位 px
+                load_data: 'on-load-data', // 异步加载树形数据的方法，详见示例
+                context_menu: {
+                    value: false,
+                    event: 'on-contextmenu'
+                }, // 当前行点击右键是否会阻止默认行为
+                column_attr: {
+                    type: '', // 列类型，可选值为 index、selection、expand、html
+                    title: '#', // 列头显示文字
+                    key: '', // 对应列内容的字段名
+                    width: '', // 列宽
+                    min_width: '', // 最小列宽
+                    max_width: '', // 最大列宽
+                    align: 'left', // 对齐方式，可选值为 left 左对齐、right 右对齐和 center 居中对齐
+                    class_name: '', // 列的样式名称
+                    fixed: '', // 列是否固定在左侧或者右侧，可选值为 left 左侧和 right 右侧
+                    ellipsis: false, // 开启后，文本将不换行，超出部分显示为省略号
+                    tooltip: false, // 开启后，文本将不换行，超出部分显示为省略号，并用 Tooltip 组件显示完整内容
+                    render: 'on-render', // 自定义渲染列，使用 Vue 的 Render 函数。传入两个参数，第一个是 h，第二个为对象，包含 row、column 和 index，分别指当前行数据，当前列数据，当前行索引，详见示例。
+                    render_header: 'on-render-header', // 自定义列头显示内容，使用 Vue 的 Render 函数。传入两个参数，第一个是 h，第二个为对象，包含 column 和 index，分别为当前列数据和当前列索引。
+                    index_method: 'on-index-method', // type 为 index 时可用，自定义序号
+                    sortable: {
+                        value: false,
+                        event: 'on-sort-method' // 自定义排序使用的方法，接收三个参数 a 、 b 和 type，当设置 sortable: true 时有效。type 值为 asc 和 desc
+                    }, // 对应列是否可以排序，如果设置为 custom，则代表用户希望远程排序，需要监听 Table 的 on-sort-change 事件
+                    sort_type: '', // 设置初始化排序。值为 asc 和 desc
+                    filters: {
+                        value: [],
+                        event: 'on-filter-method'
+                    }, // 过滤数据的选项，格式为数组，数组中每项包含 label 和 value 属性，使用过滤，必须同时配置 filterMethod
+                    filter_multiple: true, // 数据过滤的选项是否多选
+                    filtered_value: [], // 在初始化时使用过滤，数组，值为需要过滤的 value 集合
+                    filter_remote: 'on-filter-remote', // 使用远程过滤
+                    children: [], // 表头分组
+                    resizable: false, // 该列是否允许拖拽调整宽度，需开启 border 属性，且设置 width
+                    tree: '', // 指定该列为显示展开/收起图标，树形数据时使用
+                }
+            },
+        }
+    ],
+    search_form: [
+        {
+            ele_id: 1,
             ele_title: 'input组件',
             ele_name: 'input',
             ele_hash: '',
@@ -96,7 +180,7 @@ export default {
             options: []
         },
         {
-            ele_id: 3,
+            ele_id: 2,
             ele_title: '单选框组',
             ele_name: 'radio_group',
             ele_hash: '',
@@ -132,7 +216,7 @@ export default {
             ]
         },
         {
-            ele_id: 4,
+            ele_id: 3,
             ele_title: '多选框组',
             ele_name: 'checkbox_group',
             ele_hash: '',
@@ -166,7 +250,7 @@ export default {
             ]
         },
         {
-            ele_id: 5,
+            ele_id: 4,
             ele_title: '日期组件',
             ele_name: 'datepicker',
             ele_hash: '',
@@ -212,7 +296,7 @@ export default {
             options: {}
         },
         {
-            ele_id: 6,
+            ele_id: 5,
             ele_title: 'select组件',
             ele_name: 'select',
             ele_hash: '',
@@ -264,31 +348,7 @@ export default {
             ]
         },
         {
-            ele_id: 7,
-            ele_title: '上传组件',
-            ele_name: 'upload', // 为自定义上传组件
-            ele_hash: '',
-            label_width: 80,
-            ele_width: '',
-            custom_class: '',
-            ele_prop: 'upload',
-            ele_size: 'default',
-            size_active: false,
-            is_active: false,
-            ele_attr: {
-                attach_full_url: '',
-                attach_type: 1,
-                attach_minetype: '',
-                ele_info: undefined,
-                btn_title: '上传图片',
-                btn_icon: 'md-camera',
-                is_custom: false, // 是否自定义icon
-            },
-            ele_value: '',
-            options: []
-        },
-        {
-            ele_id: 8,
+            ele_id: 6,
             ele_title: 'switch组件',
             ele_name: 'switch',
             ele_hash: '',
@@ -317,31 +377,6 @@ export default {
                 }
             },
             ele_value: "1",
-            options: []
-        },
-        {
-            ele_id: 9,
-            ele_title: '评分组件',
-            ele_name: 'rate',
-            ele_hash: 'rate',
-            label_width: 80,
-            ele_width: '',
-            custom_class: '',
-            ele_prop: 'rate',
-            ele_size: 'default',
-            size_active: false,
-            is_active: false,
-            ele_attr: {
-                count: 5,
-                allow_half: true,
-                show_text: false,
-                disabled: false,
-                clearable: false,
-                rate_custom: '', // rate自定义内容
-                rate_type: 'icon', // rate自定义类型 character : 自定义字符，icon：自定义icon
-                is_custom: false // 在选择自定义字符时候有效 true：custom_icon（自定义icon）； false：icon（系统icon）
-            },
-            ele_value: 0,
             options: []
         }
     ]

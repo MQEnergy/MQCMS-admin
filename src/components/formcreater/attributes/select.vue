@@ -120,9 +120,8 @@
                                 文字提示：
                                 <Input v-model="currentElement.ele_attr.loading_text" placeholder="远程搜索中的文字提示" />
                             </div>
-<!--                            <FormItem label="label值">-->
-<!--                                <Input v-model="currentElement.ele_attr.label" placeholder="仅在remote模式下，初始化时使用" />-->
-<!--                            </FormItem>-->
+                            label值
+                            <Input v-model="currentElement.ele_attr.label" placeholder="仅在remote模式下，初始化时使用" />
                         </div>
                         <Checkbox v-model="currentElement.ele_attr.label_in_value" :true-value="true" :false-value="false">
                             label_in_value

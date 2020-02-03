@@ -4,6 +4,7 @@
         <search-form
             ref="searchForm"
             :show-multi-action="false"
+            :show-export="true"
             :base-search-form="baseSeachForm"
             :advanced-search-form="advancedSearchForm"
             @on-create-form="handleOpenUpdateCreate"
@@ -266,12 +267,12 @@
                         label_prop: 'status',
                         ele_value: '1',
                         ele_type: 'switch',
-                        options: {
+                        options: [{
                             open: '开',
                             true_value: '1',
                             close: '关',
                             false_value: '0'
-                        }
+                        }]
                     },
                 ]
             }
@@ -418,7 +419,7 @@
                 });
             },
             handleMultiDel () {
-                console.log(this.selectedData)
+                console.log(this.selectedData);
                 if (this.selectedData.length === 0) {
                     this.$Message.error('请选择至少一个元素');
                     return false;
@@ -441,7 +442,14 @@
                 }
             },
             handleExport () {
-                this.$Message.success('导出成功');
+                new Promise(resolve => {
+                    this.$refs.table.exportCsv({
+                        filename: 'test'
+                    });
+                    resolve()
+                }).then(res => {
+                    this.$Message.success('导出成功');
+                });
             }
         }
     }
