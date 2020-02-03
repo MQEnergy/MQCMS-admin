@@ -83,7 +83,7 @@
                                             <Input v-model="val.name" placeholder="name" clearable v-width="100" />&nbsp;
                                             <Input v-model="val.value" placeholder="value" clearable v-width="100" />&nbsp
                                             <div class="ivu-fr">
-                                                <Icon v-if="key > 0" v-color="'#ed4014'" type="md-close-circle" @click="handleAdvancedActionOptionsRemove(item.options, index)" style="cursor: pointer;"/>
+···                                                <Icon v-color="'#ed4014'" type="md-close-circle" @click="handleAdvancedActionOptionsRemove(item.options, key)" style="cursor: pointer;"/>
                                                 <Dropdown placement="bottom-end" class="ivu-ml-8" @on-click="handleAdvancedActionOptionsDropdownMenu($event, index, val, key)">
                                                     <a href="javascript:void(0)">
                                                         <Icon type="md-more" />
@@ -98,10 +98,10 @@
                                 </template>
                                 <template v-if="item.ele_type === 'switch'">
                                     <div v-if="item.options.length > 0" style="background: #dfe3e8; padding: 10px; margin: 5px 0;">
-                                        开：
+                                        开启：
                                         <Input v-model="item.options[0].open" placeholder="open" clearable v-width="100" />&nbsp;
                                         <Input v-model="item.options[0].true_value" placeholder="true_value" clearable v-width="100" /><br>
-                                        关：
+                                        关闭：
                                         <Input v-model="item.options[0].close" placeholder="close" clearable v-width="100" />&nbsp;
                                         <Input v-model="item.options[0].false_value" placeholder="false_value" clearable v-width="100" /><br>
                                     </div>
@@ -250,10 +250,10 @@
                 if (event === 'copy') {
                     this.handleDeepCloneSplice(this.currentElement.ele_attr.advanced_search_form, item, index);
                 } else if (event === 'other-params-select') {
-                    this.handleInitOptions('select', item.options);
+                    item.options = this.handleInitOptions('select', item.options);
 
                 } else if (event === 'other-params-switch') {
-                    this.handleInitOptions('switch', item.options);
+                    item.options = this.handleInitOptions('switch', item.options);
                 }
             },
             handleDeepCloneSplice (list, item, index) {
