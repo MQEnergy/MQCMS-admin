@@ -83,7 +83,7 @@
                                             <Input v-model="val.name" placeholder="name" clearable v-width="100" />&nbsp;
                                             <Input v-model="val.value" placeholder="value" clearable v-width="100" />&nbsp
                                             <div class="ivu-fr">
-···                                                <Icon v-color="'#ed4014'" type="md-close-circle" @click="handleAdvancedActionOptionsRemove(item.options, key)" style="cursor: pointer;"/>
+                                                <Icon v-color="'#ed4014'" type="md-close-circle" @click="handleAdvancedActionOptionsRemove(item.options, key)" style="cursor: pointer;"/>
                                                 <Dropdown placement="bottom-end" class="ivu-ml-8" @on-click="handleAdvancedActionOptionsDropdownMenu($event, index, val, key)">
                                                     <a href="javascript:void(0)">
                                                         <Icon type="md-more" />
