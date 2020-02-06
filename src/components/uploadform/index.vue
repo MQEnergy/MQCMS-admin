@@ -327,7 +327,7 @@
                 });
             },
             handleSearchImageList (searchForm) {
-                if (searchForm._is_search) {
+                if (searchForm._is_base_search) {
                     this.currentPage = 1;
                 }
                 this.list = [];

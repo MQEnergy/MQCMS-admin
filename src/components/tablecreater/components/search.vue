@@ -13,8 +13,8 @@
                 :base-search-form="element.ele_attr.base_search_form"
                 :advanced-search-form="element.ele_attr.advanced_search_form"
                 @on-create-form="handleOpenUpdateCreate"
-                @on-search="searchData"
-                @on-reset="getData"
+                @on-search="handleData"
+                @on-reset="handleData"
                 @on-multi-del="handleMultiDel"
                 @on-export="handleExport"
         />
@@ -23,7 +23,7 @@
 
 <script>
     import SearchForm from "@/components/searchform/index";
-    import { TagIndex, TagSearch } from "@api/tag";
+    import request from '@/plugins/request';
 
     export default {
         name: "component-search",
@@ -46,6 +46,10 @@
         },
         data () {
             return {
+                searchForm: {},
+                list: [],
+                total: 0,
+                loading: false
             }
         },
         methods: {
@@ -53,26 +57,29 @@
             handleOpenUpdateCreate (status, updateIndex) {
                 this.$emit('on-create-form', status, updateIndex);
             },
-            getData () {
-                this.loading = true;
-                TagIndex({
-                    page: this.current,
-                    limit: this.size
-                }).then(async res => {
-                    this.list = res.data;
-                    this.total = res.total;
-                }).finally(() => {
-                    this.loading = false;
-                });
-            },
-            searchData (searchForm) {
+            handleData (searchForm) {
                 this.searchForm = searchForm;
                 this.loading = true;
-                TagSearch({
-                    page: this.current,
-                    limit: this.size,
-                    search: searchForm
-                }).then(async res => {
+                if (!this.element.ele_attr.search_action.value) {
+                    this.$Message.error('请选择搜索url');
+                    return false;
+                }
+                const currentActionValue = this.element.ele_attr.search_action.value.split('|');
+                let requestJson = {
+                    url: currentActionValue[1],
+                    method: currentActionValue[2]
+                };
+                const requestData = {
+                    page: this.formConfig.table.page,
+                    limit: this.formConfig.table.limit,
+                };
+                if (currentActionValue[2] === 'get') {
+                    requestJson.params = requestData;
+                } else {
+                    requestData.search = searchForm;
+                    requestJson.data = requestData;
+                }
+                return request(requestJson).then(async res => {
                     this.list = res.data;
                     this.total = res.total;
                 }).finally(() => {
@@ -80,7 +87,6 @@
                 });
             },
             handleMultiDel () {
-                console.log(this.selectedData);
                 if (this.selectedData.length === 0) {
                     this.$Message.error('请选择至少一个元素');
                     return false;

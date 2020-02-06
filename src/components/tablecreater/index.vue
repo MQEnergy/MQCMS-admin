@@ -98,6 +98,9 @@
                                             <Radio label="large">large</Radio>
                                         </RadioGroup>
                                     </FormItem>
+                                    <FormItem label="分页数（limit）">
+                                        <InputNumber :max="500" :min="10" :step="10" v-model="formConfig.table.limit"  placeholder="分页数"></InputNumber>
+                                    </FormItem>
                                     <FormItem label="自定义表单class">
                                         <Input v-model="formConfig.table.custom_class" placeholder="请输入class属性" />
                                     </FormItem>
@@ -234,7 +237,6 @@
                 });
                 this.draggedList[index].is_active = !this.draggedList[index].is_active;
                 this.currentElement = this.draggedList[index];
-                console.log(this.currentElement);
             },
             handleFormItemClose (element, index) {
                 this.currentElement = undefined;

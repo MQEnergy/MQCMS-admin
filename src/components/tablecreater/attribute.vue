@@ -28,7 +28,6 @@
         components: {
             AttributeTable,
             AttributeSearch
-
         },
         data () {
             return {

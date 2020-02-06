@@ -5,7 +5,7 @@
           ref="searchForm"
           :show-multi-action="false"
           :show-export="false"
-          :base-search-form="baseSeachForm"
+          :base-search-form="baseSearchForm"
           :advanced-search-form="advancedSearchForm"
           @on-create-form="handleOpenUpdateCreate"
           @on-search="searchData"
@@ -140,7 +140,7 @@
                 sortColumns: '',
                 filterType: undefined,
                 searchForm: {},
-                baseSeachForm: {
+                baseSearchForm: {
                     type: 'id',
                     keyword: '',
                     options: [

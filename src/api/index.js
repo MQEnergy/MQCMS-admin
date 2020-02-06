@@ -2,6 +2,7 @@ export default {
     apiList: [
         {
             module: 'account',
+            module_desc: '账号api',
             data: [
                 {
                     func: 'AccountLogin',
@@ -22,11 +23,17 @@ export default {
         },
         {
             module: 'admin',
+            module_desc: '后台管理员相关接口',
             data: [
                 {
                     func: 'AdminIndex',
                     url: '/admin/index',
                     method: 'get'
+                },
+                {
+                    func: 'AdminSearch',
+                    url: '/admin/index',
+                    method: 'post'
                 },
                 {
                     func: 'AdminShow',
@@ -52,6 +59,7 @@ export default {
         },
         {
             module: 'attachment',
+            module_desc: '附件相关接口',
             data: [
                 {
                     func: 'AttachmentIndex',
@@ -87,6 +95,7 @@ export default {
         },
         {
             module: 'auth',
+            module_desc: '权限相关接口',
             data: [
                 {
                     func: 'AuthIndex',
@@ -122,6 +131,7 @@ export default {
         },
         {
             module: 'comment',
+            module_desc: '评论相关接口',
             data: [
                 {
                     func: 'CommentIndex',
@@ -157,6 +167,7 @@ export default {
         },
         {
             module: 'post',
+            module_desc: '账号api',
             data: [
                 {
                     func: 'PostIndex',
@@ -192,6 +203,7 @@ export default {
         },
         {
             module: 'tag',
+            module_desc: '标签相关接口',
             data: [
                 {
                     func: 'TagIndex',
@@ -227,6 +239,7 @@ export default {
         },
         {
             module: 'user',
+            module_desc: '用户相关接口',
             data: [
                 {
                     func: 'UserIndex',
@@ -258,6 +271,120 @@ export default {
                     url: '/user/delete',
                     method: 'post'
                 },
+            ]
+        }
+    ],
+    searchList: [
+        {
+            module: 'admin',
+            module_desc: '后台管理员相关接口',
+            data: [
+                {
+                    func: 'AdminIndex',
+                    url: '/admin/index',
+                    method: 'get'
+                },
+                {
+                    func: 'AdminSearch',
+                    url: '/admin/index',
+                    method: 'post'
+                }
+            ]
+        },
+        {
+            module: 'attachment',
+            module_desc: '附件相关接口',
+            data: [
+                {
+                    func: 'AttachmentIndex',
+                    url: '/attachment/index',
+                    method: 'get'
+                },
+                {
+                    func: 'AttachmentSearch',
+                    url: '/attachment/index',
+                    method: 'post'
+                }
+            ]
+        },
+        {
+            module: 'auth',
+            module_desc: '权限相关接口',
+            data: [
+                {
+                    func: 'AuthIndex',
+                    url: '/auth/index',
+                    method: 'get'
+                },
+                {
+                    func: 'AuthSearch',
+                    url: '/auth/index',
+                    method: 'post'
+                }
+            ]
+        },
+        {
+            module: 'comment',
+            module_desc: '评论相关接口',
+            data: [
+                {
+                    func: 'CommentIndex',
+                    url: '/comment/index',
+                    method: 'get'
+                },
+                {
+                    func: 'CommentSearch',
+                    url: '/comment/index',
+                    method: 'post'
+                }
+            ]
+        },
+        {
+            module: 'post',
+            module_desc: '账号api',
+            data: [
+                {
+                    func: 'PostIndex',
+                    url: '/post/index',
+                    method: 'get'
+                },
+                {
+                    func: 'PostSearch',
+                    url: '/post/index',
+                    method: 'post'
+                }
+            ]
+        },
+        {
+            module: 'tag',
+            module_desc: '标签相关接口',
+            data: [
+                {
+                    func: 'TagIndex',
+                    url: '/tag/index',
+                    method: 'get'
+                },
+                {
+                    func: 'TagSearch',
+                    url: '/tag/index',
+                    method: 'post'
+                }
+            ]
+        },
+        {
+            module: 'user',
+            module_desc: '用户相关接口',
+            data: [
+                {
+                    func: 'UserIndex',
+                    url: '/user/index',
+                    method: 'get'
+                },
+                {
+                    func: 'UserSearch',
+                    url: '/user/index',
+                    method: 'post'
+                }
             ]
         }
     ]

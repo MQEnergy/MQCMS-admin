@@ -190,8 +190,8 @@
                 },
                 collapse: false,
                 searchForm: {
-                    time: {},
-                    _is_search: false
+                    _time: {},
+                    _is_base_search: false
                 },
                 timeArr: [],
                 selectedKeys: []
@@ -210,31 +210,7 @@
         },
         methods: {
             handleSubmit () {
-                this.searchForm = {
-                    type: this.baseSearchForm.type,
-                    keyword: this.baseSearchForm.keyword,
-                    _is_search: this.baseSearchForm.keyword ? true : false
-                };
-                if (this.advancedSearchForm.length > 0) {
-                    const timeArr = {};
-                    this.advancedSearchForm.forEach((item, index) => {
-                        switch (item.ele_type) {
-                            case 'date':
-                            case 'datetime':
-                            case 'daterange':
-                            case 'datetimerange':
-                            case 'year':
-                            case 'month':
-                                timeArr[item.label_prop] = item.ele_value;
-                                this.searchForm.time = timeArr;
-                                break;
-                            default:
-                                this.searchForm[item.label_prop] = item.ele_value;
-                                break;
-
-                        }
-                    })
-                }
+                this.handleAdvancedSearchForm();
                 this.$emit('on-search', this.searchForm);
             },
             handleReset () {
@@ -247,17 +223,22 @@
                     })
                 }
                 this.searchForm = {
-                    time: {},
-                    _is_search: false
+                    _time: {},
+                    _is_base_search: false
                 };
-                this.$emit('on-reset');
+                this.$emit('on-reset', this.searchForm);
             },
             handleRefresh () {
+                this.handleAdvancedSearchForm();
+                this.searchForm._is_base_search = true;
+                this.$emit('on-search', this.searchForm);
+            },
+            handleAdvancedSearchForm () {
                 this.searchForm = {
-                    type: this.baseSearchForm.type,
-                    keyword: this.baseSearchForm.keyword,
-                    time: {},
-                    _is_search: true
+                    _type: this.baseSearchForm.type,
+                    _keyword: this.baseSearchForm.keyword,
+                    _time: {},
+                    _is_base_search: this.baseSearchForm.keyword !== ''
                 };
                 if (this.advancedSearchForm.length > 0) {
                     const timeArr = {};
@@ -270,16 +251,15 @@
                             case 'year':
                             case 'month':
                                 timeArr[item.label_prop] = item.ele_value;
-                                this.searchForm.time = timeArr;
+                                this.searchForm._time = timeArr;
                                 break;
                             default:
                                 this.searchForm[item.label_prop] = item.ele_value;
                                 break;
-                
+
                         }
                     })
                 }
-                this.$emit('on-search', this.searchForm);
             },
             handleOpenCreate () {
                 this.$emit('on-create-form', true, -1);

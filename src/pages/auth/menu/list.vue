@@ -4,7 +4,7 @@
         <search-form
             ref="searchForm"
             :show-multi-action="false"
-            :base-search-form="baseSeachForm"
+            :base-search-form="baseSearchForm"
             :advanced-search-form="advancedSearchForm"
             @on-create-form="handleOpenUpdateCreate"
             @on-search="searchData"
@@ -189,7 +189,7 @@
                 filterHotType: undefined,
                 filterTagType: undefined,
                 searchForm: {},
-                baseSeachForm: {
+                baseSearchForm: {
                     type: 'id',
                     keyword: '',
                     options: [

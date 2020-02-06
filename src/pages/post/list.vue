@@ -4,7 +4,7 @@
         <search-form
             ref="searchForm"
             :show-multi-action="false"
-            :base-search-form="baseSeachForm"
+            :base-search-form="baseSearchForm"
             :advanced-search-form="advancedSearchForm"
             @on-create-form="handleOpenUpdateCreate"
             @on-search="searchData"
@@ -165,7 +165,7 @@
                 sortColumns: '',
                 filterType: undefined,
                 searchForm: {},
-                baseSeachForm: {
+                baseSearchForm: {
                     type: 'id',
                     keyword: '',
                     options: [
@@ -401,7 +401,7 @@
                 });
             },
             handleMultiDel () {
-                console.log(this.selectedData)
+                console.log(this.selectedData);
                 if (this.selectedData.length === 0) {
                     this.$Message.error('请选择至少一个元素');
                     return false;

@@ -13,29 +13,103 @@
                     </FormItem>
                     <FormItem>
                         <div slot="label">
+                            搜索的url
+                            <Tooltip max-width="200" content="配置搜索URL包含普通搜索和高级搜索的接口请求，搜索接口请选择如：AdminSearch 包含search的字母" placement="top-start">
+                                <Icon type="md-help-circle" />
+                            </Tooltip>
+                        </div>
+                        <Row :gutter="2">
+                            <Col :span="8">
+                                <Select v-model="currentElement.ele_attr.search_action.module" v-width="'100%'" clearable @on-change="handleSearchActionChange">
+                                    <Option v-for="(item, index) in apiList" :value="item.module" :label="item.module" :key="index">
+                                        {{ item.module }}
+                                        <Tooltip style="float:right;color:#ccc" max-width="200" :content="item.module_desc" placement="top" :transfer="true">
+                                            <Icon type="md-help-circle" />
+                                        </Tooltip>
+                                    </Option>
+                                </Select>
+                            </Col>
+                            <Col :span="16">
+                                <template v-if="currentElement.ele_attr.search_action.data.length > 0">
+                                    <Select v-model="currentElement.ele_attr.search_action.value" clearable v-width="'100%'" @on-change="handleSearchUrlChange">
+                                        <Option v-for="(item, index) in currentElement.ele_attr.search_action.data"
+                                                :value="item.func + '|' + item.url + '|' + item.method"
+                                                :label="item.func"
+                                                :key="index">
+                                            <span>{{ item.func }}</span>
+                                            <span style="float:right;color:#ccc">{{ item.url }}</span>
+                                        </Option>
+                                    </Select>
+                                </template>
+                            </Col>
+                        </Row>
+                        <Poptip word-wrap width="200" placement="top-start">
+                            <div slot="content">
+                                <div v-height="150" v-if="modelLoading">
+                                    <Spin fix size="large"></Spin>
+                                </div>
+                                <div v-height="150" v-else>
+                                    <template v-if="currentModel.length > 0">
+                                        {{ currentModel }}
+                                    </template>
+                                    <template v-else>
+                                        <empty-list empty-text="暂无数据" :is-back="false" />
+                                    </template>
+                                </div>
+                            </div>
+                            <Button class="ivu-mt-8" v-if="currentElement.ele_attr.search_action.module" type="primary" @click="handleModuleTableClick">
+                                获取数据字段数据
+                                <Tooltip max-width="200" placement="top">
+                                    <div slot="content" v-width="100">
+                                        点击此选项可方便查看字段值，且在搜索配置中选择字段值
+                                    </div>
+                                    <Icon type="md-help-circle" />
+                                </Tooltip>
+                            </Button>
+                        </Poptip>
+                    </FormItem>
+                    <FormItem>
+                        <div slot="label">
                             基础搜索配置
-                            <Tooltip max-width="200" content="参数依次是：name（选项名称）value（选项值）" placement="top">
+                            <Tooltip max-width="200" content="这是select的选项参数，依次是：name（选项名称）value（选项值）,value与数据表字段一致" placement="top">
                                 <Icon type="md-help-circle" />
                             </Tooltip>
                         </div>
                         <div style="background: #f0f1f3; padding: 10px;">
                             <div v-for="(item, index) in currentElement.ele_attr.base_search_form.options">
-                                <Input v-model="item.name" placeholder="name" clearable v-width="100" />&nbsp;
-                                <Input v-model="item.value" placeholder="value" clearable v-width="100" />&nbsp;
-                                <div class="ivu-fr">
-                                    <Icon v-color="'#ed4014'" type="md-close-circle" @click="handleOptionRemove(index)" style="cursor: pointer;"/>
-                                    <Dropdown placement="bottom-end" class="ivu-ml-8" @on-click="handleBasicActionDropdownMenu($event, item, index)">
-                                        <a href="javascript:void(0)">
-                                            <Icon type="md-more" />
-                                        </a>
-                                        <DropdownMenu slot="list">
-                                            <DropdownItem name="copy" >向下复制</DropdownItem>
-                                            <DropdownItem name="init" >设为初始值</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
+                                <Row>
+                                    <Col :span="20">
+                                        <div class="ivu-fl">
+                                            <Input v-model="item.name" placeholder="name" clearable v-width="100" />&nbsp;
+                                            <AutoComplete
+                                                    v-model="item.value"
+                                                    :filter-method="handleBaseAutoFilter"
+                                                    placeholder="value"
+                                                    clearable
+                                                    v-width="100">
+                                                <div v-height="200">
+                                                    <Option v-for="(val, key) in currentModel" :value="val" :key="key">{{ val }}</Option>
+                                                </div>
+                                            </AutoComplete>
+                                        </div>
+                                    </Col>
+                                    <Col :span="4">
+                                        <div class="ivu-fr">
+                                            <Icon v-color="'#ed4014'" type="md-close-circle" @click="handleOptionRemove(index)" style="cursor: pointer;"/>
+                                            <Dropdown placement="bottom-end" class="ivu-ml-8" @on-click="handleBasicActionDropdownMenu($event, item, index)">
+                                                <a href="javascript:void(0)">
+                                                    <Icon type="md-more" />
+                                                </a>
+                                                <DropdownMenu slot="list">
+                                                    <DropdownItem name="copy" >向下复制</DropdownItem>
+                                                    <DropdownItem name="init" >设为初始值</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </div>
+                                    </Col>
+                                </Row>
                             </div>
-                            <Button style="margin-top: 10px;" type="dashed" long @click="handleAddOption"><Icon type="md-add" /> 新增选择项</Button>
+                            <Button class="ivu-mt-8" type="dashed" long @click="handleAddOption"><Icon type="md-add" /> 新增搜索项</Button>
                         </div>
                     </FormItem>
                     <FormItem style="margin-bottom: 10px">
@@ -47,37 +121,52 @@
                         </div>
                         <div style="background: #f0f1f3; padding: 10px;">
                             <div v-for="(item, index) in currentElement.ele_attr.advanced_search_form" :key="index">
-                                <div style="float: left;">
-                                    <Input v-model="item.label_name" placeholder="label_name" clearable v-width="100" />&nbsp;
-                                    <Input v-model="item.label_prop" placeholder="label_prop" clearable v-width="100" />&nbsp;
-                                    <Select v-model="item.ele_type" v-width="100" @on-change="handleAdvancedTypeChange($event, item, index)">
-                                        <Option value="input">input</Option>
-                                        <Option value="select">select</Option>
-                                        <Option value="switch">switch</Option>
-                                        <Option value="date">date</Option>
-                                        <Option value="datetime">datetime</Option>
-                                        <Option value="daterange">daterange</Option>
-                                        <Option value="datetimerange">datetimerange</Option>
-                                        <Option value="year">year</Option>
-                                        <Option value="month">month</Option>
-                                    </Select>
-                                </div>
-                                <div class="ivu-fr">
-                                    <Icon v-color="'#ed4014'" type="md-close-circle" @click="handleActionRemove(index)" style="cursor: pointer;"/>
-                                    <Dropdown placement="bottom-end" class="ivu-ml-8" @on-click="handleAdvancedActionDropdownMenu($event, item, index)">
-                                        <a href="javascript:void(0)">
-                                            <Icon type="md-more" />
-                                        </a>
-                                        <DropdownMenu slot="list">
-                                            <DropdownItem name="copy">向下复制</DropdownItem>
-                                            <DropdownItem name="other-params-select" v-if="item.ele_type === 'select'">设置选项</DropdownItem>
-                                            <DropdownItem name="other-params-switch" v-if="item.ele_type === 'switch'">设置属性</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-                                <br>
-                                <template v-if="item.ele_type === 'select'">
-                                    <div v-if="item.options.length > 0" style="background: #dfe3e8; padding: 10px; margin: 5px 0;">
+                                <Row>
+                                    <Col :span="20">
+                                        <div class="ivu-fl">
+                                            <Input v-model="item.label_name" placeholder="label_name" clearable v-width="100" />&nbsp;
+<!--                                            <Input v-model="item.label_prop" placeholder="label_prop" clearable v-width="100" />&nbsp;-->
+                                            <AutoComplete
+                                                    v-model="item.label_prop"
+                                                    :filter-method="handleBaseAutoFilter"
+                                                    placeholder="label_prop"
+                                                    clearable
+                                                    v-width="100">
+                                                <div v-height="200">
+                                                    <Option v-for="(val, key) in currentModel" :value="val" :key="key">{{ val }}</Option>
+                                                </div>
+                                            </AutoComplete>
+                                            <Select v-model="item.ele_type" v-width="100" @on-change="handleAdvancedTypeChange($event, item, index)">
+                                                <Option value="input">input</Option>
+                                                <Option value="select">select</Option>
+                                                <Option value="switch">switch</Option>
+                                                <Option value="date">date</Option>
+                                                <Option value="datetime">datetime</Option>
+                                                <Option value="daterange">daterange</Option>
+                                                <Option value="datetimerange">datetimerange</Option>
+                                                <Option value="year">year</Option>
+                                                <Option value="month">month</Option>
+                                            </Select>
+                                        </div>
+                                    </Col>
+                                    <Col :span="4">
+                                        <div class="ivu-fr">
+                                            <Icon v-color="'#ed4014'" type="md-close-circle" @click="handleActionRemove(index)" style="cursor: pointer;"/>
+                                            <Dropdown placement="bottom-end" class="ivu-ml-8" @on-click="handleAdvancedActionDropdownMenu($event, item, index)">
+                                                <a href="javascript:void(0)">
+                                                    <Icon type="md-more" />
+                                                </a>
+                                                <DropdownMenu slot="list">
+                                                    <DropdownItem name="copy">向下复制</DropdownItem>
+                                                    <DropdownItem name="other-params-select" v-if="item.ele_type === 'select'">设置选项</DropdownItem>
+                                                    <DropdownItem name="other-params-switch" v-if="item.ele_type === 'switch'">设置属性</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </div>
+                                    </Col>
+                                </Row>
+                                <div v-if="item.options.length > 0" style="background: #dfe3e8; padding: 10px; margin: 5px 0;">
+                                    <template v-if="item.ele_type === 'select'">
                                         <div v-for="(val, key) in item.options" :key="key">
                                             选项{{ key + 1 }}：
                                             <Input v-model="val.name" placeholder="name" clearable v-width="100" />&nbsp;
@@ -94,20 +183,18 @@
                                                 </Dropdown>
                                             </div>
                                         </div>
-                                    </div>
-                                </template>
-                                <template v-if="item.ele_type === 'switch'">
-                                    <div v-if="item.options.length > 0" style="background: #dfe3e8; padding: 10px; margin: 5px 0;">
+                                    </template>
+                                    <template v-if="item.ele_type === 'switch'">
                                         开启：
                                         <Input v-model="item.options[0].open" placeholder="open" clearable v-width="100" />&nbsp;
                                         <Input v-model="item.options[0].true_value" placeholder="true_value" clearable v-width="100" /><br>
                                         关闭：
                                         <Input v-model="item.options[0].close" placeholder="close" clearable v-width="100" />&nbsp;
                                         <Input v-model="item.options[0].false_value" placeholder="false_value" clearable v-width="100" /><br>
-                                    </div>
-                                </template>
+                                    </template>
+                                </div>
                             </div>
-                            <Button style="margin-top: 10px;" type="dashed" long @click="handleAddAction"><Icon type="md-add" /> 新增选择项</Button>
+                            <Button class="ivu-mt-8" type="dashed" long @click="handleAddAction"><Icon type="md-add" /> 新增搜索项</Button>
                         </div>
                     </FormItem>
                 </Card>
@@ -134,25 +221,25 @@
                     <FormItem label="额外属性">
                         <Checkbox v-model="currentElement.ele_attr.show_refresh" :true-value="true" :false-value="false">
                             show_refresh
-                            <Tooltip min-width="180" max-width="180" content="设置展示刷新按钮" placement="top">
+                            <Tooltip min-width="180" max-width="180" content="设置展示刷新按钮，需配合@on-search事件使用" placement="top">
                                 <Icon type="md-help-circle" />
                             </Tooltip>
                         </Checkbox>
                         <Checkbox v-model="currentElement.ele_attr.show_export" :true-value="true" :false-value="false">
                             show_export
-                            <Tooltip min-width="180" max-width="180" content="设置展示导出按钮" placement="top">
+                            <Tooltip min-width="180" max-width="180" content="设置展示导出按钮，需配合@on-export事件使用" placement="top">
                                 <Icon type="md-help-circle" />
                             </Tooltip>
                         </Checkbox>
                         <Checkbox v-model="currentElement.ele_attr.show_import" :true-value="true" :false-value="false">
                             show_import
-                            <Tooltip min-width="180" max-width="180" content="设置展示导入按钮" placement="top">
+                            <Tooltip min-width="180" max-width="180" content="设置展示导入按钮，需配合@on-import事件使用" placement="top" :transfer="true">
                                 <Icon type="md-help-circle" />
                             </Tooltip>
                         </Checkbox>
                         <Checkbox v-model="currentElement.ele_attr.show_create" :true-value="true" :false-value="false">
                             show_create
-                            <Tooltip min-width="180" max-width="180" content="设置展示新建按钮" placement="top">
+                            <Tooltip min-width="180" max-width="180" content="设置展示新建按钮，需配合@on-create-form事件使用" placement="top">
                                 <Icon type="md-help-circle" />
                             </Tooltip>
                         </Checkbox>
@@ -164,15 +251,25 @@
                         </Checkbox>
                         <Checkbox v-model="currentElement.ele_attr.show_multi_action" :true-value="true" :false-value="false">
                             show_multi_action
-                            <Tooltip max-width="200" content="设置更多操作按钮，内容依次为：name、value，name代表更多操作的选项名称，value代表操作的emit调用父组件方法传递数据（尽量名称以on-开头）" placement="top">
+                            <Tooltip max-width="200" content="设置更多操作按钮，内容依次为：name、value，name代表更多操作的选项名称，value代表操作的emit，调用父组件方法传递数据（尽量名称以on-开头），需配合@on-事件使用" placement="top">
                                 <Icon type="md-help-circle" />
                             </Tooltip>
                         </Checkbox>
                         <div style="background: #f0f1f3; padding: 10px;" v-if="currentElement.ele_attr.show_multi_action">
                             <div v-for="(item, index) in currentElement.ele_attr.multi_actions">
-                                <Input v-model="item.name" placeholder="name" clearable v-width="120" />&nbsp;
-                                <Input v-model="item.value" placeholder="value" clearable v-width="120" />&nbsp;
-                                <Button type="text" @click="handleMultiActionRemove(index)"><Icon v-color="'#ed4014'" type="md-close-circle" /></Button>
+                                <Row>
+                                    <Col :span="20">
+                                        <div class="ivu-fl">
+                                            <Input v-model="item.name" placeholder="name" clearable v-width="120" />&nbsp;
+                                            <Input v-model="item.value" placeholder="value" clearable v-width="120" />&nbsp;
+                                        </div>
+                                    </Col>
+                                    <Col :span="4">
+                                        <div class="ivu-fr">
+                                            <Icon v-color="'#ed4014'" type="md-close-circle" @click="handleMultiActionRemove(index)" style="cursor: pointer;"/>
+                                        </div>
+                                    </Col>
+                                </Row>
                             </div>
                             <Button style="margin-top: 10px;" type="dashed" long @click="handleAddMultiAction"><Icon type="md-add" /> 新增选择项</Button>
                         </div>
@@ -185,9 +282,12 @@
 
 <script>
     import dataJson from '@/api/index';
+    import { AdminModule } from "@api/admin";
+    import EmptyList from "@/components/common/empty";
 
     export default {
         name: "attribute-search",
+        components: {EmptyList},
         props: {
             currentElement: {
                 type: Object,
@@ -204,12 +304,22 @@
         },
         data () {
             return {
-                apiList: dataJson.apiList
+                apiList: dataJson.searchList,
+                modelLoading: false,
+                currentModel: []
             }
         },
         methods: {
             handleElementSize (type) {
                 this.$emit('on-element-size', type);
+            },
+            handleSearchActionChange (value) {
+                const currentAction = this.apiList.filter(item => {
+                    return item.module === value;
+                });
+                this.formConfig.search.search_action.module = currentAction.length > 0 ? currentAction[0].module : '';
+                this.currentElement.ele_attr.search_action.module = currentAction.length > 0 ? currentAction[0].module : '';
+                this.currentElement.ele_attr.search_action.data = currentAction.length > 0 ? currentAction[0].data : [];
             },
             handleOptionRemove (index) {
                 this.currentElement.ele_attr.base_search_form.options.splice(index, 1);
@@ -219,7 +329,6 @@
                 this.currentElement.ele_attr.base_search_form.options.push(options);
             },
             handleAdvancedTypeChange (event, item, index) {
-                console.log(item.options);
                 item.options = [];
                 const options = this.handleInitOptions(event, item.options);
                 item.options = options;
@@ -323,6 +432,24 @@
                 }
                 return options;
             },
+            handleModuleTableClick () {
+                this.modelLoading = true;
+                this.currentModel = [];
+                AdminModule({
+                    module: this.currentElement.ele_attr.search_action.module
+                }).then(res => {
+                    this.currentModel = res;
+                }).catch(err => {
+                }).finally(() => {
+                    this.modelLoading = false;
+                });
+            },
+            handleBaseAutoFilter (value, option) {
+                return option.toUpperCase().indexOf(value.toUpperCase()) !== -1;
+            },
+            handleSearchUrlChange (value) {
+                this.formConfig.search.search_action.value = value;
+            }
         }
     }
 </script>

@@ -1,11 +1,20 @@
 export default {
     config: {
+        search: {
+            search_action: {
+                module: '',
+                value: '',
+                data: []
+            }
+        },
         table: {
             label_width: 80,
             label_position: 'right',
             size: 'default', // 表格大小 large default small
             size_active: true,
-            custom_class: ''
+            custom_class: '',
+            page: 1,
+            limit: 10,
         },
         show: {
             modal_title: '详情',
@@ -32,6 +41,11 @@ export default {
             size_active: false,
             is_active: false,
             ele_attr: {
+                search_action: {
+                    module: '', // @/api/index.js 里面的 module 例如：account
+                    value: '', // 选择的值 包含 方法名称｜接口url｜请求方式  例如：AccountLogin|/auth/login|post
+                    data: [] // @/api/index.js中的data值
+                },
                 base_search_form: {
                     type: 'id',
                     keyword: '',
@@ -62,7 +76,7 @@ export default {
                         name: '批量删除',
                         value: 'on-multi-del'
                     }
-                ], // 更多操作方法数组
+                ] // 更多操作方法数组
             }
         },
         {
