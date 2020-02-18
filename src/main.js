@@ -18,6 +18,7 @@ import { getHeaderName, getMenuSider, getSiderSubmenu } from '@/libs/system';
 // 内置组件
 import iLink from '@/components/link';
 import PageHeader from '@/components/pageheader/index';
+import Exception from '@/components/exception/index';
 
 import './assets/styles/index.less';
 import './assets/styles/default/mqcms.css';
@@ -31,6 +32,7 @@ Vue.use(ViewUI, {
 
 Vue.component('i-link', iLink);
 Vue.component('page-header', PageHeader);
+Vue.component('exception', Exception);
 
 Vue.config.productionTip = false;
 
@@ -71,4 +73,4 @@ new Vue({
             this.appRouteChange(to, from);
         }
     }
-}).$mount('#app')
+}).$mount('#app');
