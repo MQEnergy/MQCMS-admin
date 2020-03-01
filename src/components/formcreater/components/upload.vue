@@ -18,7 +18,7 @@
             <Button :class="element.custom_class" :size="element.ele_size" v-width="element.ele_width" @click="handleUploadSeen">
                 <Icon v-if="!element.ele_attr.is_custom" :type="element.ele_attr.btn_icon" size="16" />
                 <Icon v-else :class="formConfig.icon.font_family" :custom="formConfig.icon.css_prefix_text + element.ele_attr.btn_icon" size="16" />
-                {{ formConfig.upload.btn_title }}
+                {{ element.ele_attr.btn_title }}
             </Button>
         </Tooltip>
         <Modal
