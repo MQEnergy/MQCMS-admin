@@ -1,7 +1,7 @@
 <template>
     <div class="icon-container">
         <div class="icon-search ivu-mt-8 ivu-mb">
-            <Input v-model="keyword" @input="handleSearchIcon" size="large" placeholder="输入英文关键词搜索 如：logo" clearable />
+            <Input v-model="newKeyword" @input="handleSearchIcon" size="large" placeholder="输入英文关键词搜索 如：logo" clearable />
         </div>
         <Tabs v-model="currentTabName" type="card" :animated="false" @on-click="handleTabClick">
             <TabPane label="系统" name="system"></TabPane>
@@ -47,6 +47,11 @@
                 iconList: data.sysIconList,
                 fontFamily: data.customIcon.font_family,
                 cssPrefixText: data.customIcon.css_prefix_text,
+                newKeyword: this.keyword
+            }
+        },
+        watch: {
+            newKeyword () {
             }
         },
         methods: {
@@ -65,7 +70,7 @@
                 list = list.filter(item => {
                     item.is_active = false;
                     item.is_custom = this.currentTabName !== 'system';
-                    return item.name.indexOf(this.keyword) >= 0;
+                    return item.name.indexOf(this.newKeyword) >= 0;
                 });
                 this.iconList = list;
             },

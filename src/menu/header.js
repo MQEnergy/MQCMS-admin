@@ -16,13 +16,6 @@ export default [
         hideHeader: true, // 是否显示在顶部 true：不显示
         name: 'log'
     },
-    // {
-    //     path: '/wechat',
-    //     title: '微信公众号',
-    //     icon: 'md-compass',
-    //     hideSider: false,
-    //     name: 'wechat-index'
-    // },
     {
         path: '/system',
         title: '系统管理',

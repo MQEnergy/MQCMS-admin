@@ -26,7 +26,7 @@
             <div style="position: relative; height: 100px;" v-if="loading">
                 <Spin fix size="large"></Spin>
             </div>
-            <empty v-else-if="limitData.length === 0" />
+            <empty v-else-if="limitData.length === 0"  :is-back="false" />
             <div v-else>
                 <div v-if="modeType === 'list'">
                     <Table

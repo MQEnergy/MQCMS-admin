@@ -10,7 +10,7 @@ export default {
     path: '/system',
     name: 'system',
     redirect: {
-        name: `auth-index`
+        name: `permission-admin`
     },
     meta,
     component: BasicLayout

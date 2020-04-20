@@ -282,7 +282,7 @@
 
 <script>
     import dataJson from '@/api/index';
-    import { AdminModule } from "@api/admin";
+    import { AdminModule } from "@api/permission/admin";
     import EmptyList from "@/components/common/empty";
 
     export default {

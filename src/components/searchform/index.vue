@@ -4,29 +4,31 @@
             <Row class="search-form-base-row">
                 <Col v-bind="gridLeft">
                     <FormItem :label-width="0">
-                        <Input
-                                :size="size"
-                                class="search-form-base-row-input"
-                                v-model="baseSearchForm.keyword"
-                                @on-search="handleSubmit"
-                                clearable
-                                search
-                                enter-button="搜索"
-                                placeholder="请输入查询内容">
-                            <Select v-model="baseSearchForm.type" slot="prepend" v-width="100">
-                                <Option
-                                    v-for="(item, index) in baseSearchForm.options"
-                                    :key="index"
-                                    :value="item.value">
-                                    {{ item.name }}
-                                </Option>
-                            </Select>
-                        </Input>
-                        <Button :size="size" v-if="showAdvanced" style="float: left" type="text" v-color="'#2d8cf0'"
-                                @click="collapse = !collapse">
-                            {{ collapse ? '普通搜索' : '高级搜索' }}
-                            <Icon :type="collapse ? 'ios-arrow-up' : 'ios-arrow-down'" />
-                        </Button>
+                        <div v-if="showSearch">
+                            <Input
+                                    :size="size"
+                                    class="search-form-base-row-input"
+                                    v-model="baseSearchForm.keyword"
+                                    @on-search="handleSubmit"
+                                    clearable
+                                    search
+                                    enter-button="搜索"
+                                    placeholder="请输入查询内容">
+                                <Select v-model="baseSearchForm.type" slot="prepend" v-width="100">
+                                    <Option
+                                            v-for="(item, index) in baseSearchForm.options"
+                                            :key="index"
+                                            :value="item.value">
+                                        {{ item.name }}
+                                    </Option>
+                                </Select>
+                            </Input>
+                            <Button :size="size" v-if="showAdvanced" style="float: left" type="text" v-color="'#2d8cf0'"
+                                    @click="collapse = !collapse">
+                                {{ collapse ? '普通搜索' : '高级搜索' }}
+                                <Icon :type="collapse ? 'ios-arrow-up' : 'ios-arrow-down'" />
+                            </Button>
+                        </div>
                     </FormItem>
                 </Col>
                 <Col v-bind="gridRight">
@@ -118,6 +120,10 @@
             size: {
                 type: String,
                 default: 'default'
+            },
+            showSearch: {
+                type: Boolean,
+                default: true
             },
             showRefresh: {
                 type: Boolean,

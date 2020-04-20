@@ -2,13 +2,11 @@
 import dashboard from './modules/dashboard';
 import list from './modules/list';
 import user from './modules/user';
-import tag from './modules/tag';
-import post from './modules/post';
 import attachment from './modules/attachment';
-import comment from './modules/comment';
-import auth from './modules/auth';
 import application from './modules/application';
 import setting from './modules/setting';
+import portal from "./modules/portal";
+import permission from "./modules/permission";
 
 // 系统
 import log from './modules/log';
@@ -17,12 +15,10 @@ export default [
     dashboard,
     list,
     user,
-    tag,
-    post,
-    auth,
     attachment,
     setting,
-    comment,
+    permission,
     log,
+    portal,
     application
 ];

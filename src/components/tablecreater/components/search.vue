@@ -13,7 +13,7 @@
                 :base-search-form="element.ele_attr.base_search_form"
                 :advanced-search-form="element.ele_attr.advanced_search_form"
                 @on-create-form="handleOpenUpdateCreate"
-                @on-search="handleData"
+                @on-search="handleData      "
                 @on-reset="handleData"
                 @on-multi-del="handleMultiDel"
                 @on-export="handleExport"

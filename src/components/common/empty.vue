@@ -47,7 +47,7 @@
 
 <style lang="less" scoped>
     .empty-container {
-        padding-top: 20px;
+        padding: 20px;
         text-align: center;
         line-height: 35px;
         &-icon {

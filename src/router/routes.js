@@ -1,17 +1,13 @@
+import BasicLayout from '@/layouts/basic-layout';
 import dashboard from './modules/dashboard';
 import list from './modules/list';
 import user from './modules/user';
-import tag from './modules/tag';
 import attachment from './modules/attachment';
-import auth from './modules/auth';
-import comment from './modules/comment';
-import post from './modules/post';
 import setting from './modules/setting';
 import application from './modules/application';
-import search from './modules/search';
 import system from './modules/system';
-
-import BasicLayout from '@/layouts/basic-layout';
+import permission from "./modules/permission";
+import portal from "./modules/portal";
 
 /**
  * 在主框架内显示
@@ -67,15 +63,12 @@ const frameIn = [
     dashboard,
     list,
     user,
-    tag,
-    auth,
+    permission,
     attachment,
-    comment,
-    post,
     setting,
     application,
-    search,
-    system
+    system,
+    portal
 ];
 
 /**

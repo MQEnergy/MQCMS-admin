@@ -7,12 +7,36 @@ export default {
     custom: 'i-icon-demo i-icon-demo-setting',
     children: [
         {
-            path: `${pre}user`,
-            title: '个人中心'
+            path: `${pre}site`,
+            title: '网站信息'
         },
         {
-            path: `${pre}account`,
-            title: '个人设置'
+            path: `${pre}theme`,
+            title: '模版管理'
+        },
+        {
+            path: `${pre}navbar`,
+            title: '导航管理'
+        },
+        {
+            path: `${pre}slide`,
+            title: '幻灯片管理'
+        },
+        {
+            path: `${pre}link`,
+            title: '友情链接'
+        },
+        {
+            path: `${pre}upload`,
+            title: '上传设置'
+        },
+        // {
+        //     path: `${pre}html`,
+        //     title: '页面静态化'
+        // },
+        {
+            path: `${pre}clear-cache`,
+            title: '缓存清理'
         },
         {
             path: `${pre}form`,

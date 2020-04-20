@@ -16,22 +16,67 @@ export default {
     component: BasicLayout,
     children: [
         {
-            path: 'user',
-            name: `${pre}user`,
+            path: 'site',
+            name: `${pre}site`,
             meta: {
                 ...meta,
-                title: '个人中心'
+                title: '网站信息'
             },
-            component: () => import('@/pages/setting/user')
+            component: () => import('@/pages/setting/site')
         },
         {
-            path: 'account',
-            name: `${pre}account`,
+            path: 'theme',
+            name: `${pre}theme`,
             meta: {
                 ...meta,
-                title: '个人设置'
+                title: '模版管理'
             },
-            component: () => import('@/pages/setting/account')
+            component: () => import('@/pages/setting/theme')
+        },
+        {
+            path: 'navbar',
+            name: `${pre}navbar`,
+            meta: {
+                ...meta,
+                title: '导航管理'
+            },
+            component: () => import('@/pages/setting/navbar')
+        },
+        {
+            path: 'slide',
+            name: `${pre}slide`,
+            meta: {
+                ...meta,
+                title: '幻灯片管理'
+            },
+            component: () => import('@/pages/setting/slide')
+        },
+        {
+            path: 'link',
+            name: `${pre}link`,
+            meta: {
+                ...meta,
+                title: '友情链接'
+            },
+            component: () => import('@/pages/setting/link')
+        },
+        {
+            path: 'upload',
+            name: `${pre}upload`,
+            meta: {
+                ...meta,
+                title: '上传设置'
+            },
+            component: () => import('@/pages/setting/upload')
+        },
+        {
+            path: 'clear-cache',
+            name: `${pre}clear-cache`,
+            meta: {
+                ...meta,
+                title: '清除缓存'
+            },
+            component: () => import('@/pages/setting/clear-cache')
         },
         {
             path: 'form',
