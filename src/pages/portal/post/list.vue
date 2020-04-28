@@ -358,7 +358,11 @@
             },
             // 编辑创建数据
             handleOpenUpdateCreate (status, updateIndex) {
-                this.$refs.createForm.handleShowUpdateCreate(status, updateIndex);
+                if (updateIndex < 0) {
+                    this.$router.push('/portal/post/create');
+                } else {
+                    this.$refs.createForm.handleShowUpdateCreate(status, updateIndex);
+                }
             },
             handleDelete (index) {
                 this.updateIndex = index;
@@ -378,7 +382,6 @@
                 });
             },
             handleMultiDel () {
-                console.log(this.selectedData);
                 if (this.selectedData.length === 0) {
                     this.$Message.error('请选择至少一个元素');
                     return false;

@@ -6,7 +6,7 @@
             :show-multi-action="false"
             :base-search-form="baseSearchForm"
             :advanced-search-form="advancedSearchForm"
-            :show-advanced="false"
+            :show-advanced="true"
             @on-create-form="handleOpenUpdateCreate"
             @on-search="searchData"
             @on-reset="getData"
@@ -161,78 +161,14 @@
                         {
                             name: '分类名称',
                             value: 'cate_name'
+                        },
+                        {
+                            name: '分类别名',
+                            value: 'alias_name'
                         }
                     ]
                 },
                 advancedSearchForm: [
-                    {
-                        label_name: '资源类型：',
-                        label_prop: 'label_type',
-                        ele_value: '',
-                        ele_type: 'select',
-                        options: [
-                            {
-                                value: '1',
-                                name: '单图'
-                            },
-                            {
-                                value: '2',
-                                name: '视频'
-                            },
-                            {
-                                value: '3',
-                                name: '其他'
-                            }
-                        ],
-                    },
-                    {
-                        label_name: '是否商品：',
-                        label_prop: 'is_good',
-                        ele_value: '',
-                        ele_type: 'select',
-                        options: [
-                            {
-                                value: '1',
-                                name: '是'
-                            },
-                            {
-                                value: '0',
-                                name: '否'
-                            }
-                        ],
-                    },
-                    {
-                        label_name: '是否发布：',
-                        label_prop: 'is_publish',
-                        ele_value: '',
-                        ele_type: 'select',
-                        options: [
-                            {
-                                value: '1',
-                                name: '是'
-                            },
-                            {
-                                value: '0',
-                                name: '否'
-                            }
-                        ],
-                    },
-                    {
-                        label_name: '是否推荐：',
-                        label_prop: 'is_recommend',
-                        ele_value: '',
-                        ele_type: 'select',
-                        options: [
-                            {
-                                value: '1',
-                                name: '是'
-                            },
-                            {
-                                value: '0',
-                                name: '否'
-                            }
-                        ],
-                    },
                     {
                         label_name: '创建时间：',
                         label_prop: 'created_at',
@@ -241,11 +177,20 @@
                         options: {}
                     },
                     {
-                        label_name: '更新时间：',
-                        label_prop: 'updated_at',
+                        label_name: '状态：',
+                        label_prop: 'status',
                         ele_value: '',
-                        ele_type: 'daterange',
-                        options: {}
+                        ele_type: 'select',
+                        options: [
+                            {
+                                value: '1',
+                                name: '是'
+                            },
+                            {
+                                value: '0',
+                                name: '否'
+                            }
+                        ],
                     }
                 ]
             }
