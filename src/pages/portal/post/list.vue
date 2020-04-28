@@ -14,12 +14,6 @@
             @on-export="handleExport"
         />
         <!-- 列表 -->
-        <Alert show-icon>
-            <div v-font="14">
-                已选择 <strong v-color="'#2d8cf0'">{{ selectedData.length }}</strong> 项
-                <a class="ivu-ml" @click="handleClearSelect">清空</a>
-            </div>
-        </Alert>
         <Table
             border
             ref="table"
