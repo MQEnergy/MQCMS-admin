@@ -13,7 +13,6 @@
             @on-reset="getData"
         />
         <Table
-            border
             ref="table"
             :columns="columns"
             :data="limitData"

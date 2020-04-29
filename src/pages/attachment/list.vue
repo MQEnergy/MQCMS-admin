@@ -1,5 +1,5 @@
 <template>
-    <div class="i-table-no-border">
+    <div>
         <!-- 搜索 -->
         <search-form
             style="border-bottom: 1px solid #eee"

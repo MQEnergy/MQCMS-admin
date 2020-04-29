@@ -21,10 +21,10 @@
                     <Input v-model="createData.desc" placeholder="请输入菜单描述" />
                 </FormItem>
                 <FormItem label="前端路由：" prop="frontend_url">
-                    <Input v-model="createData.frontend_url" placeholder="请输入菜单别名" />
+                    <Input v-model="createData.frontend_url" placeholder="请输入前端路由 例如：/admin/index" />
                 </FormItem>
                 <FormItem label="后端路由：" prop="backend_url">
-                    <Input v-model="createData.backend_url" placeholder="请输入菜单别名" />
+                    <Input v-model="createData.backend_url" placeholder="请输入后端路由 例如：/admin/index" />
                 </FormItem>
                 <FormItem label="自定义图标：" prop="custom">
                     <Tooltip placement="top">

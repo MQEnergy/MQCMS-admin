@@ -119,6 +119,7 @@
                 })
             },
             handleShowUpdateCreate (status, updateIndex) {
+                console.info('status: ', status);
                 this.showCreate = status;
                 this.updateIndex = updateIndex;
                 this.modalTitle = updateIndex < 0 ? '新建操作' : '编辑操作';
@@ -140,12 +141,20 @@
             handleCreate () {
                 this.$refs.create.validate((valid) => {
                     if (valid) {
-                        // 新建
-                        MenuStore(this.createData).then(async res => {
-                            this.$Message.success('创建成功');
-                            this.$emit('on-ok');
-                            this.handleCancel();
-                        });
+                        if (this.updateIndex < 0) {
+                            // 新建
+                            MenuStore(this.createData).then(async res => {
+                                this.$Message.success('创建成功');
+                                this.$emit('on-ok');
+                                this.handleCancel();
+                            });
+                        } else {
+                            MenuUpdate(this.createData).then(async res => {
+                                this.$Message.success('编辑成功');
+                                this.$emit('on-ok');
+                                this.handleCancel();
+                            });
+                        }
                         this.creating = false;
                         this.$nextTick(() => {
                             this.creating = true;

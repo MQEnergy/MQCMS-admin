@@ -12,7 +12,6 @@
             @on-search="getData"
         />
         <Table
-            border
             ref="table"
             row-key="id"
             :columns="columns"
@@ -53,7 +52,7 @@
         </div>
         <!-- 创建编辑 -->
         <create-form ref="createForm" @on-create-form="handleOpenUpdateCreate" @on-ok="getData" />
-        <create-action-form ref="createActionForm" @on-create-form="handleOpenUpdateCreate" @on-ok="getData" />
+        <create-action-form ref="createActionForm" @on-create-form="handleMenuOpenUpdateCreate" @on-ok="getData" />
     </div>
 </template>
 <script>
