@@ -4,7 +4,7 @@
       <div class="mq-global-footer-links">
         <a v-for="item in links" :key="item.key" :href="item.href" target="_blank" :title="item.title">{{ item.title }}</a>
       </div>
-      <div class="mq-global-footer-copyright">{{ copyright }}</div>
+      <div class="mq-global-footer-copyright">{{ copyRight }}</div>
     </footer>
   </div>
 </template>
@@ -17,7 +17,7 @@
                 type: Array,
                 default: {}
             },
-            copyright: {
+            copyRight: {
                 type: String,
                 default: ''
             }

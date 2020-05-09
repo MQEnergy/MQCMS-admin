@@ -1,5 +1,5 @@
 <template>
-    <global-footer class="i-copyright" :links="links" :copyright="copyright" />
+    <global-footer class="i-copyright" :links="links" :copy-right="copyright" />
 </template>
 <script>
     import globalFooter from "@/components/copyright/globalFooter";
